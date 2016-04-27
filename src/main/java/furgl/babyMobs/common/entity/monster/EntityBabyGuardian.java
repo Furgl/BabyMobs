@@ -1,8 +1,11 @@
 package furgl.babyMobs.common.entity.monster;
 
+import java.util.Iterator;
+import java.util.List;
+
 import com.google.common.base.Predicate;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
+import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
@@ -94,14 +97,9 @@ public class EntityBabyGuardian extends EntityMob
 			((EntityPlayer)cause.getEntity()).triggerAchievement(Achievements.achievementWhyAreTheySoStrong);
 		super.onDeath(cause);
     }
-	
-	public boolean hasTargetedEntity()
-    {
-        return this.dataWatcher.getWatchableObjectInt(17) != 0;
-    }
 
 	@Override
-	protected boolean canDropLoot()
+	protected boolean func_146066_aG()
 	{
 		return true;
 	}
@@ -149,7 +147,7 @@ public class EntityBabyGuardian extends EntityMob
 	}
 
 	@Override
-	protected PathNavigate getNewNavigator(World worldIn)
+	protected PathNavigate func_175447_b(World worldIn)
 	{
 		return new PathNavigateSwimmer(this, worldIn);
 	}
@@ -212,7 +210,7 @@ public class EntityBabyGuardian extends EntityMob
 			this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(8.0D);
 			this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(80.0D);
 			this.enablePersistence();
-            this.wander.setExecutionChance(400);
+			this.wander.func_179479_b(400);
 		}
 	}
 
@@ -267,9 +265,9 @@ public class EntityBabyGuardian extends EntityMob
 	}
 
 	@Override
-	public void onDataWatcherUpdate(int p_145781_1_)
+	public void func_145781_i(int p_145781_1_)
 	{
-		super.onDataWatcherUpdate(p_145781_1_);
+		super.func_145781_i(p_145781_1_);
 
 		if (p_145781_1_ == 16)
 		{
@@ -341,9 +339,9 @@ public class EntityBabyGuardian extends EntityMob
 	}
 
 	@Override
-	public float getBlockPathWeight(BlockPos pos)
+	public float func_180484_a(BlockPos p_180484_1_)
 	{
-        return this.worldObj.getBlockState(pos).getBlock().getMaterial() == Material.water ? 10.0F + this.worldObj.getLightBrightness(pos) - 0.5F : super.getBlockPathWeight(pos);
+		return this.worldObj.getBlockState(p_180484_1_).getBlock().getMaterial() == Material.water ? 10.0F + this.worldObj.getLightBrightness(p_180484_1_) - 0.5F : super.func_180484_a(p_180484_1_);
 	}
 
 	//TODO longer spikes getter
@@ -525,38 +523,48 @@ public class EntityBabyGuardian extends EntityMob
 		return (this.field_175479_bo + p_175477_1_) / this.func_175464_ck();
 	}
 
-	 protected void updateAITasks()
-	    {
-	        super.updateAITasks();
+	@Override
+	protected void updateAITasks()
+	{
+		super.updateAITasks();
 
-	        if (this.isElder())
-	        {
-	            if ((this.ticksExisted + this.getEntityId()) % 1200 == 0)
-	            {
-	                Potion potion = Potion.digSlowdown;
+		if (this.isElder())
+		{
+			if ((this.ticksExisted + this.getEntityId()) % 1200 == 0)
+			{
+				Potion potion = Potion.digSlowdown;
+				List list = this.worldObj.getPlayers(EntityPlayerMP.class, new Predicate()
+				{
+					public boolean func_179913_a(EntityPlayerMP p_179913_1_)
+					{
+						return EntityBabyGuardian.this.getDistanceSqToEntity(p_179913_1_) < 2500.0D && p_179913_1_.theItemInWorldManager.func_180239_c();
+					}
+					@Override
+					public boolean apply(Object p_apply_1_)
+					{
+						return this.func_179913_a((EntityPlayerMP)p_apply_1_);
+					}
+				});
+				Iterator iterator = list.iterator();
 
-	                for (EntityPlayerMP entityplayermp : this.worldObj.getPlayers(EntityPlayerMP.class, new Predicate<EntityPlayerMP>()
-	            {
-	                public boolean apply(EntityPlayerMP p_apply_1_)
-	                    {
-	                        return EntityBabyGuardian.this.getDistanceSqToEntity(p_apply_1_) < 2500.0D && p_apply_1_.theItemInWorldManager.survivalOrAdventure();
-	                    }
-	                }))
-	                {
-	                    if (!entityplayermp.isPotionActive(potion) || entityplayermp.getActivePotionEffect(potion).getAmplifier() < 2 || entityplayermp.getActivePotionEffect(potion).getDuration() < 1200)
-	                    {
-	                        entityplayermp.playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(10, 0.0F));
-	                        entityplayermp.addPotionEffect(new PotionEffect(potion.id, 6000, 2));
-	                    }
-	                }
-	            }
+				while (iterator.hasNext())
+				{
+					EntityPlayerMP entityplayermp = (EntityPlayerMP)iterator.next();
 
-	            if (!this.hasHome())
-	            {
-	                this.setHomePosAndDistance(new BlockPos(this), 16);
-	            }
-	        }
-	    }
+					if (!entityplayermp.isPotionActive(potion) || entityplayermp.getActivePotionEffect(potion).getAmplifier() < 2 || entityplayermp.getActivePotionEffect(potion).getDuration() < 1200)
+					{
+						entityplayermp.playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(10, 0.0F));
+						entityplayermp.addPotionEffect(new PotionEffect(potion.id, 6000, 2));
+					}
+				}
+			}
+
+			if (!this.hasHome())
+			{
+				this.func_175449_a(new BlockPos(this), 16);
+			}
+		}
+	}
 
 	/**
 	 * Drop 0-2 items of this living's type
@@ -590,7 +598,7 @@ public class EntityBabyGuardian extends EntityMob
 	 * Makes entity wear random armor based on difficulty
 	 */
 	@Override
-	protected void addRandomDrop()
+	protected void addRandomArmor()
 	{
 		ItemStack itemstack = ((WeightedRandomFishable)WeightedRandom.getRandomItem(this.rand, EntityFishHook.func_174855_j())).getItemStack(this.rand);
 		this.entityDropItem(itemstack, 1.0F);
@@ -609,7 +617,7 @@ public class EntityBabyGuardian extends EntityMob
 	 * Whether or not the current entity is in lava
 	 */
 	@Override
-	public boolean isNotColliding()
+	public boolean handleLavaMovement()
 	{
 		return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox(), this) && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).isEmpty();
 	}
@@ -653,7 +661,7 @@ public class EntityBabyGuardian extends EntityMob
 			}
 		}
 
-		this.wander.makeUpdate();;
+		this.wander.func_179480_f();
 		return super.attackEntityFrom(source, amount);
 	}
 
@@ -749,7 +757,7 @@ public class EntityBabyGuardian extends EntityMob
 		{
 			this.guardian.func_175463_b(0);
 			this.guardian.setAttackTarget((EntityLivingBase)null);
-			this.guardian.wander.makeUpdate();;
+			this.guardian.wander.func_179480_f();
 		}
 
 		/**
@@ -834,11 +842,11 @@ public class EntityBabyGuardian extends EntityMob
 				double d7 = this.field_179930_g.posX + d0 / d3 * 2.0D;
 				double d8 = this.field_179930_g.getEyeHeight() + this.field_179930_g.posY + d1 / d3 * 1.0D;
 				double d9 = this.field_179930_g.posZ + d2 / d3 * 2.0D;
-				double d10 = entitylookhelper.getLookPosX();
-				double d11 = entitylookhelper.getLookPosY();
-				double d12 = entitylookhelper.getLookPosZ();
+				double d10 = entitylookhelper.func_180423_e();
+				double d11 = entitylookhelper.func_180422_f();
+				double d12 = entitylookhelper.func_180421_g();
 
-				if (!entitylookhelper.getIsLooking())
+				if (!entitylookhelper.func_180424_b())
 				{
 					d10 = d7;
 					d11 = d8;

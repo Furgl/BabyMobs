@@ -2,7 +2,7 @@ package furgl.babyMobs.common.entity.monster;
 
 import java.util.Random;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
+import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.block.ModBlocks;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
@@ -55,7 +55,7 @@ public class EntityBabySpider extends EntityMob
 		this.targetTasks.addTask(1, new EntityAIBabyHurtByTarget(this, true, new Class[0]));
 
 		this.tasks.addTask(1, new EntityAISwimming(this));
-		//this.tasks.addTask(2, this.field_175455_a); ??
+		this.tasks.addTask(2, this.field_175455_a);
 		this.tasks.addTask(3, new EntityAIBabyLeapAtTarget(this, 0.4F));
 		this.tasks.addTask(4, new EntityBabySpider.AISpiderAttack(EntityPlayer.class));
 		this.tasks.addTask(4, new EntityBabySpider.AISpiderAttack(EntityIronGolem.class));
@@ -75,7 +75,7 @@ public class EntityBabySpider extends EntityMob
 	}
 
 	@Override
-	protected boolean canDropLoot()
+	protected boolean func_146066_aG()
 	{
 		return true;
 	}
@@ -100,7 +100,7 @@ public class EntityBabySpider extends EntityMob
 
 
 	@Override
-	protected PathNavigate getNewNavigator(World worldIn)
+	protected PathNavigate func_175447_b(World worldIn)
 	{
 		return new PathNavigateClimber(this, worldIn);
 	}
@@ -128,7 +128,7 @@ public class EntityBabySpider extends EntityMob
 			{
 				EntityBabySkeleton entityBabySkeleton = new EntityBabySkeleton(this.worldObj);
 				entityBabySkeleton.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, 0.0F);
-				entityBabySkeleton.onInitialSpawn(this.worldObj.getDifficultyForLocation(new BlockPos(this)), (IEntityLivingData)null);
+				entityBabySkeleton.func_180482_a(this.worldObj.getDifficultyForLocation(new BlockPos(this)), (IEntityLivingData)null);
 				this.worldObj.spawnEntityInWorld(entityBabySkeleton);
 				entityBabySkeleton.mountEntity(this);
 			}
@@ -313,9 +313,9 @@ public class EntityBabySpider extends EntityMob
 	}
 
 	@Override
-	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData iEntityLivingData)
+	public IEntityLivingData func_180482_a(DifficultyInstance difficulty, IEntityLivingData iEntityLivingData)
 	{
-		Object obj = super.onInitialSpawn(difficulty, iEntityLivingData);
+		Object obj = super.func_180482_a(difficulty, iEntityLivingData);
 
 		if (obj == null)
 		{

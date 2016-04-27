@@ -3,7 +3,7 @@ package furgl.babyMobs.common.entity.monster;
 import java.util.Collections;
 import java.util.List;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
+import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
@@ -52,7 +52,7 @@ public class EntityBabyPigZombie extends EntityPigZombie
 	@Override
 	public double getYOffset()
 	{
-		return super.getYOffset() + 0.1D;
+		return super.getYOffset() + 0.4D;
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class EntityBabyPigZombie extends EntityPigZombie
 			entityzombiepig.copyLocationAndAnglesFrom(entityLivingIn);
 			this.worldObj.removeEntity(entityLivingIn);
 			((EntityPig)entityLivingIn).setGrowingAge(-2000000);
-			entityzombiepig.onInitialSpawn(this.worldObj.getDifficultyForLocation(new BlockPos(entityzombiepig)), (IEntityLivingData)null);
+			entityzombiepig.func_180482_a(this.worldObj.getDifficultyForLocation(new BlockPos(entityzombiepig)), (IEntityLivingData)null);
 			this.worldObj.spawnEntityInWorld(entityzombiepig);
 			this.mountEntity(entityzombiepig);
 			entityzombiepig.playLivingSound();

@@ -23,8 +23,7 @@ public class RenderBabyPigZombie extends RenderBiped
         this.addLayer(new LayerHeldItem(this));
         this.addLayer(new LayerBipedArmor(this)
         {
-        	@Override
-            protected void initArmor()
+            protected void func_177177_a()
             {
                 this.field_177189_c = new ModelBabyPigZombie(0.5F, true);
                 this.field_177186_d = new ModelBabyPigZombie(1.0F, true);

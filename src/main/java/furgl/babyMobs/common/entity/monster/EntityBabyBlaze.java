@@ -1,6 +1,6 @@
 package furgl.babyMobs.common.entity.monster;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
+import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
@@ -67,7 +67,7 @@ public class EntityBabyBlaze extends EntityMob
     }
 
 	@Override
-	protected boolean canDropLoot()
+	protected boolean func_146066_aG()
 	{
 		return true;
 	}

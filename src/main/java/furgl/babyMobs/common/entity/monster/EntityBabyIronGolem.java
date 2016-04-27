@@ -3,7 +3,7 @@ package furgl.babyMobs.common.entity.monster;
 import com.google.common.base.Predicate;
 import com.mojang.authlib.GameProfile;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
+import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyDefendVillage;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
@@ -68,7 +68,7 @@ public class EntityBabyIronGolem extends EntityGolem
 		this.tasks.addTask(5, new EntityAIBabyFollowParent(this, 1.1D));
 		this.setHoldingRose(true);
 
-		((PathNavigateGround)this.getNavigator()).setAvoidsWater(true);
+		((PathNavigateGround)this.getNavigator()).func_179690_a(true);
 		this.tasks.addTask(1, new EntityAIAttackOnCollide(this, 1.0D, true));
 		this.tasks.addTask(2, new EntityAIMoveTowardsTarget(this, 0.9D, 32.0F));
 		this.tasks.addTask(3, new EntityAIMoveThroughVillage(this, 0.6D, true));
@@ -79,7 +79,7 @@ public class EntityBabyIronGolem extends EntityGolem
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIBabyDefendVillage(this));
 		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, new Class[0]));
-		this.targetTasks.addTask(3, new EntityBabyIronGolem.AINearestAttackableTargetNonCreeper(this, EntityLiving.class, 10, false, true, IMob.VISIBLE_MOB_SELECTOR));
+		this.targetTasks.addTask(3, new EntityBabyIronGolem.AINearestAttackableTargetNonCreeper(this, EntityLiving.class, 10, false, true, IMob.field_175450_e));
 	}	
     
 	@Override
@@ -97,7 +97,7 @@ public class EntityBabyIronGolem extends EntityGolem
     }
 	
 	@Override
-	protected boolean canDropLoot()
+	protected boolean func_146066_aG()
 	{
 		return true;
 	}
@@ -142,7 +142,7 @@ public class EntityBabyIronGolem extends EntityGolem
 			else
 			{
 				BlockPos blockpos = this.villageObj.getCenter();
-				this.setHomePosAndDistance(blockpos, (int)(this.villageObj.getVillageRadius() * 0.6F));
+				this.func_175449_a(blockpos, (int)(this.villageObj.getVillageRadius() * 0.6F));
 			}
 		}
 
@@ -264,7 +264,7 @@ public class EntityBabyIronGolem extends EntityGolem
 		if (flag)
 		{
 			p_70652_1_.motionY += 0.4000000059604645D;
-			this.applyEnchantments(this, p_70652_1_);
+			this.func_174815_a(this, p_70652_1_);
 		}
 
 		this.playSound("mob.irongolem.throw", 1.0F, 1.0F);
@@ -273,7 +273,7 @@ public class EntityBabyIronGolem extends EntityGolem
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void handleStatusUpdate(byte p_70103_1_)
+	public void handleHealthUpdate(byte p_70103_1_)
 	{
 		if (p_70103_1_ == 4)
 		{
@@ -286,7 +286,7 @@ public class EntityBabyIronGolem extends EntityGolem
 		}
 		else
 		{
-			super.handleStatusUpdate(p_70103_1_);
+			super.handleHealthUpdate(p_70103_1_);
 		}
 	}
 

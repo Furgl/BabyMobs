@@ -1,4 +1,4 @@
-package furgl.babyMobs.client.gui.creativeTab;
+package furgl.babyMobs.creativetab;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;

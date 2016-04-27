@@ -1,6 +1,8 @@
 package furgl.babyMobs.common.entity.monster;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
+import com.google.common.base.Predicate;
+
+import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyCreeperSwell;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
@@ -56,8 +58,19 @@ public class EntityBabyCreeper extends EntityMob
 
 		this.tasks.addTask(1, new EntityAISwimming(this));
 		this.tasks.addTask(2, new EntityAIBabyCreeperSwell(this));
-		//this.tasks.addTask(2, this.field_175455_a); ??
-        this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityOcelot.class, 6.0F, 1.0D, 1.2D));
+		this.tasks.addTask(2, this.field_175455_a);
+		this.tasks.addTask(3, new EntityAIAvoidEntity(this, new Predicate<Object>()
+		{
+			public boolean func_179958_a(Entity p_179958_1_)
+			{
+				return p_179958_1_ instanceof EntityOcelot;
+			}
+			@Override
+			public boolean apply(Object p_apply_1_)
+			{
+				return this.func_179958_a((Entity)p_apply_1_);
+			}
+		}, 6.0F, 1.0D, 1.2D));
 		this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 1.0D, false));
 		this.tasks.addTask(5, new EntityAIWander(this, 0.8D));
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
@@ -89,7 +102,7 @@ public class EntityBabyCreeper extends EntityMob
 
 	// //TODO sound and middle click
     @Override
-	protected boolean canDropLoot()
+	protected boolean func_146066_aG()
 	{
 		return true;
 	}
@@ -349,7 +362,7 @@ public class EntityBabyCreeper extends EntityMob
 	{
 		if (!this.worldObj.isRemote)
 		{
-			boolean flag = this.worldObj.getGameRules().getBoolean("mobGriefing");
+			boolean flag = this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing") ;
 			float f = this.getPowered() ? 2.0F : 1.0F;
 			this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, this.explosionRadius * f, flag);
 			

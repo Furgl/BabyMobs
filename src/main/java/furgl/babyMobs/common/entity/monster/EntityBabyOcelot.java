@@ -2,7 +2,7 @@ package furgl.babyMobs.common.entity.monster;
 
 import com.google.common.base.Predicate;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
+import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -49,7 +49,7 @@ public class EntityBabyOcelot extends EntityTameable
 		this.tasks.addTask(1, new EntityAIBabyFollowParent(this, 1.1D));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
         
-        ((PathNavigateGround)this.getNavigator()).setAvoidsWater(true);
+        ((PathNavigateGround)this.getNavigator()).func_179690_a(true);
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(7, new EntityAILeapAtTarget(this, 0.3F));
         this.tasks.addTask(8, new EntityAIOcelotAttack(this));
@@ -337,7 +337,7 @@ public class EntityBabyOcelot extends EntityTameable
      * Whether or not the current entity is in lava
      */
     @Override
-	public boolean isNotColliding()
+	public boolean handleLavaMovement()
     {
         if (this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox(), this) && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).isEmpty() && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox()))
         {
@@ -379,7 +379,18 @@ public class EntityBabyOcelot extends EntityTameable
     {
         if (this.field_175545_bm == null)
         {
-            this.field_175545_bm = new EntityAIAvoidEntity(this, EntityPlayer.class, 16.0F, 0.8D, 1.33D);
+            this.field_175545_bm = new EntityAIAvoidEntity(this, new Predicate()
+            {
+                public boolean func_179874_a(Entity p_179874_1_)
+                {
+                    return p_179874_1_ instanceof EntityPlayer;
+                }
+                @Override
+				public boolean apply(Object p_apply_1_)
+                {
+                    return this.func_179874_a((Entity)p_apply_1_);
+                }
+            }, 16.0F, 0.8D, 1.33D);
         }
 
         this.tasks.removeTask(this.field_175545_bm);
@@ -391,9 +402,9 @@ public class EntityBabyOcelot extends EntityTameable
     }
 
     @Override
-	public IEntityLivingData onInitialSpawn(DifficultyInstance p_180482_1_, IEntityLivingData p_180482_2_)
+	public IEntityLivingData func_180482_a(DifficultyInstance p_180482_1_, IEntityLivingData p_180482_2_)
     {
-        p_180482_2_ = super.onInitialSpawn(p_180482_1_, p_180482_2_);
+        p_180482_2_ = super.func_180482_a(p_180482_1_, p_180482_2_);
 
        /* if (this.worldObj.rand.nextInt(7) == 0)
         {

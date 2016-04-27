@@ -19,7 +19,6 @@ import furgl.babyMobs.common.entity.monster.EntityBabySquid;
 import furgl.babyMobs.common.entity.monster.EntityBabyWitch;
 import furgl.babyMobs.common.entity.monster.EntityBabyWitherSkeleton;
 import furgl.babyMobs.common.entity.monster.EntityBabyZombie;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.monster.EntityBlaze;
@@ -37,7 +36,7 @@ import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntitySquid;
 
-public class EntityAIBabyFollowParent<T extends Entity> extends EntityAIBase
+public class EntityAIBabyFollowParent extends EntityAIBase
 {
 	/** The child that is following its parent. */
 	private EntityLiving child;
@@ -59,7 +58,7 @@ public class EntityAIBabyFollowParent<T extends Entity> extends EntityAIBase
 	{
 		if (!(this.child.getAttackTarget() == null))
 			return false;
-        List<EntityLiving> list = this.child.worldObj.getEntitiesWithinAABB(EntityLiving.class, this.child.getEntityBoundingBox().expand(8.0D, 4.0D, 8.0D));
+		List<?> list = this.child.worldObj.getEntitiesWithinAABB(this.getParent(this.child), this.child.getEntityBoundingBox().expand(8.0D, 4.0D, 8.0D));
 		EntityLiving entityliving = null;
 		double d0 = Double.MAX_VALUE;
 		Iterator<?> iterator = list.iterator();
@@ -91,7 +90,7 @@ public class EntityAIBabyFollowParent<T extends Entity> extends EntityAIBase
 		}
 	}
 
-	private Class getParent(EntityLiving taskOwner) {
+	private Class<?> getParent(EntityLiving taskOwner) {
 		if (taskOwner.getClass() == EntityBabyCreeper.class)
 		{
 			return EntityCreeper.class;

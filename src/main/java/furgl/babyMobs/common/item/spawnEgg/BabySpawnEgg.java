@@ -22,11 +22,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
-public class ItemBabySpawnEgg extends Item 
+public class BabySpawnEgg extends Item 
 {
 	public String entityName;
 	
-	public ItemBabySpawnEgg(String entityName)
+	public BabySpawnEgg(String entityName)
 	{
 		this.entityName = entityName;
 	}
@@ -181,7 +181,7 @@ public class ItemBabySpawnEgg extends Item
 					entity.setLocationAndAngles(x, y, z, MathHelper.wrapAngleTo180_float(worldIn.rand.nextFloat() * 360.0F), 0.0F);
 					entityliving.rotationYawHead = entityliving.rotationYaw;
 					entityliving.renderYawOffset = entityliving.rotationYaw;
-					entityliving.onInitialSpawn(worldIn.getDifficultyForLocation(new BlockPos(entityliving)), (IEntityLivingData)null);
+					entityliving.func_180482_a(worldIn.getDifficultyForLocation(new BlockPos(entityliving)), (IEntityLivingData)null);
 					worldIn.spawnEntityInWorld(entity);
 					entityliving.playLivingSound();
 				}

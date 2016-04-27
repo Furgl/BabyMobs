@@ -2,9 +2,10 @@ package furgl.babyMobs.common.entity.monster;
 
 import java.util.Map;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Maps;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
+import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
@@ -75,9 +76,20 @@ public class EntityBabySkeleton extends EntityMob implements IRangedAttackMob
 
 		this.tasks.addTask(1, new EntityAISwimming(this));
 		this.tasks.addTask(2, new EntityAIRestrictSun(this));
-		//this.tasks.addTask(2, this.field_175455_a); ??
+		this.tasks.addTask(2, this.field_175455_a);
 		this.tasks.addTask(3, new EntityAIFleeSun(this, 1.0D));
-        this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityWolf.class, 6.0F, 1.0D, 1.2D));
+		this.tasks.addTask(3, new EntityAIAvoidEntity(this, new Predicate()
+		{
+			public boolean func_179945_a(Entity p_179945_1_)
+			{
+				return p_179945_1_ instanceof EntityWolf;
+			}
+			@Override
+			public boolean apply(Object p_apply_1_)
+			{
+				return this.func_179945_a((Entity)p_apply_1_);
+			}
+		}, 6.0F, 1.0D, 1.2D));
 		this.tasks.addTask(4, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(6, new EntityAILookIdle(this));
@@ -117,7 +129,7 @@ public class EntityBabySkeleton extends EntityMob implements IRangedAttackMob
     }
 	
 	@Override
-	protected boolean canDropLoot()
+	protected boolean func_146066_aG()
 	{
 		return true;
 	}
@@ -360,7 +372,7 @@ public class EntityBabySkeleton extends EntityMob implements IRangedAttackMob
 	 * Makes entity wear random armor based on difficulty
 	 */
 	@Override
-	protected void addRandomDrop()
+	protected void addRandomArmor()
 	{
 		if (this.getSkeletonType() == 1)
 		{
@@ -369,16 +381,16 @@ public class EntityBabySkeleton extends EntityMob implements IRangedAttackMob
 	}
 
 	@Override
-	protected void setEquipmentBasedOnDifficulty(DifficultyInstance p_180481_1_)
+	protected void func_180481_a(DifficultyInstance p_180481_1_)
 	{
-		super.setEquipmentBasedOnDifficulty(p_180481_1_);
+		super.func_180481_a(p_180481_1_);
 		this.setCurrentItemOrArmor(0, new ItemStack(Items.bow));
 	}
 
 	@Override
-	public IEntityLivingData onInitialSpawn(DifficultyInstance p_180482_1_, IEntityLivingData p_180482_2_)
+	public IEntityLivingData func_180482_a(DifficultyInstance p_180482_1_, IEntityLivingData p_180482_2_)
 	{
-		 p_180482_2_ = super.onInitialSpawn(p_180482_1_, p_180482_2_);
+		 p_180482_2_ = super.func_180482_a(p_180482_1_, p_180482_2_);
 
 	        if (this.worldObj.provider instanceof WorldProviderHell && this.getRNG().nextInt(5) > 0)
 	        {
@@ -390,8 +402,8 @@ public class EntityBabySkeleton extends EntityMob implements IRangedAttackMob
 	        else
 	        {
 	            this.tasks.addTask(4, this.aiArrowAttack);
-	            this.setEquipmentBasedOnDifficulty(p_180482_1_);
-	            this.setEnchantmentBasedOnDifficulty(p_180482_1_);
+	            this.func_180481_a(p_180482_1_);
+	            this.func_180483_b(p_180482_1_);
 	        }
 
 	        this.setCanPickUpLoot(this.rand.nextFloat() < 0.55F * p_180482_1_.getClampedAdditionalDifficulty());

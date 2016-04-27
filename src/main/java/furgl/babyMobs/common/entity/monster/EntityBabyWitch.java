@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
+import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
 import furgl.babyMobs.common.item.ModItems;
@@ -59,7 +59,7 @@ public class EntityBabyWitch extends EntityMob implements IRangedAttackMob
 		this.tasks.addTask(1, new EntityAISwimming(this));
 		this.tasks.addTask(2, new EntityAIArrowAttack(this, 1.0D, 60, 10.0F));
 		this.tasks.addTask(2, new EntityAIWander(this, 1.0D));
-		//this.tasks.addTask(2, this.field_175455_a); ??
+		this.tasks.addTask(2, this.field_175455_a);
 		this.tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(3, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIBabyHurtByTarget(this, true, new Class[0]));
@@ -75,7 +75,7 @@ public class EntityBabyWitch extends EntityMob implements IRangedAttackMob
     }
 	
 	@Override
-	protected boolean canDropLoot()
+	protected boolean func_146066_aG()
 	{
 		return true;
 	}
@@ -233,7 +233,7 @@ public class EntityBabyWitch extends EntityMob implements IRangedAttackMob
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void handleStatusUpdate(byte p_70103_1_)
+	public void handleHealthUpdate(byte p_70103_1_)
 	{
 		if (p_70103_1_ == 15)
 		{
@@ -244,7 +244,7 @@ public class EntityBabyWitch extends EntityMob implements IRangedAttackMob
 		}
 		else
 		{
-			super.handleStatusUpdate(p_70103_1_);
+			super.handleHealthUpdate(p_70103_1_);
 		}
 	}
 

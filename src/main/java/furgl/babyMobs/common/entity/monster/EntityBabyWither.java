@@ -6,11 +6,12 @@ import java.util.List;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
+import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.projectile.EntityWitherWitherSkull;
 import furgl.babyMobs.common.item.ModItems;
 import net.minecraft.block.Block;
+import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -38,7 +39,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
@@ -80,7 +80,7 @@ public class EntityBabyWither extends EntityMob implements IBossDisplayData, IRa
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.35D);
 
 		this.isImmuneToFire = true;
-		((PathNavigateGround)this.getNavigator()).setCanSwim(true);
+		((PathNavigateGround)this.getNavigator()).func_179693_d(true);
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(2, new EntityAIArrowAttack(this, 1.0D, 40, 20.0F));
 		this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
@@ -100,7 +100,7 @@ public class EntityBabyWither extends EntityMob implements IBossDisplayData, IRa
     }
 	
 	@Override
-	protected boolean canDropLoot()
+	protected boolean func_146066_aG()
 	{
 		return true;
 	}
@@ -288,7 +288,7 @@ public class EntityBabyWither extends EntityMob implements IBossDisplayData, IRa
 
 			if (i <= 0)
 			{
-				this.worldObj.newExplosion(this, this.posX, this.posY + this.getEyeHeight(), this.posZ, 7.0F, false, this.worldObj.getGameRules().getBoolean("mobGriefing"));
+				this.worldObj.newExplosion(this, this.posX, this.posY + this.getEyeHeight(), this.posZ, 7.0F, false, this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"));
 				this.worldObj.playBroadcastSound(1013, new BlockPos(this), 0);
 			}
 
@@ -347,7 +347,7 @@ public class EntityBabyWither extends EntityMob implements IBossDisplayData, IRa
 					}
 					else
 					{
-                        List<EntityLivingBase> list = this.worldObj.<EntityLivingBase>getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().expand(20.0D, 8.0D, 20.0D), Predicates.<EntityLivingBase>and(attackEntitySelector, EntitySelectors.NOT_SPECTATING));
+						List list = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().expand(20.0D, 8.0D, 20.0D), Predicates.and(attackEntitySelector, IEntitySelector.NOT_SPECTATING));
 
 						for (int k1 = 0; k1 < 10 && !list.isEmpty(); ++k1)
 						{
@@ -389,7 +389,7 @@ public class EntityBabyWither extends EntityMob implements IBossDisplayData, IRa
 			{
 				--this.blockBreakCounter;
 
-				if (this.blockBreakCounter == 0 && this.worldObj.getGameRules().getBoolean("mobGriefing"))
+				if (this.blockBreakCounter == 0 && this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"))
 				{
 					i = MathHelper.floor_double(this.posY);
 					i1 = MathHelper.floor_double(this.posX);

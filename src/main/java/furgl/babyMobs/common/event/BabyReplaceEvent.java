@@ -63,7 +63,7 @@ public class BabyReplaceEvent
 					event.entity.setDead();
 					EntityLiving entityToSpawn = new EntityZombieChicken(entity.worldObj);
 					entityToSpawn.setLocationAndAngles(entity.posX, entity.posY, entity.posZ,  entity.rotationYaw, 0.0F);
-					entityToSpawn.onInitialSpawn(entity.worldObj.getDifficultyForLocation(entity.getPosition()), (IEntityLivingData)null);
+					entityToSpawn.func_180482_a(entity.worldObj.getDifficultyForLocation(entity.getPosition()), (IEntityLivingData)null);
 					((EntityZombieChicken) entityToSpawn).setChickenJockey(true);
 					entity.worldObj.spawnEntityInWorld(entityToSpawn);
 					entity.mountEntity(entityToSpawn);
@@ -74,7 +74,7 @@ public class BabyReplaceEvent
 			{
 				EntityLiving entityToSpawn = new EntityZombieChicken(event.entity.worldObj);
 				entityToSpawn.setLocationAndAngles(event.entity.posX, event.entity.posY, event.entity.posZ,  event.entity.rotationYaw, 0.0F);
-				entityToSpawn.onInitialSpawn(event.entity.worldObj.getDifficultyForLocation(event.entity.getPosition()), (IEntityLivingData)null);
+				entityToSpawn.func_180482_a(event.entity.worldObj.getDifficultyForLocation(event.entity.getPosition()), (IEntityLivingData)null);
 				((EntityZombieChicken) entityToSpawn).setChickenJockey(true);
 				event.entity.worldObj.spawnEntityInWorld(entityToSpawn);
 				event.entity.mountEntity(entityToSpawn);

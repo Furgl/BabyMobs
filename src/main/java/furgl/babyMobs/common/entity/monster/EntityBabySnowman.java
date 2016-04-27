@@ -1,6 +1,6 @@
 package furgl.babyMobs.common.entity.monster;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
+import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.projectile.EntitySnowmanSnowball;
@@ -40,7 +40,7 @@ public class EntityBabySnowman extends EntityGolem implements IRangedAttackMob
 		this.experienceValue = (int)(this.experienceValue * 2.5F);
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.35D);
 		this.tasks.addTask(5, new EntityAIBabyFollowParent(this, 1.1D));
-		((PathNavigateGround)this.getNavigator()).setAvoidsWater(false);
+		((PathNavigateGround)this.getNavigator()).func_179690_a(false);
 		
 		this.tasks.addTask(1, new EntityAIArrowAttack(this, 1.25D, 20, 10.0F));
 		this.tasks.addTask(2, new EntityAIWander(this, 1.0D));
@@ -58,7 +58,7 @@ public class EntityBabySnowman extends EntityGolem implements IRangedAttackMob
     }
 	
 	@Override
-	protected boolean canDropLoot()
+	protected boolean func_146066_aG()
 	{
 		return true;
 	}

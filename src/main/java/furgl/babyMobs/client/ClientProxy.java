@@ -1,8 +1,14 @@
 package furgl.babyMobs.client;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
+import java.lang.reflect.InvocationTargetException;
+
+import furgl.babyMobs.client.gui.Achievements;
+import furgl.babyMobs.client.model.ModelBabyCreeper;
 import furgl.babyMobs.client.model.ModelBabyOcelot;
+import furgl.babyMobs.client.model.ModelBabySkeleton;
+import furgl.babyMobs.client.model.ModelBabySpider;
 import furgl.babyMobs.client.model.ModelBabySquid;
+import furgl.babyMobs.client.model.ModelBabyWitherSkeleton;
 import furgl.babyMobs.client.model.ModelZombieChicken;
 import furgl.babyMobs.client.model.ModelZombiePig;
 import furgl.babyMobs.client.particle.EntityBlazeFlamethrowerFX;
@@ -57,8 +63,8 @@ import furgl.babyMobs.common.entity.projectile.EntityCreeperExplosion;
 import furgl.babyMobs.common.entity.projectile.EntityGhastFireball;
 import furgl.babyMobs.common.entity.projectile.EntitySkeletonArrow;
 import furgl.babyMobs.common.entity.projectile.EntitySnowmanSnowball;
-import furgl.babyMobs.common.entity.projectile.EntityWitherExplosion;
 import furgl.babyMobs.common.entity.projectile.EntityWitherSkeletonSmoke;
+import furgl.babyMobs.common.entity.projectile.EntityWitherExplosion;
 import furgl.babyMobs.common.entity.projectile.EntityWitherWitherSkull;
 import furgl.babyMobs.common.item.ModItems;
 import furgl.babyMobs.util.EntitySpawner;
@@ -108,7 +114,7 @@ public class ClientProxy extends CommonProxy
 			EntityFX particle = (EntityFX) entityClass.getConstructor(World.class, double.class, double.class, double.class, EntitySpawner.class, int.class, int.class).newInstance(world, x, y, z, spawner, heightIterator, entityIterator);
 			Minecraft.getMinecraft().effectRenderer.addEffect(particle);
 		} 
-		catch (Exception e) 
+		catch (InstantiationException | IllegalAccessException | IllegalArgumentException| InvocationTargetException | NoSuchMethodException | SecurityException e) 
 		{
 			System.out.println("ERROR: ENTITYFX " + entityClass + " MISSING SPAWNER CONSTRUCTOR");
 			e.printStackTrace();
@@ -160,13 +166,12 @@ public class ClientProxy extends CommonProxy
 		spawner.run();
 	}
 
-	@SuppressWarnings("deprecation")
 	private void registerEntityRenders() 
 	{
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabySpider.class, new RenderBabySpider(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabySkeleton.class, new RenderBabySkeleton(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyCreeper.class, new RenderBabyCreeper(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyWitherSkeleton.class, new RenderBabyWitherSkeleton(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabySpider.class, new RenderBabySpider(Minecraft.getMinecraft().getRenderManager(), new ModelBabySpider(), 0));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabySkeleton.class, new RenderBabySkeleton(Minecraft.getMinecraft().getRenderManager(), new ModelBabySkeleton(), 0));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyCreeper.class, new RenderBabyCreeper(Minecraft.getMinecraft().getRenderManager(), new ModelBabyCreeper(), 0));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyWitherSkeleton.class, new RenderBabyWitherSkeleton(Minecraft.getMinecraft().getRenderManager(), new ModelBabyWitherSkeleton(), 0));
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabyEnderman.class, new RenderBabyEnderman(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabyBlaze.class, new RenderBabyBlaze(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabyWitch.class, new RenderBabyWitch(Minecraft.getMinecraft().getRenderManager()));

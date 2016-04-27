@@ -1,4 +1,4 @@
-package furgl.babyMobs.client.gui.achievements;
+package furgl.babyMobs.client.gui;
 
 import java.util.ArrayList;
 import java.util.List;

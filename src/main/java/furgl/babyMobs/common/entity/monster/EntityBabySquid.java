@@ -1,6 +1,6 @@
 package furgl.babyMobs.common.entity.monster;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
+import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.projectile.EntitySquidInk;
 import furgl.babyMobs.common.item.ModItems;
@@ -66,7 +66,7 @@ public class EntityBabySquid extends EntityWaterMob
     }
 
 	@Override
-	protected boolean canDropLoot()
+	protected boolean func_146066_aG()
 	{
 		return true;
 	}
@@ -307,7 +307,7 @@ public class EntityBabySquid extends EntityWaterMob
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void handleStatusUpdate(byte p_70103_1_)
+	public void handleHealthUpdate(byte p_70103_1_)
 	{
 		if (p_70103_1_ == 19)
 		{
@@ -315,7 +315,7 @@ public class EntityBabySquid extends EntityWaterMob
 		}
 		else
 		{
-			super.handleStatusUpdate(p_70103_1_);
+			super.handleHealthUpdate(p_70103_1_);
 		}
 	}
 

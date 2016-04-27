@@ -4,7 +4,7 @@ import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.item.projectile.ItemCaveSpiderVenom;
 import furgl.babyMobs.common.item.projectile.ItemCreeperExplosion;
 import furgl.babyMobs.common.item.projectile.ItemInvisible;
-import furgl.babyMobs.common.item.spawnEgg.ItemBabySpawnEgg;
+import furgl.babyMobs.common.item.spawnEgg.BabySpawnEgg;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -35,22 +35,22 @@ public class ModItems
 
 	public static void init() 
 	{
-		baby_spider_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babySpider"), "baby_spider_egg");
-		baby_skeleton_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babySkeleton"), "baby_skeleton_egg");
-		baby_creeper_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyCreeper"), "baby_creeper_egg");
-		baby_wither_skeleton_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyWitherSkeleton"), "baby_wither_skeleton_egg");
-		baby_enderman_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyEnderman"), "baby_enderman_egg");
-		baby_blaze_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyBlaze"), "baby_blaze_egg");
-		baby_witch_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyWitch"), "baby_witch_egg");
-		baby_guardian_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyGuardian"), "baby_guardian_egg");
-		baby_squid_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babySquid"), "baby_squid_egg");
-		baby_cave_spider_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyCaveSpider"), "baby_cave_spider_egg");
-		baby_zombie_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyZombie"), "baby_zombie_egg");
-		baby_pig_zombie_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyPigZombie"), "baby_pig_zombie_egg");
-		baby_ghast_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyGhast"), "baby_ghast_egg");
-		baby_snowman_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babySnowman"), "baby_snowman_egg");
-		baby_iron_golem_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyIronGolem"), "baby_iron_golem_egg");
-		baby_wither_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyWither"), "baby_wither_egg");
+		baby_spider_egg = registerItemWithTab(new BabySpawnEgg("babymobs.babySpider"), "baby_spider_egg");
+		baby_skeleton_egg = registerItemWithTab(new BabySpawnEgg("babymobs.babySkeleton"), "baby_skeleton_egg");
+		baby_creeper_egg = registerItemWithTab(new BabySpawnEgg("babymobs.babyCreeper"), "baby_creeper_egg");
+		baby_wither_skeleton_egg = registerItemWithTab(new BabySpawnEgg("babymobs.babyWitherSkeleton"), "baby_wither_skeleton_egg");
+		baby_enderman_egg = registerItemWithTab(new BabySpawnEgg("babymobs.babyEnderman"), "baby_enderman_egg");
+		baby_blaze_egg = registerItemWithTab(new BabySpawnEgg("babymobs.babyBlaze"), "baby_blaze_egg");
+		baby_witch_egg = registerItemWithTab(new BabySpawnEgg("babymobs.babyWitch"), "baby_witch_egg");
+		baby_guardian_egg = registerItemWithTab(new BabySpawnEgg("babymobs.babyGuardian"), "baby_guardian_egg");
+		baby_squid_egg = registerItemWithTab(new BabySpawnEgg("babymobs.babySquid"), "baby_squid_egg");
+		baby_cave_spider_egg = registerItemWithTab(new BabySpawnEgg("babymobs.babyCaveSpider"), "baby_cave_spider_egg");
+		baby_zombie_egg = registerItemWithTab(new BabySpawnEgg("babymobs.babyZombie"), "baby_zombie_egg");
+		baby_pig_zombie_egg = registerItemWithTab(new BabySpawnEgg("babymobs.babyPigZombie"), "baby_pig_zombie_egg");
+		baby_ghast_egg = registerItemWithTab(new BabySpawnEgg("babymobs.babyGhast"), "baby_ghast_egg");
+		baby_snowman_egg = registerItemWithTab(new BabySpawnEgg("babymobs.babySnowman"), "baby_snowman_egg");
+		baby_iron_golem_egg = registerItemWithTab(new BabySpawnEgg("babymobs.babyIronGolem"), "baby_iron_golem_egg");
+		baby_wither_egg = registerItemWithTab(new BabySpawnEgg("babymobs.babyWither"), "baby_wither_egg");
 
 		invisible = registerItemWithoutTab(new ItemInvisible(), "invisible");
 		cave_spider_venom = registerItemWithoutTab(new ItemCaveSpiderVenom(), "cave_spider_venom");

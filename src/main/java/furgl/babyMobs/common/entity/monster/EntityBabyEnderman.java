@@ -9,7 +9,7 @@ import java.util.UUID;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
+import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
@@ -99,7 +99,7 @@ public class EntityBabyEnderman extends EntityMob
     }
 
 	@Override
-	protected boolean canDropLoot()
+	protected boolean func_146066_aG()
 	{
 		return true;
 	}
@@ -128,10 +128,7 @@ public class EntityBabyEnderman extends EntityMob
 			if (entity instanceof FakePlayer || (entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode))
 				return null;
 			if (entity instanceof EntityPlayer)
-			{
-				this.setScreaming(true);
 				return (EntityPlayer)entity;
-			}
 			else
 				return null;
 		}
@@ -140,7 +137,6 @@ public class EntityBabyEnderman extends EntityMob
 			//if fake player or creative mode
 			if (this.getAttackTarget() instanceof FakePlayer || (this.getAttackTarget() instanceof EntityPlayer && ((EntityPlayer) this.getAttackTarget()).capabilities.isCreativeMode))
 				return null;
-			this.setScreaming(true);
 			return (this.getAttackTarget() instanceof EntityPlayer) ? (EntityPlayer) this.getAttackTarget() : null;
 		}
 	}
@@ -607,9 +603,9 @@ public class EntityBabyEnderman extends EntityMob
 		@SuppressWarnings("unchecked")
 		public boolean shouldExecute()
 		{
-			 double d0 = this.getTargetDistance();
-             List<EntityPlayer> list = this.taskOwner.worldObj.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, this.taskOwner.getEntityBoundingBox().expand(d0, 4.0D, d0), this.targetEntitySelector);
-             Collections.sort(list, this.theNearestAttackableTargetSorter);
+			double d0 = this.getTargetDistance();
+			List<?> list = this.taskOwner.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.taskOwner.getEntityBoundingBox().expand(d0, 4.0D, d0), this.targetEntitySelector);
+			Collections.sort(list, this.theNearestAttackableTargetSorter);
 
 			if (list.isEmpty())
 			{
@@ -722,7 +718,7 @@ public class EntityBabyEnderman extends EntityMob
 		@Override
 		public boolean shouldExecute()
 		{
-			return !this.field_179475_a.worldObj.getGameRules().getBoolean("mobGriefing") ? false : (this.field_179475_a.func_175489_ck().getBlock().getMaterial() == Material.air ? false : this.field_179475_a.getRNG().nextInt(2000) == 0);
+			return !this.field_179475_a.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing") ? false : (this.field_179475_a.func_175489_ck().getBlock().getMaterial() == Material.air ? false : this.field_179475_a.getRNG().nextInt(2000) == 0);
 		}
 
 		/**
@@ -762,7 +758,7 @@ public class EntityBabyEnderman extends EntityMob
 		@Override
 		public boolean shouldExecute()
 		{
-			return !this.field_179473_a.worldObj.getGameRules().getBoolean("mobGriefing") ? false : (this.field_179473_a.func_175489_ck().getBlock().getMaterial() != Material.air ? false : this.field_179473_a.getRNG().nextInt(20) == 0);
+			return !this.field_179473_a.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing") ? false : (this.field_179473_a.func_175489_ck().getBlock().getMaterial() != Material.air ? false : this.field_179473_a.getRNG().nextInt(20) == 0);
 		}
 
 		/**

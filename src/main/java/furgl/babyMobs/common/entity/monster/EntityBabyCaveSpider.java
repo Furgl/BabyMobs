@@ -1,6 +1,6 @@
 package furgl.babyMobs.common.entity.monster;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
+import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.item.ModItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -80,7 +80,7 @@ public class EntityBabyCaveSpider extends EntityBabySpider
     }
 
     @Override
-	public IEntityLivingData onInitialSpawn(DifficultyInstance p_180482_1_, IEntityLivingData p_180482_2_)
+	public IEntityLivingData func_180482_a(DifficultyInstance p_180482_1_, IEntityLivingData p_180482_2_)
     {
         return p_180482_2_;
     }

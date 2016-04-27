@@ -1,8 +1,11 @@
 package furgl.babyMobs.common.entity.monster;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
+import com.google.common.base.Predicate;
+
+import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.config.Config;
+import furgl.babyMobs.common.entity.ai.EntityAIBabyAvoidEntity;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
 import furgl.babyMobs.common.entity.projectile.EntityWitherSkeletonSmoke;
 import furgl.babyMobs.common.item.ModItems;
@@ -19,7 +22,6 @@ import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIArrowAttack;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
@@ -62,10 +64,19 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 		this.maxHurtResistantTime = 50;
 
 		this.tasks.addTask(2, new EntityAISwimming(this));
-		//this.tasks.addTask(3, this.field_175455_a); ??
-        this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityWolf.class, 6.0F, 1.0D, 1.2D));
-        this.tasks.addTask(1, new EntityAIAvoidEntity(this, EntityArrow.class, 12.0F, 1.2D, 1.6D));
-        this.tasks.addTask(1, new EntityAIAvoidEntity(this, EntityPlayer.class, 12.0F, 1.2D, 1.6D));
+		this.tasks.addTask(3, this.field_175455_a);
+		this.tasks.addTask(1, new EntityAIBabyAvoidEntity(this, new Predicate()
+		{
+			public boolean func_179945_a(Entity p_179945_1_)
+			{
+				return p_179945_1_ instanceof EntityWolf || p_179945_1_ instanceof EntityPlayer || p_179945_1_ instanceof EntityArrow;
+			}
+			@Override
+			public boolean apply(Object p_apply_1_)
+			{
+				return this.func_179945_a((Entity)p_apply_1_);
+			}
+		}, 12.0F, 1.2D, 1.6D)); //orig 6.0F, 1.0D, 1.2D
 		this.tasks.addTask(4, new EntityAIWander(this, 1.2D));
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(6, new EntityAILookIdle(this));
@@ -112,7 +123,7 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 	}
 
 	@Override
-	protected boolean canDropLoot()
+	protected boolean func_146066_aG()
 	{
 		return true;
 	}
@@ -328,7 +339,7 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 	 * Makes entity wear random armor based on difficulty
 	 */
 	@Override
-	protected void addRandomDrop()
+	protected void addRandomArmor()
 	{
 		if (this.getSkeletonType() == 1)
 		{
@@ -337,16 +348,16 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 	}
 
 	@Override
-	protected void setEquipmentBasedOnDifficulty(DifficultyInstance p_180481_1_)
+	protected void func_180481_a(DifficultyInstance p_180481_1_)
 	{
-		super.setEquipmentBasedOnDifficulty(p_180481_1_);
+		super.func_180481_a(p_180481_1_);
 		this.setCurrentItemOrArmor(0, new ItemStack(Items.bow));
 	}
 
 	@Override
-	public IEntityLivingData onInitialSpawn(DifficultyInstance p_180482_1_, IEntityLivingData p_180482_2_)
+	public IEntityLivingData func_180482_a(DifficultyInstance p_180482_1_, IEntityLivingData p_180482_2_)
 	{
-		p_180482_2_ = super.onInitialSpawn(p_180482_1_, p_180482_2_);
+		p_180482_2_ = super.func_180482_a(p_180482_1_, p_180482_2_);
 
 		if (this.worldObj.provider instanceof WorldProviderHell && this.getRNG().nextInt(5) > 0)
 		{

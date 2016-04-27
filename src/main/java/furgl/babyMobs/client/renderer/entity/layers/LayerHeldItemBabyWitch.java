@@ -75,7 +75,7 @@ public class LayerHeldItemBabyWitch implements LayerRenderer
                     GlStateManager.translate(0.0F, -0.125F, 0.0F);
                 }
 
-                this.field_177144_a.transformHeldFull3DItemLayer();
+                this.field_177144_a.func_82422_c();
                 f8 = 0.625F;
                 GlStateManager.scale(f8, -f8, f8);
                 GlStateManager.rotate(-100.0F, 1.0F, 0.0F, 0.0F);

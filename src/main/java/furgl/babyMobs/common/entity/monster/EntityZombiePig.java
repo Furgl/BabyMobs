@@ -65,6 +65,9 @@ public class EntityZombiePig extends EntityPig
 	@Override
 	public void onUpdate()
 	{
+		//TODO ANGER NOT WORKING PROPERLY - ALSO ADD ANGER WHEN PIGMEN ATTACKED AND MAYBE STUFF IN
+		//ATTACKBABYAI FOR CHICKEN AND PIG
+		
 		//sync anger with rider
 		if (!this.worldObj.isRemote)
 		{
@@ -78,8 +81,6 @@ public class EntityZombiePig extends EntityPig
 					this.recentlyHit = this.getRevengeTimer();
 				}
 			}
-			else if (this.getAttackTarget() instanceof EntityPlayer && !(this.getAttackTarget() instanceof FakePlayer) && ((EntityPlayer) this.getAttackTarget()).capabilities.isCreativeMode)
-				this.setAttackTarget(null);
 		}
 
 		if (!this.worldObj.isRemote && this.worldObj.getDifficulty() == EnumDifficulty.PEACEFUL)
@@ -169,7 +170,7 @@ public class EntityZombiePig extends EntityPig
 				p_70652_1_.setFire(j * 4);
 			}
 
-			this.applyEnchantments(this, p_70652_1_);
+			this.func_174815_a(this, p_70652_1_);
 		}
 
 		return flag;
