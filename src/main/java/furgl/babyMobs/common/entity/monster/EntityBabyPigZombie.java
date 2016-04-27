@@ -3,7 +3,6 @@ package furgl.babyMobs.common.entity.monster;
 import java.util.Collections;
 import java.util.List;
 
-import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
@@ -16,7 +15,6 @@ import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -24,24 +22,47 @@ import net.minecraftforge.common.util.FakePlayer;
 
 public class EntityBabyPigZombie extends EntityPigZombie
 {
+	private EntityAIBabyHurtByTarget hurtAi = new EntityAIBabyHurtByTarget(this, true, new Class[0]);
+	private EntityAIBabyFollowParent followAi = new EntityAIBabyFollowParent(this, 1.1D, this.isAIEnabled());
 	private Sorter theNearestAttackableTargetSorter;
 
-	public EntityBabyPigZombie(World worldIn)
-	{
+	public EntityBabyPigZombie(World worldIn) {
 		super(worldIn);
 		this.setChild(true);
-		this.tasks.addTask(5, new EntityAIBabyFollowParent(this, 1.1D));
-		this.targetTasks.addTask(1, new EntityAIBabyHurtByTarget(this, true, new Class[0]));
 		this.theNearestAttackableTargetSorter = new EntityAINearestAttackableTarget.Sorter(this);
-	}	
-    
+	}
+
+	//TODO hurtAi
 	@Override
-	public void onDeath(DamageSource cause) //first achievement
-    {
-		if (!this.worldObj.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-			((EntityPlayer)cause.getEntity()).triggerAchievement(Achievements.achievementWhyAreTheySoStrong);
-		super.onDeath(cause);
-    }
+	public boolean attackEntityFrom(DamageSource source, float amount)
+	{
+		if (source.getEntity() instanceof EntityPlayer)
+		{
+			this.setRevengeTarget((EntityLivingBase) source.getEntity());
+			if (this.hurtAi.shouldExecute())
+				this.hurtAi.startExecuting();
+		}
+		return super.attackEntityFrom(source, amount);
+	}
+	//end
+
+	@Override
+	public void onLivingUpdate()
+	{
+		//TODO followAI
+		if (this.getAttackTarget() == null && this.followAi.shouldExecute())
+		{
+			if (this.followAi.parent != null && this.rand.nextInt(10) == 0)
+			{
+				this.followAi.startExecuting();
+				this.followAi.updateTask();
+			}
+			else
+				this.followAi.resetTask();
+		}
+		//end
+		super.onLivingUpdate();
+	}
 
 	@Override
 	public ItemStack getPickedResult(MovingObjectPosition target)
@@ -52,7 +73,7 @@ public class EntityBabyPigZombie extends EntityPigZombie
 	@Override
 	public double getYOffset()
 	{
-		return super.getYOffset() + 0.4D;
+		return super.getYOffset();
 	}
 
 	@Override
@@ -63,7 +84,7 @@ public class EntityBabyPigZombie extends EntityPigZombie
 		//Sync anger with zombie pig
 		if (!this.worldObj.isRemote)
 		{
-			if (!this.isAngry() && this.ridingEntity instanceof EntityZombiePig &&((EntityZombiePig)this.ridingEntity).getAttackTarget() != null)
+			if (this.getAttackTarget() == null && this.ridingEntity instanceof EntityZombiePig &&((EntityZombiePig)this.ridingEntity).getAttackTarget() != null)
 			{
 				EntityLivingBase target = ((EntityZombiePig) this.ridingEntity).getAttackTarget();
 				if ((((EntityZombiePig)this.ridingEntity).getAttackTarget() != null) && target != null && target instanceof EntityPlayer && !(target instanceof FakePlayer))
@@ -77,7 +98,7 @@ public class EntityBabyPigZombie extends EntityPigZombie
 		if (Config.useSpecialAbilities && this.ticksExisted % 50 == 0 && !this.isRiding())
 		{
 			double d0 = 35.0D;
-			List list = this.worldObj.getEntitiesWithinAABB(EntityPig.class, this.getEntityBoundingBox().expand(d0, 4.0D, d0), null);
+			List list = this.worldObj.getEntitiesWithinAABB(EntityPig.class, this.boundingBox.expand(d0, 4.0D, d0));
 			Collections.sort(list, this.theNearestAttackableTargetSorter);
 			if (!list.isEmpty())
 			{
@@ -86,6 +107,7 @@ public class EntityBabyPigZombie extends EntityPigZombie
 					if (list.get(i).getClass().equals(EntityPig.class))
 					{
 						this.setAttackTarget((EntityLivingBase) list.get(i));
+						this.entityToAttack = (EntityLivingBase) list.get(i);
 						break;
 					}
 				}
@@ -116,7 +138,7 @@ public class EntityBabyPigZombie extends EntityPigZombie
 			entityzombiepig.copyLocationAndAnglesFrom(entityLivingIn);
 			this.worldObj.removeEntity(entityLivingIn);
 			((EntityPig)entityLivingIn).setGrowingAge(-2000000);
-			entityzombiepig.func_180482_a(this.worldObj.getDifficultyForLocation(new BlockPos(entityzombiepig)), (IEntityLivingData)null);
+			entityzombiepig.onSpawnWithEgg((IEntityLivingData)null);
 			this.worldObj.spawnEntityInWorld(entityzombiepig);
 			this.mountEntity(entityzombiepig);
 			entityzombiepig.playLivingSound();

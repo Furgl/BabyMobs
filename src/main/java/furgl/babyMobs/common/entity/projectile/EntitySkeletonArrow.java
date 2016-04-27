@@ -12,7 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionHelper;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public class EntitySkeletonArrow extends EntityArrow
@@ -80,7 +79,7 @@ public class EntitySkeletonArrow extends EntityArrow
 		}
 		if (this.worldObj.isRemote)
 		{
-			this.worldObj.spawnParticle(EnumParticleTypes.SPELL_MOB, this.posX + (this.rand.nextDouble() - 0.5D) * this.width, this.posY + this.rand.nextDouble() * this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * this.width, this.red, this.green, this.blue, new int[0]);
+			this.worldObj.spawnParticle("mobSpell", this.posX + (this.rand.nextDouble() - 0.5D) * this.width, this.posY + this.rand.nextDouble() * this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * this.width, this.red, this.green, this.blue);
 		}
 	}
 

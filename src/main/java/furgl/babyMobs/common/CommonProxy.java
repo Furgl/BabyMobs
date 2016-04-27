@@ -31,4 +31,5 @@ public class CommonProxy
 	public void spawnEntityDragonParticlesFX(EntityBabyDragon entityBabyDragon) { }
 
 	public void spawnEntitySquidInkFX(World worldObj, double x, double y, double z, int motionX, int motionY, int motionZ) { }
+
 }

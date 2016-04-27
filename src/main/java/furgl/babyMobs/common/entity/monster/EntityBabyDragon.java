@@ -2,24 +2,25 @@ package furgl.babyMobs.common.entity.monster;
 
 import furgl.babyMobs.common.BabyMobs;
 import net.minecraft.block.BlockDragonEgg;
+import net.minecraft.block.BlockEndPortal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IEntityMultiPart;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.boss.EntityDragonPart;
+import net.minecraft.entity.boss.IBossDisplayData;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData, */IEntityMultiPart, IMob
+public class EntityBabyDragon extends EntityLiving implements IBossDisplayData, IEntityMultiPart, IMob
 {
 	public double targetX;
 	public double targetY;
@@ -47,15 +48,15 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 	public boolean forceNewTarget;
 	/** Activated if the dragon is flying though obsidian, white stone or bedrock. Slows movement and animation speed. */
 	public boolean slowed;
-	private BlockPos target;
+	private Vec3 target;
 	public int deathTicks;
 
 	public Vec3 dragonEgg;
 	private boolean hasDragonEgg;
 
-	public EntityBabyDragon(World worldIn)
+	public EntityBabyDragon(World world)
 	{
-		super(worldIn);
+		super(world);
 		this.setSize(0.2F, 0.2F);
 		this.targetY = 80.0D;
 		if (!this.worldObj.isRemote)
@@ -76,6 +77,13 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 		this.hasDragonEgg = true;
 	}
 
+	//TODO sound and middle click
+	@Override
+	protected boolean func_146066_aG()
+	{
+		return true;
+	}
+
 	@Override
 	public ItemStack getPickedResult(MovingObjectPosition target)
 	{
@@ -87,12 +95,13 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 	{
 		return true;
 	}
+	//end
 
 	@Override
 	protected void applyEntityAttributes()
 	{
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(150.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(200.0D);
 	}
 
 	@Override
@@ -129,13 +138,35 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 		return adouble;
 	}
 
+	public boolean findDragonEgg()
+	{
+		if (this.dragonEgg != null)
+		{
+			for (int x=(int) (this.dragonEgg.xCoord-2); x<=this.dragonEgg.xCoord+2; x++)
+			{
+				for (int y=(int) (this.dragonEgg.yCoord-2); y<=this.dragonEgg.yCoord+2; y++)
+				{
+					for (int z=(int) (this.dragonEgg.zCoord-2); z<=this.dragonEgg.zCoord+2; z++)
+					{
+						if (this.worldObj.getBlock(x, y, z) instanceof BlockDragonEgg)
+						{
+							this.dragonEgg = Vec3.createVectorHelper(x, y, z); 
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
 	 * use this to react to sunlight and start to burn.
 	 */
 	@Override
 	public void onLivingUpdate()
-	{    	
+	{
 		//TODO spawning
 		if (!this.worldObj.isRemote && this.ticksExisted == 1)
 		{
@@ -155,7 +186,7 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 			}
 			else //server and already spawned with egg
 			{
-				this.dragonEgg = new Vec3(this.getEntityData().getIntArray("dragonEgg")[0], this.getEntityData().getIntArray("dragonEgg")[1], this.getEntityData().getIntArray("dragonEgg")[2]);
+				this.dragonEgg = Vec3.createVectorHelper(this.getEntityData().getIntArray("dragonEgg")[0], this.getEntityData().getIntArray("dragonEgg")[1], this.getEntityData().getIntArray("dragonEgg")[2]);
 				this.dataWatcher.updateObject(29, (int) dragonEgg.xCoord);
 				this.dataWatcher.updateObject(30, (int) dragonEgg.yCoord);
 				this.dataWatcher.updateObject(31, (int) dragonEgg.zCoord);
@@ -163,16 +194,18 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 			}
 		}
 
-		if (this.worldObj.isRemote && this.ticksExisted == 2)
+		if (this.worldObj.isRemote && this.ticksExisted == 50)
 		{
-			this.dragonEgg = new Vec3(this.dataWatcher.getWatchableObjectInt(29), this.dataWatcher.getWatchableObjectInt(30), this.dataWatcher.getWatchableObjectInt(31));
-			if (!(this.worldObj.getBlockState(new BlockPos(this.dragonEgg)).getBlock() instanceof BlockDragonEgg))
+			this.dragonEgg = Vec3.createVectorHelper(this.dataWatcher.getWatchableObjectInt(29), this.dataWatcher.getWatchableObjectInt(30), this.dataWatcher.getWatchableObjectInt(31));
+			if (!this.findDragonEgg())
 				this.hasDragonEgg = false;
 			else
 				this.hasDragonEgg = true;
 		}
-
-		if (!this.hasDragonEgg && this.ticksExisted > 2 || !this.worldObj.isRemote && this.hasDragonEgg && !(this.worldObj.getBlockState(new BlockPos(this.dragonEgg)).getBlock() instanceof BlockDragonEgg))
+		if (this.ticksExisted == 50)
+			this.findDragonEgg();
+		
+		if (this.ticksExisted > 50 && (!this.hasDragonEgg && this.ticksExisted > 2 || !this.worldObj.isRemote && this.hasDragonEgg  && !(this.worldObj.getBlock((int) this.dragonEgg.xCoord, (int) this.dragonEgg.yCoord, (int) this.dragonEgg.zCoord) instanceof BlockDragonEgg)))
 			this.setDead();
 
 		if (this.hasDragonEgg)
@@ -180,7 +213,7 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 			if (this.ticksExisted == 3)
 				this.targetY = this.dragonEgg.yCoord + 2D;
 			else if (this.ticksExisted % 40 == 0)
-				this.target = new BlockPos(this.dragonEgg.addVector(rand.nextInt(5)-2, rand.nextDouble()*3, rand.nextInt(5)-2));
+				this.target = this.dragonEgg.addVector(rand.nextInt(5)-2, rand.nextDouble()*3, rand.nextInt(5)-2);
 
 			if (this.worldObj.isRemote)
 			{
@@ -188,7 +221,7 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 				{
 					BabyMobs.proxy.spawnEntityDragonParticlesFX(this);
 				}
-				this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.dragonEgg.xCoord+rand.nextDouble(), this.dragonEgg.yCoord+rand.nextDouble(), this.dragonEgg.zCoord+rand.nextDouble(), 0,0,0, new int[0]);
+				this.worldObj.spawnParticle("smoke", this.dragonEgg.xCoord+rand.nextDouble(), this.dragonEgg.yCoord+rand.nextDouble(), this.dragonEgg.zCoord+rand.nextDouble(), 0,0,0);
 			}
 		}
 		//end
@@ -201,7 +234,7 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 			f = MathHelper.cos(this.animTime * (float)Math.PI * 2.0F);
 			f1 = MathHelper.cos(this.prevAnimTime * (float)Math.PI * 2.0F);
 
-			if (f1 <= -0.3F && f >= -0.3F && !this.isSilent())
+			if (f1 <= -0.3F && f >= -0.3F)
 			{
 				this.worldObj.playSound(this.posX, this.posY, this.posZ, "mob.enderdragon.wings", this.getSoundVolume(), 0.8F + this.rand.nextFloat() * 0.3F, false);
 			}
@@ -215,10 +248,11 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 			f = (this.rand.nextFloat() - 0.5F) * 8.0F;
 			f1 = (this.rand.nextFloat() - 0.5F) * 4.0F;
 			f2 = (this.rand.nextFloat() - 0.5F) * 8.0F;
-			this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX + f, this.posY + 2.0D + f1, this.posZ + f2, 0.0D, 0.0D, 0.0D, new int[0]);
+			this.worldObj.spawnParticle("largeexplode", this.posX + f, this.posY + 2.0D + f1, this.posZ + f2, 0.0D, 0.0D, 0.0D);
 		}
 		else
 		{
+			//this.updateDragonEnderCrystal();
 			f = 0.2F / (MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ) * 10.0F + 1.0F);
 			f *= (float)Math.pow(2.0D, this.motionY);
 
@@ -276,23 +310,22 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 				d0 = this.targetY - this.posY;
 				d1 = this.targetZ - this.posZ;
 				d2 = d10 * d10 + d0 * d0 + d1 * d1;
-				double d8;
 
 				if (this.target != null)
 				{
-					this.targetX = this.target.getX();
-					this.targetZ = this.target.getZ();
+					this.targetX = this.target.xCoord;
+					this.targetZ = this.target.zCoord;
 					double d3 = this.targetX - this.posX;
 					double d5 = this.targetZ - this.posZ;
 					double d7 = Math.sqrt(d3 * d3 + d5 * d5);
-					d8 = 0.4000000059604645D + d7 / 80.0D - 1.0D;
+					double d8 = 0.4000000059604645D + d7 / 80.0D - 1.0D;
 
 					if (d8 > 10.0D)
 					{
 						d8 = 10.0D;
 					}
 
-					this.targetY = this.target.getY()+2D + d8; //TODO target height
+					this.targetY = this.target.yCoord+2D + d8; //TODO target height
 				}
 				else
 				{
@@ -307,7 +340,17 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 
 				d0 /= MathHelper.sqrt_double(d10 * d10 + d1 * d1);
 				f12 = 0.6F;
-				d0 = MathHelper.clamp_double(d0, (-f12), f12);
+
+				if (d0 < (-f12))
+				{
+					d0 = (-f12);
+				}
+
+				if (d0 > f12)
+				{
+					d0 = f12;
+				}
+
 				this.motionY += d0 * 0.10000000149011612D;
 				this.rotationYaw = MathHelper.wrapAngleTo180_float(this.rotationYaw);
 				double d4 = 180.0D - Math.atan2(d10, d1) * 180.0D / Math.PI;
@@ -323,10 +366,9 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 					d6 = -50.0D;
 				}
 
-				Vec3 vec3 = (new Vec3(this.targetX - this.posX, this.targetY - this.posY, this.targetZ - this.posZ)).normalize();
-				d8 = (-MathHelper.cos(this.rotationYaw * (float)Math.PI / 180.0F));
-				Vec3 vec31 = (new Vec3(MathHelper.sin(this.rotationYaw * (float)Math.PI / 180.0F), this.motionY, d8)).normalize();
-				float f5 = ((float)vec31.dotProduct(vec3) + 0.5F) / 1.5F;
+				Vec3 vec3 = Vec3.createVectorHelper(this.targetX - this.posX, this.targetY - this.posY, this.targetZ - this.posZ).normalize();
+				Vec3 vec32 = Vec3.createVectorHelper(MathHelper.sin(this.rotationYaw * (float)Math.PI / 180.0F), this.motionY, (-MathHelper.cos(this.rotationYaw * (float)Math.PI / 180.0F))).normalize();
+				float f5 = (float)(vec32.dotProduct(vec3) + 0.5D) / 1.5F;
 
 				if (f5 < 0.0F)
 				{
@@ -350,8 +392,8 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 
 				this.moveEntity(this.motionX * 0.2D, this.motionY * 0.2D, this.motionZ * 0.2D); //TODO slow
 
-				Vec3 vec32 = (new Vec3(this.motionX, this.motionY, this.motionZ)).normalize();
-				float f9 = ((float)vec32.dotProduct(vec31) + 1.0F) / 2.0F;
+				Vec3 vec31 = Vec3.createVectorHelper(this.motionX, this.motionY, this.motionZ).normalize();
+				float f9 = (float)(vec31.dotProduct(vec32) + 1.0D) / 2.0F;
 				f9 = 0.8F + 0.15F * f9;
 				this.motionX *= f9;
 				this.motionZ *= f9;
@@ -381,6 +423,13 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 			this.dragonPartWing1.setLocationAndAngles(this.posX + f4 * 4.5F, this.posY + 2.0D, this.posZ + f11 * 4.5F, 0.0F, 0.0F);
 			this.dragonPartWing2.onUpdate();
 			this.dragonPartWing2.setLocationAndAngles(this.posX - f4 * 4.5F, this.posY + 2.0D, this.posZ - f11 * 4.5F, 0.0F, 0.0F);
+			//TODO removed collisions
+			/* if (!this.worldObj.isRemote && this.hurtTime == 0)
+            {
+                this.collideWithEntities(this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.dragonPartWing1.boundingBox.expand(4.0D, 2.0D, 4.0D).offset(0.0D, -2.0D, 0.0D)));
+                this.collideWithEntities(this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.dragonPartWing2.boundingBox.expand(4.0D, 2.0D, 4.0D).offset(0.0D, -2.0D, 0.0D)));
+                this.attackEntitiesInList(this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.dragonPartHead.boundingBox.expand(1.0D, 1.0D, 1.0D)));
+            }*/
 
 			double[] adouble1 = this.getMovementOffsets(5, 1.0F);
 			double[] adouble = this.getMovementOffsets(0, 1.0F);
@@ -417,16 +466,132 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 				entitydragonpart.onUpdate();
 				entitydragonpart.setLocationAndAngles(this.posX - (f11 * f17 + f15 * f18) * f2, this.posY + (adouble2[1] - adouble1[1]) * 1.0D - (f18 + f17) * f10 + 1.5D, this.posZ + (f4 * f17 + f16 * f18) * f2, 0.0F, 0.0F);
 			}
+
+			if (!this.worldObj.isRemote)
+			{
+				//this.slowed = this.destroyBlocksInAABB(this.dragonPartHead.boundingBox) | this.destroyBlocksInAABB(this.dragonPartBody.boundingBox);
+			}
 		}
 	}
 
+	//TODO removed
+	/* *//**
+	 * Updates the state of the enderdragon's current endercrystal.
+	 *//*
+    private void updateDragonEnderCrystal()
+    {
+        if (this.healingEnderCrystal != null)
+        {
+            if (this.healingEnderCrystal.isDead)
+            {
+                if (!this.worldObj.isRemote)
+                {
+                    this.attackEntityFromPart(this.dragonPartHead, DamageSource.setExplosionSource((Explosion)null), 10.0F);
+                }
+
+                this.healingEnderCrystal = null;
+            }
+            else if (this.ticksExisted % 10 == 0 && this.getHealth() < this.getMaxHealth())
+            {
+                this.setHealth(this.getHealth() + 1.0F);
+            }
+        }
+
+        if (this.rand.nextInt(10) == 0)
+        {
+            float f = 32.0F;
+            List list = this.worldObj.getEntitiesWithinAABB(EntityEnderCrystal.class, this.boundingBox.expand((double)f, (double)f, (double)f));
+            EntityEnderCrystal entityendercrystal = null;
+            double d0 = Double.MAX_VALUE;
+            Iterator iterator = list.iterator();
+
+            while (iterator.hasNext())
+            {
+                EntityEnderCrystal entityendercrystal1 = (EntityEnderCrystal)iterator.next();
+                double d1 = entityendercrystal1.getDistanceSqToEntity(this);
+
+                if (d1 < d0)
+                {
+                    d0 = d1;
+                    entityendercrystal = entityendercrystal1;
+                }
+            }
+
+            this.healingEnderCrystal = entityendercrystal;
+        }
+    }
+
+	  *//**
+	  * Pushes all entities inside the list away from the enderdragon.
+	  *//*
+    private void collideWithEntities(List p_70970_1_)
+    {
+        double d0 = (this.dragonPartBody.boundingBox.minX + this.dragonPartBody.boundingBox.maxX) / 2.0D;
+        double d1 = (this.dragonPartBody.boundingBox.minZ + this.dragonPartBody.boundingBox.maxZ) / 2.0D;
+        Iterator iterator = p_70970_1_.iterator();
+
+        while (iterator.hasNext())
+        {
+            Entity entity = (Entity)iterator.next();
+
+            if (entity instanceof EntityLivingBase)
+            {
+                double d2 = entity.posX - d0;
+                double d3 = entity.posZ - d1;
+                double d4 = d2 * d2 + d3 * d3;
+                entity.addVelocity(d2 / d4 * 4.0D, 0.20000000298023224D, d3 / d4 * 4.0D);
+            }
+        }
+    }
+
+	   *//**
+	   * Attacks all entities inside this list, dealing 5 hearts of damage.
+	   *//*
+    private void attackEntitiesInList(List p_70971_1_)
+    {
+        for (int i = 0; i < p_70971_1_.size(); ++i)
+        {
+            Entity entity = (Entity)p_70971_1_.get(i);
+
+            if (entity instanceof EntityLivingBase)
+            {
+                entity.attackEntityFrom(DamageSource.causeMobDamage(this), 10.0F);
+            }
+        }
+    }*/
 
 	/**
 	 * Sets a new target for the flight AI. It can be a random coordinate or a nearby player.
 	 */
 	private void setNewTarget()
 	{
+		//TODO removed
+		/* this.forceNewTarget = false;
 
+        if (this.rand.nextInt(2) == 0 && !this.worldObj.playerEntities.isEmpty())
+        {
+            this.target = (Entity)this.worldObj.playerEntities.get(this.rand.nextInt(this.worldObj.playerEntities.size()));
+        }
+        else
+        {
+            boolean flag = false;
+
+            do
+            {
+                this.targetX = 0.0D;
+                this.targetY = (double)(70.0F + this.rand.nextFloat() * 50.0F);
+                this.targetZ = 0.0D;
+                this.targetX += (double)(this.rand.nextFloat() * 120.0F - 60.0F);
+                this.targetZ += (double)(this.rand.nextFloat() * 120.0F - 60.0F);
+                double d0 = this.posX - this.targetX;
+                double d1 = this.posY - this.targetY;
+                double d2 = this.posZ - this.targetZ;
+                flag = d0 * d0 + d1 * d1 + d2 * d2 > 100.0D;
+            }
+            while (!flag);
+
+            this.target = null;
+        }*/
 	}
 
 	/**
@@ -436,7 +601,78 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 	{
 		return (float)MathHelper.wrapAngleTo180_double(p_70973_1_);
 	}
+	/* TODO remove
+	 *//**
+	 * Destroys all blocks that aren't associated with 'The End' inside the given bounding box.
+	 *//*
+    private boolean destroyBlocksInAABB(AxisAlignedBB p_70972_1_)
+    {
+        int i = MathHelper.floor_double(p_70972_1_.minX);
+        int j = MathHelper.floor_double(p_70972_1_.minY);
+        int k = MathHelper.floor_double(p_70972_1_.minZ);
+        int l = MathHelper.floor_double(p_70972_1_.maxX);
+        int i1 = MathHelper.floor_double(p_70972_1_.maxY);
+        int j1 = MathHelper.floor_double(p_70972_1_.maxZ);
+        boolean flag = false;
+        boolean flag1 = false;
 
+        for (int k1 = i; k1 <= l; ++k1)
+        {
+            for (int l1 = j; l1 <= i1; ++l1)
+            {
+                for (int i2 = k; i2 <= j1; ++i2)
+                {
+                    Block block = this.worldObj.getBlock(k1, l1, i2);
+
+                    if (!block.isAir(worldObj, k1, l1, i2))
+                    {
+                        if (block.canEntityDestroy(worldObj, k1, l1, i2, this) && this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"))
+                        {
+                            flag1 = this.worldObj.setBlockToAir(k1, l1, i2) || flag1;
+                        }
+                        else
+                        {
+                            flag = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (flag1)
+        {
+            double d1 = p_70972_1_.minX + (p_70972_1_.maxX - p_70972_1_.minX) * (double)this.rand.nextFloat();
+            double d2 = p_70972_1_.minY + (p_70972_1_.maxY - p_70972_1_.minY) * (double)this.rand.nextFloat();
+            double d0 = p_70972_1_.minZ + (p_70972_1_.maxZ - p_70972_1_.minZ) * (double)this.rand.nextFloat();
+            this.worldObj.spawnParticle("largeexplode", d1, d2, d0, 0.0D, 0.0D, 0.0D);
+        }
+
+        return flag;
+    }
+
+    public boolean attackEntityFromPart(EntityDragonPart p_70965_1_, DamageSource p_70965_2_, float p_70965_3_)
+    {
+        if (p_70965_1_ != this.dragonPartHead)
+        {
+            p_70965_3_ = p_70965_3_ / 4.0F + 1.0F;
+        }
+
+        float f1 = this.rotationYaw * (float)Math.PI / 180.0F;
+        float f2 = MathHelper.sin(f1);
+        float f3 = MathHelper.cos(f1);
+        this.targetX = this.posX + (double)(f2 * 5.0F) + (double)((this.rand.nextFloat() - 0.5F) * 2.0F);
+        this.targetY = this.posY + (double)(this.rand.nextFloat() * 3.0F) + 1.0D;
+        this.targetZ = this.posZ - (double)(f3 * 5.0F) + (double)((this.rand.nextFloat() - 0.5F) * 2.0F);
+        this.target = null;
+
+        if (p_70965_2_.getEntity() instanceof EntityPlayer || p_70965_2_.isExplosion())
+        {
+            this.func_82195_e(p_70965_2_, p_70965_3_);
+        }
+
+        return true;
+    }
+	  */
 	/**
 	 * Called when the entity is attacked.
 	 */
@@ -446,15 +682,124 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 		return false;
 	}
 
+	protected boolean func_82195_e(DamageSource p_82195_1_, float p_82195_2_)
+	{
+		return super.attackEntityFrom(p_82195_1_, p_82195_2_);
+	}
+
 	/**
-	 * Called by the /kill command.
+	 * handles entity death timer, experience orb and particle creation
 	 */
 	@Override
-	public void onKillCommand()//TODO onKill
+	protected void onDeathUpdate()
 	{
-		if (!this.hasDragonEgg)
+		++this.deathTicks;
+
+		if (this.deathTicks >= 180 && this.deathTicks <= 200)
+		{
+			float f = (this.rand.nextFloat() - 0.5F) * 8.0F;
+			float f1 = (this.rand.nextFloat() - 0.5F) * 4.0F;
+			float f2 = (this.rand.nextFloat() - 0.5F) * 8.0F;
+			this.worldObj.spawnParticle("hugeexplosion", this.posX + f, this.posY + 2.0D + f1, this.posZ + f2, 0.0D, 0.0D, 0.0D);
+		}
+
+		int i;
+		int j;
+
+		if (!this.worldObj.isRemote)
+		{
+			if (this.deathTicks > 150 && this.deathTicks % 5 == 0)
+			{
+				i = 1000;
+
+				while (i > 0)
+				{
+					j = EntityXPOrb.getXPSplit(i);
+					i -= j;
+					this.worldObj.spawnEntityInWorld(new EntityXPOrb(this.worldObj, this.posX, this.posY, this.posZ, j));
+				}
+			}
+
+			if (this.deathTicks == 1)
+			{
+				this.worldObj.playBroadcastSound(1018, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+			}
+		}
+
+		this.moveEntity(0.0D, 0.10000000149011612D, 0.0D);
+		this.renderYawOffset = this.rotationYaw += 20.0F;
+
+		if (this.deathTicks == 200 && !this.worldObj.isRemote)
+		{
+			i = 2000;
+
+			while (i > 0)
+			{
+				j = EntityXPOrb.getXPSplit(i);
+				i -= j;
+				this.worldObj.spawnEntityInWorld(new EntityXPOrb(this.worldObj, this.posX, this.posY, this.posZ, j));
+			}
+
+			this.createEnderPortal(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posZ));
 			this.setDead();
-		return;
+		}
+	}
+
+	/**
+	 * Creates the ender portal leading back to the normal world after defeating the enderdragon.
+	 */
+	private void createEnderPortal(int p_70975_1_, int p_70975_2_)
+	{
+		byte b0 = 64;
+		BlockEndPortal.field_149948_a = true;
+		byte b1 = 4;
+
+		for (int k = b0 - 1; k <= b0 + 32; ++k)
+		{
+			for (int l = p_70975_1_ - b1; l <= p_70975_1_ + b1; ++l)
+			{
+				for (int i1 = p_70975_2_ - b1; i1 <= p_70975_2_ + b1; ++i1)
+				{
+					double d0 = l - p_70975_1_;
+					double d1 = i1 - p_70975_2_;
+					double d2 = d0 * d0 + d1 * d1;
+
+					if (d2 <= (b1 - 0.5D) * (b1 - 0.5D))
+					{
+						if (k < b0)
+						{
+							if (d2 <= (b1 - 1 - 0.5D) * (b1 - 1 - 0.5D))
+							{
+								this.worldObj.setBlock(l, k, i1, Blocks.bedrock);
+							}
+						}
+						else if (k > b0)
+						{
+							this.worldObj.setBlock(l, k, i1, Blocks.air);
+						}
+						else if (d2 > (b1 - 1 - 0.5D) * (b1 - 1 - 0.5D))
+						{
+							this.worldObj.setBlock(l, k, i1, Blocks.bedrock);
+						}
+						else
+						{
+							this.worldObj.setBlock(l, k, i1, Blocks.end_portal);
+						}
+					}
+				}
+			}
+		}
+
+		this.worldObj.setBlock(p_70975_1_, b0 + 0, p_70975_2_, Blocks.bedrock);
+		this.worldObj.setBlock(p_70975_1_, b0 + 1, p_70975_2_, Blocks.bedrock);
+		this.worldObj.setBlock(p_70975_1_, b0 + 2, p_70975_2_, Blocks.bedrock);
+		this.worldObj.setBlock(p_70975_1_ - 1, b0 + 2, p_70975_2_, Blocks.torch);
+		this.worldObj.setBlock(p_70975_1_ + 1, b0 + 2, p_70975_2_, Blocks.torch);
+		this.worldObj.setBlock(p_70975_1_, b0 + 2, p_70975_2_ - 1, Blocks.torch);
+		this.worldObj.setBlock(p_70975_1_, b0 + 2, p_70975_2_ + 1, Blocks.torch);
+		this.worldObj.setBlock(p_70975_1_, b0 + 3, p_70975_2_, Blocks.bedrock);
+		this.worldObj.setBlock(p_70975_1_, b0 + 4, p_70975_2_, Blocks.dragon_egg);
+		BlockEndPortal.field_149948_a = false;
 	}
 
 	/**
@@ -482,7 +827,7 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 	}
 
 	@Override
-	public World getWorld()
+	public World func_82194_d()
 	{
 		return this.worldObj;
 	}

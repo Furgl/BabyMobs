@@ -3,9 +3,7 @@ package furgl.babyMobs.common.block;
 import java.util.Random;
 
 import net.minecraft.block.BlockWeb;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
-import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 public class BlockDisappearingWeb extends BlockWeb
@@ -18,11 +16,11 @@ public class BlockDisappearingWeb extends BlockWeb
 	}
 	
 	@Override
-	public void randomTick(World world, BlockPos pos, IBlockState state, Random random)
+	public void updateTick(World world, int x, int y, int z, Random random)
 	{
 		if (!world.isRemote)
 		{
-			world.setBlockToAir(pos);
+			world.setBlockToAir(x, y, z);
 		}
 	}
 
@@ -32,7 +30,7 @@ public class BlockDisappearingWeb extends BlockWeb
 	 * @param fortune the level of the Fortune enchantment on the player's tool
 	 */
 	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune)
+	public Item getItemDropped(int meta, Random rand, int fortune)
 	{
 		return null;
 	}
@@ -41,14 +39,5 @@ public class BlockDisappearingWeb extends BlockWeb
 	protected boolean canSilkHarvest()
 	{
 		return false;
-	}
-
-	@Override
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
-	{
-		if (!worldIn.isRemote)
-		{
-			//worldIn.setBlockToAir(pos);
-		}
 	}
 }

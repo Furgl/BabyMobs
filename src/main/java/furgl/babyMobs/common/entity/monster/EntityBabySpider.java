@@ -2,40 +2,28 @@ package furgl.babyMobs.common.entity.monster;
 
 import java.util.Random;
 
-import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.block.ModBlocks;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
-import furgl.babyMobs.common.entity.ai.EntityAIBabyLeapAtTarget;
 import furgl.babyMobs.common.entity.projectile.EntityCaveSpiderVenom;
 import furgl.babyMobs.common.item.ModItems;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.pathfinding.PathNavigateClimber;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
@@ -44,36 +32,17 @@ public class EntityBabySpider extends EntityMob
 {
 	protected boolean spitting = false;
 	protected int spittingCounter = 0;
+	private EntityAIBabyHurtByTarget hurtAi = new EntityAIBabyHurtByTarget(this, true, new Class[0]);
+	private EntityAIBabyFollowParent followAi = new EntityAIBabyFollowParent(this, 1.1D, this.isAIEnabled());
 
-	public EntityBabySpider(World worldIn)
+	public EntityBabySpider(World p_i1743_1_)
 	{
-		super(worldIn);
+		super(p_i1743_1_);
 		this.setSize(0.8F, 0.5F);
 		this.experienceValue = (int)(this.experienceValue * 2.5F);
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.35D);
-		this.tasks.addTask(5, new EntityAIBabyFollowParent(this, 1.1D));
-		this.targetTasks.addTask(1, new EntityAIBabyHurtByTarget(this, true, new Class[0]));
-
-		this.tasks.addTask(1, new EntityAISwimming(this));
-		this.tasks.addTask(2, this.field_175455_a);
-		this.tasks.addTask(3, new EntityAIBabyLeapAtTarget(this, 0.4F));
-		this.tasks.addTask(4, new EntityBabySpider.AISpiderAttack(EntityPlayer.class));
-		this.tasks.addTask(4, new EntityBabySpider.AISpiderAttack(EntityIronGolem.class));
-		this.tasks.addTask(5, new EntityAIWander(this, 0.8D));
-		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-		this.tasks.addTask(6, new EntityAILookIdle(this));
-		this.targetTasks.addTask(2, new EntityBabySpider.AISpiderTarget(EntityPlayer.class));
-		this.targetTasks.addTask(3, new EntityBabySpider.AISpiderTarget(EntityIronGolem.class));
-	}	
-
-	@Override
-	public void onDeath(DamageSource cause) //first achievement
-	{
-		if (!this.worldObj.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-			((EntityPlayer)cause.getEntity()).triggerAchievement(Achievements.achievementWhyAreTheySoStrong);
-		super.onDeath(cause);
 	}
 
+	//TODO sound and middle click
 	@Override
 	protected boolean func_146066_aG()
 	{
@@ -91,25 +60,27 @@ public class EntityBabySpider extends EntityMob
 	{
 		return true;
 	}
+	//end
 
+	//TODO hurtAi
 	@Override
-	public float getEyeHeight()
+	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
-		return 0.30F;
+		if (source.getEntity() instanceof EntityPlayer)
+		{
+			this.setRevengeTarget((EntityLivingBase) source.getEntity());
+			if (this.hurtAi.shouldExecute())
+				this.hurtAi.startExecuting();
+		}
+		return super.attackEntityFrom(source, amount);
 	}
-
-
-	@Override
-	protected PathNavigate func_175447_b(World worldIn)
-	{
-		return new PathNavigateClimber(this, worldIn);
-	}
+	//end
 
 	@Override
 	protected void entityInit()
 	{
 		super.entityInit();
-		this.dataWatcher.addObject(19, new Byte((byte)0));
+		this.dataWatcher.addObject(16, new Byte((byte)0));
 		this.dataWatcher.addObject(17, 0);//added
 	}
 
@@ -119,8 +90,19 @@ public class EntityBabySpider extends EntityMob
 	@Override
 	public void onUpdate()
 	{
+		//TODO followAI
+		if (this.getAttackTarget() == null && this.followAi.shouldExecute())
+		{
+			if (this.followAi.parent != null && this.rand.nextInt(10) == 0)
+			{
+				this.followAi.startExecuting();
+				this.followAi.updateTask();
+			}
+			else
+				this.followAi.resetTask();
+		}
+		//end
 		//TODO venom spitting attack for baby cave spiders and jockey check
-
 		if (!this.getEntityData().hasKey("JockeyCheck") && this.ticksExisted == 1 && !this.worldObj.isRemote && this.riddenByEntity == null && this.getClass() == EntityBabySpider.class)
 		{
 			this.getEntityData().setBoolean("JockeyCheck", true);
@@ -128,7 +110,7 @@ public class EntityBabySpider extends EntityMob
 			{
 				EntityBabySkeleton entityBabySkeleton = new EntityBabySkeleton(this.worldObj);
 				entityBabySkeleton.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, 0.0F);
-				entityBabySkeleton.func_180482_a(this.worldObj.getDifficultyForLocation(new BlockPos(this)), (IEntityLivingData)null);
+				entityBabySkeleton.onSpawnWithEgg((IEntityLivingData)null);
 				this.worldObj.spawnEntityInWorld(entityBabySkeleton);
 				entityBabySkeleton.mountEntity(this);
 			}
@@ -137,9 +119,9 @@ public class EntityBabySpider extends EntityMob
 		{
 			if (!this.worldObj.isRemote)
 			{
-				if (this.getAttackTarget() != null && this instanceof EntityBabyCaveSpider && !this.spitting && this.getHealth() > 0)
+				if (this.entityToAttack instanceof EntityLivingBase && this instanceof EntityBabyCaveSpider && !this.spitting && this.getHealth() > 0)
 				{
-					EntityLivingBase entitylivingbase = this.getAttackTarget();
+					EntityLivingBase entitylivingbase = (EntityLivingBase) this.entityToAttack;
 					double d0 = this.getDistanceSqToEntity(entitylivingbase);
 
 					if (d0 > 10.0D)
@@ -151,12 +133,12 @@ public class EntityBabySpider extends EntityMob
 					this.dataWatcher.updateObject(17, 0);
 			}
 
-			if (this.dataWatcher.getWatchableObjectInt(17) == 1 && this.getAttackTarget() instanceof EntityPlayer && !(this.getAttackTarget() instanceof FakePlayer) && !(((EntityPlayer) this.getAttackTarget()).capabilities.isCreativeMode))
+			if (this.dataWatcher.getWatchableObjectInt(17) == 1 && this.entityToAttack instanceof EntityPlayer && !(this.entityToAttack instanceof FakePlayer) && !(((EntityPlayer) this.entityToAttack).capabilities.isCreativeMode))
 			{
 				this.spitting = true;
 				this.spittingCounter = 40;
 
-				EntityLivingBase entitylivingbase = this.getAttackTarget();
+				EntityLivingBase entitylivingbase = (EntityLivingBase)this.entityToAttack;
 				if (entitylivingbase != null && !this.worldObj.isRemote)
 				{
 					this.getLookHelper().setLookPosition(entitylivingbase.posX, entitylivingbase.posY+entitylivingbase.getEyeHeight()/2, entitylivingbase.posZ, 5F, 5F);			
@@ -183,7 +165,6 @@ public class EntityBabySpider extends EntityMob
 			}
 		}
 		//end
-
 		super.onUpdate();
 
 		if (!this.worldObj.isRemote)
@@ -197,7 +178,27 @@ public class EntityBabySpider extends EntityMob
 	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(16.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.30000001192092896D);
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(3D);//changed
+	}
+
+	/**
+	 * Finds the closest player within 16 blocks to attack, or null if this Entity isn't interested in attacking
+	 * (Animals, BabySpiders at day, peaceful PigZombies).
+	 */
+	@Override
+	protected Entity findPlayerToAttack()
+	{
+		float f = this.getBrightness(1.0F);
+
+		if (f < 0.5F)
+		{
+			double d0 = 16.0D;
+			return this.worldObj.getClosestVulnerablePlayerToEntity(this, d0);
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
@@ -228,9 +229,52 @@ public class EntityBabySpider extends EntityMob
 	}
 
 	@Override
-	protected void playStepSound(BlockPos p_180429_1_, Block p_180429_2_)
+	protected void func_145780_a(int p_145780_1_, int p_145780_2_, int p_145780_3_, Block p_145780_4_)
 	{
 		this.playSound("mob.spider.step", 0.15F, 1.0F);
+	}
+
+	/**
+	 * Basic mob attack. Default to touch of death in EntityCreature. Overridden by each mob to define their attack.
+	 */
+	@Override
+	protected void attackEntity(Entity target, float p_70785_2_)
+	{
+		float f1 = this.getBrightness(1.0F);
+
+		//TODO spawn web
+		if (Config.useSpecialAbilities && target instanceof EntityPlayer)
+		{
+			if(this.worldObj.rand.nextInt(150) == 0 && this.worldObj.isAirBlock((int)target.posX, (int)target.posY, (int)target.posZ))
+			{
+				this.worldObj.setBlock((int)target.posX, (int)target.posY, (int)target.posZ, ModBlocks.disappearingWeb);
+			}
+		}
+		//end
+
+		if (f1 > 0.5F && this.rand.nextInt(100) == 0)
+		{
+			this.entityToAttack = null;
+		}
+		else
+		{
+			if (p_70785_2_ > 2.0F && p_70785_2_ < 6.0F && this.rand.nextInt(10) == 0)
+			{
+				if (this.onGround)
+				{
+					double d0 = target.posX - this.posX;
+					double d1 = target.posZ - this.posZ;
+					float f2 = MathHelper.sqrt_double(d0 * d0 + d1 * d1);
+					this.motionX = d0 / f2 * 0.5D * 0.800000011920929D + this.motionX * 0.20000000298023224D;
+					this.motionZ = d1 / f2 * 0.5D * 0.800000011920929D + this.motionZ * 0.20000000298023224D;
+					this.motionY = 0.4000000059604645D;
+				}
+			}
+			else
+			{
+				super.attackEntity(target, p_70785_2_);
+			}
+		}
 	}
 
 	@Override
@@ -240,7 +284,8 @@ public class EntityBabySpider extends EntityMob
 	}
 
 	/**
-	 * Drop 0-2 items of this living's type
+	 * Drop 0-2 items of this living's type. @param par1 - Whether this entity has recently been hit by a player. @param
+	 * par2 - Level of Looting used to kill this mob.
 	 */
 	@Override
 	protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
@@ -289,7 +334,7 @@ public class EntityBabySpider extends EntityMob
 	 */
 	public boolean isBesideClimbableBlock()
 	{
-		return (this.dataWatcher.getWatchableObjectByte(19) & 1) != 0;
+		return (this.dataWatcher.getWatchableObjectByte(16) & 1) != 0;
 	}
 
 	/**
@@ -298,7 +343,7 @@ public class EntityBabySpider extends EntityMob
 	 */
 	public void setBesideClimbableBlock(boolean p_70839_1_)
 	{
-		byte b0 = this.dataWatcher.getWatchableObjectByte(19);
+		byte b0 = this.dataWatcher.getWatchableObjectByte(16);
 
 		if (p_70839_1_)
 		{
@@ -309,27 +354,27 @@ public class EntityBabySpider extends EntityMob
 			b0 &= -2;
 		}
 
-		this.dataWatcher.updateObject(19, Byte.valueOf(b0));
+		this.dataWatcher.updateObject(16, Byte.valueOf(b0));
 	}
 
 	@Override
-	public IEntityLivingData func_180482_a(DifficultyInstance difficulty, IEntityLivingData iEntityLivingData)
+	public IEntityLivingData onSpawnWithEgg(IEntityLivingData p_110161_1_)
 	{
-		Object obj = super.func_180482_a(difficulty, iEntityLivingData);
+		Object p_110161_1_1 = super.onSpawnWithEgg(p_110161_1_);
 
-		if (obj == null)
+		if (p_110161_1_1 == null)
 		{
-			obj = new EntityBabySpider.GroupData();
+			p_110161_1_1 = new EntityBabySpider.GroupData();
 
-			if (this.worldObj.getDifficulty() == EnumDifficulty.HARD && this.worldObj.rand.nextFloat() < 0.1F * difficulty.getClampedAdditionalDifficulty())
+			if (this.worldObj.difficultySetting == EnumDifficulty.HARD && this.worldObj.rand.nextFloat() < 0.1F * this.worldObj.func_147462_b(this.posX, this.posY, this.posZ))
 			{
-				((EntityBabySpider.GroupData)obj).func_111104_a(this.worldObj.rand);
+				((EntityBabySpider.GroupData)p_110161_1_1).func_111104_a(this.worldObj.rand);
 			}
 		}
 
-		if (obj instanceof EntityBabySpider.GroupData)
+		if (p_110161_1_1 instanceof EntityBabySpider.GroupData)
 		{
-			int i = ((EntityBabySpider.GroupData)obj).field_111105_a;
+			int i = ((EntityBabySpider.GroupData)p_110161_1_1).field_111105_a;
 
 			if (i > 0 && Potion.potionTypes[i] != null)
 			{
@@ -337,78 +382,7 @@ public class EntityBabySpider extends EntityMob
 			}
 		}
 
-		return (IEntityLivingData)obj;
-	}
-
-	@Override
-	public double getMountedYOffset()
-	{
-		return 0.65D;
-	}
-
-	class AISpiderAttack extends EntityAIAttackOnCollide
-	{
-		private Class classTarget;
-		@SuppressWarnings("unused")
-		private boolean canPenalize;
-
-		public AISpiderAttack(Class p_i45819_2_)
-		{
-			super(EntityBabySpider.this, p_i45819_2_, 1.0D, true);
-			canPenalize = classTarget == null || !net.minecraft.entity.player.EntityPlayer.class.isAssignableFrom(classTarget);
-		}
-
-		/**
-		 * Returns whether an in-progress EntityAIBase should continue executing
-		 */
-		@Override
-		public boolean continueExecuting()
-		{
-			float f = this.attacker.getBrightness(1.0F);
-
-			//TODO spawn web
-			if (Config.useSpecialAbilities && this.attacker.getAttackTarget() instanceof EntityPlayer)
-			{
-				BlockPos pos = new BlockPos(this.attacker.getAttackTarget().posX, this.attacker.getAttackTarget().posY, this.attacker.getAttackTarget().posZ);
-				if (this.attacker.worldObj.rand.nextInt(150) == 0 && this.attacker.worldObj.isAirBlock(pos) && this.attacker.getDistanceSqToEntity(this.attacker.getAttackTarget()) < 80D)
-					this.attacker.worldObj.setBlockState(pos, ModBlocks.disappearingWeb.getDefaultState());
-			}
-			//end
-
-			if (f >= 0.5F && this.attacker.getRNG().nextInt(100) == 0)
-			{
-				this.attacker.setAttackTarget((EntityLivingBase)null);
-				return false;
-			}
-			else
-			{
-				return super.continueExecuting();
-			}
-		}
-
-		@Override
-		protected double func_179512_a(EntityLivingBase p_179512_1_)
-		{
-			return 4.0F + p_179512_1_.width;
-		}
-	}
-
-	class AISpiderTarget extends EntityAINearestAttackableTarget
-	{
-		public AISpiderTarget(Class p_i45818_2_)
-		{
-			super(EntityBabySpider.this, p_i45818_2_, true);
-		}
-
-		/**
-		 * Returns whether the EntityAIBase should begin execution.
-		 */
-		@Override
-		public boolean shouldExecute()
-		{
-			float f = this.taskOwner.getBrightness(1.0F);
-			return f >= 0.5F ? false : super.shouldExecute();
-		}
+		return (IEntityLivingData)p_110161_1_1;
 	}
 
 	public static class GroupData implements IEntityLivingData
@@ -438,5 +412,3 @@ public class EntityBabySpider extends EntityMob
 	}
 
 }
-
-

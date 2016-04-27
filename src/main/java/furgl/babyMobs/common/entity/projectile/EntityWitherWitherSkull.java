@@ -7,16 +7,15 @@ import net.minecraft.world.World;
 
 public class EntityWitherWitherSkull extends EntityWitherSkull
 {
+
 	public EntityWitherWitherSkull(World world)
 	{
 		super(world);
 	}
 
-	public EntityWitherWitherSkull(World world, EntityLivingBase entitylivingbase, double accelX, double accelY, double accelZ, EntityLivingBase target) 
+	public EntityWitherWitherSkull(World world, EntityLivingBase entitylivingbase, double accelX, double accelY, double accelZ) 
 	{
 		super(world, entitylivingbase, accelX, accelY, accelZ);
-		if (target != null)
-			this.setTarget(target);
 	}
 
 	@Override
@@ -26,16 +25,19 @@ public class EntityWitherWitherSkull extends EntityWitherSkull
 		this.dataWatcher.addObject(20, Integer.valueOf(0));		
 	}
 
-	private void setTarget(EntityLivingBase target)
+	@Override
+	public void onUpdate()
 	{
-		this.dataWatcher.updateObject(20, target.getEntityId());
+		super.onUpdate();
+		if (this.motionX == 0 && this.motionY == 0 && this.motionZ == 0)
+			this.setDead();
 	}
 
 	@Override
 	protected void onImpact(MovingObjectPosition mop)
 	{
 		super.onImpact(mop);
-		if (!this.worldObj.isRemote)
+		if (!this.worldObj.isRemote && this.shootingEntity != null)
 		{
 			for (int i=0; i<7; i++)
 			{

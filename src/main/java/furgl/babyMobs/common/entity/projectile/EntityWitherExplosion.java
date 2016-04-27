@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
@@ -43,7 +42,7 @@ public class EntityWitherExplosion extends EntityThrowable
 		if (this.worldObj.isRemote)
 		{
 			for (int i=0; i<2; i++)
-				this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX, this.posY+0.5D, this.posZ, 0, 0, 0, new int[0]);
+				this.worldObj.spawnParticle("smoke", this.posX, this.posY+0.5D, this.posZ, 0, 0, 0);
 		}
 	}
 

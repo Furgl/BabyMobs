@@ -1,9 +1,10 @@
 package furgl.babyMobs.client.model;
 
+import org.lwjgl.opengl.GL11;
+
 import furgl.babyMobs.common.entity.monster.EntityBabySkeleton;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.ModelZombie;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 
@@ -15,15 +16,15 @@ public class ModelBabySkeleton extends ModelZombie
 	{
 		isChild = true;
 		this.setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_, p_78088_1_);
-		GlStateManager.pushMatrix();
+		GL11.glPushMatrix();
 		float f6 = 2.0F;
-		GlStateManager.scale(1.5F / f6, 1.5F / f6, 1.5F / f6);
-		GlStateManager.translate(0.0F, 16.0F * p_78088_7_, 0.0F);
+		GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
+		GL11.glTranslatef(0.0F, 16.0F * p_78088_7_, 0.0F);
 		this.bipedHead.render(p_78088_7_);
-		GlStateManager.popMatrix();
-		GlStateManager.pushMatrix();
-		GlStateManager.scale(1.0F / f6, 1.0F / f6, 1.0F / f6);
-		GlStateManager.translate(0.0F, 24.0F * p_78088_7_, 0.0F);
+		GL11.glPopMatrix();
+		GL11.glPushMatrix();
+		GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
+		GL11.glTranslatef(0.0F, 24.0F * p_78088_7_, 0.0F);
 		
 		this.bipedBody.render(p_78088_7_);
 		this.bipedRightArm.render(p_78088_7_);
@@ -32,7 +33,7 @@ public class ModelBabySkeleton extends ModelZombie
 		this.bipedLeftLeg.render(p_78088_7_);
 		this.bipedHeadwear.render(p_78088_7_);
 		
-		GlStateManager.popMatrix();
+		GL11.glPopMatrix();
 	}
 	
 

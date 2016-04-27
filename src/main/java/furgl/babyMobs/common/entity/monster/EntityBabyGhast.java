@@ -1,18 +1,14 @@
 package furgl.babyMobs.common.entity.monster;
 
-import java.util.Random;
-
-import furgl.babyMobs.client.gui.Achievements;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.projectile.EntityGhastFireball;
 import furgl.babyMobs.common.item.ModItems;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityFlying;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAIFindEntityNearestPlayer;
-import net.minecraft.entity.ai.EntityMoveHelper;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityLargeFireball;
@@ -22,48 +18,41 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityBabyGhast extends EntityFlying implements IMob
 {
+	public int courseChangeCooldown;
+	public double waypointX;
+	public double waypointY;
+	public double waypointZ;
+	private Entity targetedEntity;
+	/** Cooldown time between target loss and new target aquirement. */
+	private int aggroCooldown;
+	public int prevAttackCounter;
+	public int attackCounter;
 	/** The explosion radius of spawned fireballs. */
 	private int explosionStrength = 1;
+	
+	private EntityAIBabyFollowParent followAi = new EntityAIBabyFollowParent(this, 1.1D, this.isAIEnabled());
 
-	public EntityBabyGhast(World worldIn)
+	public EntityBabyGhast(World p_i1735_1_)
 	{
-		super(worldIn);
+		super(p_i1735_1_);
 		this.setSize(1.4F, 1.4F);
-		this.experienceValue = (int)(this.experienceValue * 2.5F);
+		this.experienceValue = 12;
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.35D);
-		this.tasks.addTask(5, new EntityAIBabyFollowParent(this, 1.1D));
 
 		this.isImmuneToFire = true;
-		this.experienceValue = 5;
-		this.moveHelper = new EntityBabyGhast.GhastMoveHelper();
-		this.tasks.addTask(5, new EntityBabyGhast.AIRandomFly());
-		this.tasks.addTask(7, new EntityBabyGhast.AILookAround());
-		this.tasks.addTask(7, new EntityBabyGhast.AIFireballAttack());
-		this.targetTasks.addTask(1, new EntityAIFindEntityNearestPlayer(this));
-	}	
-    
-	@Override
-	public void onDeath(DamageSource cause) //first achievement
-    {
-		if (!this.worldObj.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-			((EntityPlayer)cause.getEntity()).triggerAchievement(Achievements.achievementWhyAreTheySoStrong);
-		super.onDeath(cause);
-    }
+	}
 	
-	@Override
+	//TODO sound and middle click
+    @Override
 	protected boolean func_146066_aG()
 	{
 		return true;
@@ -80,35 +69,12 @@ public class EntityBabyGhast extends EntityFlying implements IMob
 	{
 		return true;
 	}
+	//end
 
 	@SideOnly(Side.CLIENT)
 	public boolean func_110182_bF()
 	{
 		return this.dataWatcher.getWatchableObjectByte(16) != 0;
-	}
-
-	public void func_175454_a(boolean p_175454_1_)
-	{
-		this.dataWatcher.updateObject(16, Byte.valueOf((byte)(p_175454_1_ ? 1 : 0)));
-	}
-
-	public int func_175453_cd()
-	{
-		return this.explosionStrength;
-	}
-
-	/**
-	 * Called to update the entity's position/logic.
-	 */
-	@Override
-	public void onUpdate()
-	{
-		super.onUpdate();
-
-		if (!this.worldObj.isRemote && this.worldObj.getDifficulty() == EnumDifficulty.PEACEFUL)
-		{
-			this.setDead();
-		}
 	}
 
 	/**
@@ -117,7 +83,7 @@ public class EntityBabyGhast extends EntityFlying implements IMob
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
-		if (this.isEntityInvulnerable(source))
+		if (this.isEntityInvulnerable())
 		{
 			return false;
 		}
@@ -145,7 +111,170 @@ public class EntityBabyGhast extends EntityFlying implements IMob
 	{
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(10.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(100.0D);
+	}
+
+	@Override
+	protected void updateEntityActionState()
+	{
+		//TODO followAI
+		if (this.getAttackTarget() == null && this.followAi.shouldExecute())
+		{
+			if (this.followAi.parent != null && this.rand.nextInt(5) == 0)
+			{
+				this.followAi.startExecuting();
+				this.followAi.updateTask();
+			}
+			else
+				this.followAi.resetTask();
+		}
+		//end
+		if (!this.worldObj.isRemote && this.worldObj.difficultySetting == EnumDifficulty.PEACEFUL)
+		{
+			this.setDead();
+		}
+
+		this.despawnEntity();
+		this.prevAttackCounter = this.attackCounter;
+		double d0 = this.waypointX - this.posX;
+		double d1 = this.waypointY - this.posY;
+		double d2 = this.waypointZ - this.posZ;
+		double d3 = d0 * d0 + d1 * d1 + d2 * d2;
+
+		if (d3 < 1.0D || d3 > 3600.0D)
+		{
+			this.waypointX = this.posX + (this.rand.nextFloat() * 2.0F - 1.0F) * 16.0F;
+			this.waypointY = this.posY + (this.rand.nextFloat() * 2.0F - 1.0F) * 16.0F;
+			this.waypointZ = this.posZ + (this.rand.nextFloat() * 2.0F - 1.0F) * 16.0F;
+		}
+
+		if (this.courseChangeCooldown-- <= 0)
+		{
+			this.courseChangeCooldown += this.rand.nextInt(5) + 2;
+			d3 = MathHelper.sqrt_double(d3);
+
+			if (this.isCourseTraversable(this.waypointX, this.waypointY, this.waypointZ, d3))
+			{
+				this.motionX += d0 / d3 * 0.1D;
+				this.motionY += d1 / d3 * 0.1D;
+				this.motionZ += d2 / d3 * 0.1D;
+			}
+			else
+			{
+				this.waypointX = this.posX;
+				this.waypointY = this.posY;
+				this.waypointZ = this.posZ;
+			}
+		}
+
+		if (this.targetedEntity != null && this.targetedEntity.isDead)
+		{
+			this.targetedEntity = null;
+		}
+
+		if (this.targetedEntity == null || this.aggroCooldown-- <= 0)
+		{
+			this.targetedEntity = this.worldObj.getClosestVulnerablePlayerToEntity(this, 100.0D);
+
+			if (this.targetedEntity != null)
+			{
+				this.aggroCooldown = 20;
+			}
+		}
+
+		double d4 = 64.0D;
+
+		if (this.targetedEntity != null && this.targetedEntity.getDistanceSqToEntity(this) < d4 * d4)
+		{
+			double d5 = this.targetedEntity.posX - this.posX;
+            double d6 = this.targetedEntity.boundingBox.minY + this.targetedEntity.height / 2.0F - (this.posY + this.height / 2.0F)-3.0F;
+			double d7 = this.targetedEntity.posZ - this.posZ;
+			this.renderYawOffset = this.rotationYaw = -((float)Math.atan2(d5, d7)) * 180.0F / (float)Math.PI;
+
+			if (this.canEntityBeSeen(this.targetedEntity))
+			{
+				if (this.attackCounter == 10)
+				{
+					this.worldObj.playAuxSFXAtEntity((EntityPlayer)null, 1007, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+				}
+
+				++this.attackCounter;
+
+				if (this.attackCounter == 20)
+				{
+					this.worldObj.playAuxSFXAtEntity((EntityPlayer)null, 1008, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+					//TODO EntityGhastFireball (only entity is replaced from orig)
+					Vec3 vec3 = this.getLook(1.0F);
+					 double d8 = 4.0D;
+					if (Config.useSpecialAbilities)
+					{
+						EntityGhastFireball fireball = new EntityGhastFireball(this.worldObj, this, d5, d6, d7);
+						fireball.field_92057_e = this.explosionStrength;
+						fireball.posX = this.posX + vec3.xCoord * d8;
+	                    fireball.posY = this.posY + this.height / 2.0F - 1.0D;
+	                    fireball.posZ = this.posZ + vec3.zCoord * d8;
+						this.worldObj.spawnEntityInWorld(fireball);
+					}
+					else
+					{
+						EntityLargeFireball fireball = new EntityLargeFireball(this.worldObj, this, d5, d6, d7);
+						fireball.field_92057_e = this.explosionStrength;
+						fireball.posX = this.posX + vec3.xCoord * d8;
+	                    fireball.posY = this.posY + this.height / 2.0F - 1.0D;
+	                    fireball.posZ = this.posZ + vec3.zCoord * d8;
+						this.worldObj.spawnEntityInWorld(fireball);
+					}
+					//end
+					this.attackCounter = -40;
+				}
+			}
+			else if (this.attackCounter > 0)
+			{
+				--this.attackCounter;
+			}
+		}
+		else
+		{
+			this.renderYawOffset = this.rotationYaw = -((float)Math.atan2(this.motionX, this.motionZ)) * 180.0F / (float)Math.PI;
+
+			if (this.attackCounter > 0)
+			{
+				--this.attackCounter;
+			}
+		}
+
+		if (!this.worldObj.isRemote)
+		{
+			byte b1 = this.dataWatcher.getWatchableObjectByte(16);
+			byte b0 = (byte)(this.attackCounter > 10 ? 1 : 0);
+
+			if (b1 != b0)
+			{
+				this.dataWatcher.updateObject(16, Byte.valueOf(b0));
+			}
+		}
+	}
+
+	/**
+	 * True if the ghast has an unobstructed line of travel to the waypoint.
+	 */
+	private boolean isCourseTraversable(double p_70790_1_, double p_70790_3_, double p_70790_5_, double p_70790_7_)
+	{
+		double d4 = (this.waypointX - this.posX) / p_70790_7_;
+		double d5 = (this.waypointY - this.posY) / p_70790_7_;
+		double d6 = (this.waypointZ - this.posZ) / p_70790_7_;
+		AxisAlignedBB axisalignedbb = this.boundingBox.copy();
+
+		for (int i = 1; i < p_70790_7_; ++i)
+		{
+			axisalignedbb.offset(d4, d5, d6);
+
+			if (!this.worldObj.getCollidingBoundingBoxes(this, axisalignedbb).isEmpty())
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -218,7 +347,7 @@ public class EntityBabyGhast extends EntityFlying implements IMob
 	@Override
 	public boolean getCanSpawnHere()
 	{
-		return this.rand.nextInt(20) == 0 && super.getCanSpawnHere() && this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL;
+		return this.rand.nextInt(20) == 0 && super.getCanSpawnHere() && this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL;
 	}
 
 	/**
@@ -251,261 +380,6 @@ public class EntityBabyGhast extends EntityFlying implements IMob
 		if (tagCompund.hasKey("ExplosionPower", 99))
 		{
 			this.explosionStrength = tagCompund.getInteger("ExplosionPower");
-		}
-	}
-
-	@Override
-	public float getEyeHeight()
-	{
-		return 1.3F;
-	}
-
-	class AIFireballAttack extends EntityAIBase
-	{
-		private EntityBabyGhast field_179470_b = EntityBabyGhast.this;
-		public int field_179471_a;
-
-		/**
-		 * Returns whether the EntityAIBase should begin execution.
-		 */
-		@Override
-		public boolean shouldExecute()
-		{
-			return this.field_179470_b.getAttackTarget() != null;
-		}
-
-		/**
-		 * Execute a one shot task or start executing a continuous task
-		 */
-		@Override
-		public void startExecuting()
-		{
-			this.field_179471_a = 0;
-		}
-
-		/**
-		 * Resets the task
-		 */
-		@Override
-		public void resetTask()
-		{
-			this.field_179470_b.func_175454_a(false);
-		}
-
-		/**
-		 * Updates the task
-		 */
-		@Override
-		public void updateTask()
-		{
-			EntityLivingBase entitylivingbase = this.field_179470_b.getAttackTarget();
-			double d0 = 64.0D;
-
-			if (entitylivingbase.getDistanceSqToEntity(this.field_179470_b) < d0 * d0 && this.field_179470_b.canEntityBeSeen(entitylivingbase))
-			{
-				World world = this.field_179470_b.worldObj;
-				++this.field_179471_a;
-
-				if (this.field_179471_a == 10)
-				{
-					world.playAuxSFXAtEntity((EntityPlayer)null, 1007, new BlockPos(this.field_179470_b), 0);
-				}
-
-				if (this.field_179471_a == 20)
-				{
-					double d1 = 4.0D;
-					Vec3 vec3 = this.field_179470_b.getLook(1.0F);
-					double d2 = entitylivingbase.posX - (this.field_179470_b.posX + vec3.xCoord * d1);
-					double d3 = entitylivingbase.getEntityBoundingBox().minY + entitylivingbase.height / 2.0F - (0.5D + this.field_179470_b.posY + this.field_179470_b.height / 2.0F);
-					double d4 = entitylivingbase.posZ - (this.field_179470_b.posZ + vec3.zCoord * d1);
-					world.playAuxSFXAtEntity((EntityPlayer)null, 1008, new BlockPos(this.field_179470_b), 0);
-					//TODO EntityGhastFireball (only entity is replaced from orig)
-					if (Config.useSpecialAbilities)
-					{
-						EntityGhastFireball fireball = new EntityGhastFireball(world, this.field_179470_b, d2, d3, d4);
-						fireball.explosionPower = this.field_179470_b.func_175453_cd();
-						fireball.posX = this.field_179470_b.posX + vec3.xCoord * d1;
-						fireball.posY = this.field_179470_b.posY + this.field_179470_b.height / 2.0F + 0.5D;
-						fireball.posZ = this.field_179470_b.posZ + vec3.zCoord * d1;
-						world.spawnEntityInWorld(fireball);
-					}
-					else
-					{
-						EntityLargeFireball fireball = new EntityLargeFireball(world, this.field_179470_b, d2, d3, d4);
-						fireball.explosionPower = this.field_179470_b.func_175453_cd();
-						fireball.posX = this.field_179470_b.posX + vec3.xCoord * d1;
-						fireball.posY = this.field_179470_b.posY + this.field_179470_b.height / 2.0F + 0.5D;
-						fireball.posZ = this.field_179470_b.posZ + vec3.zCoord * d1;
-						world.spawnEntityInWorld(fireball);
-					}
-					//end   
-
-					this.field_179471_a = -40;
-				}
-			}
-			else if (this.field_179471_a > 0)
-			{
-				--this.field_179471_a;
-			}
-
-			this.field_179470_b.func_175454_a(this.field_179471_a > 10);
-		}
-	}
-
-	class AILookAround extends EntityAIBase
-	{
-		private EntityBabyGhast field_179472_a = EntityBabyGhast.this;
-
-		public AILookAround()
-		{
-			this.setMutexBits(2);
-		}
-
-		/**
-		 * Returns whether the EntityAIBase should begin execution.
-		 */
-		@Override
-		public boolean shouldExecute()
-		{
-			return true;
-		}
-
-		/**
-		 * Updates the task
-		 */
-		@Override
-		public void updateTask()
-		{
-			if (this.field_179472_a.getAttackTarget() == null)
-			{
-				this.field_179472_a.renderYawOffset = this.field_179472_a.rotationYaw = -((float)Math.atan2(this.field_179472_a.motionX, this.field_179472_a.motionZ)) * 180.0F / (float)Math.PI;
-			}
-			else
-			{
-				EntityLivingBase entitylivingbase = this.field_179472_a.getAttackTarget();
-				double d0 = 64.0D;
-
-				if (entitylivingbase.getDistanceSqToEntity(this.field_179472_a) < d0 * d0)
-				{
-					double d1 = entitylivingbase.posX - this.field_179472_a.posX;
-					double d2 = entitylivingbase.posZ - this.field_179472_a.posZ;
-					this.field_179472_a.renderYawOffset = this.field_179472_a.rotationYaw = -((float)Math.atan2(d1, d2)) * 180.0F / (float)Math.PI;
-				}
-			}
-		}
-	}
-
-	class AIRandomFly extends EntityAIBase
-	{
-		private EntityBabyGhast field_179454_a = EntityBabyGhast.this;
-
-		public AIRandomFly()
-		{
-			this.setMutexBits(1);
-		}
-
-		/**
-		 * Returns whether the EntityAIBase should begin execution.
-		 */
-		@Override
-		public boolean shouldExecute()
-		{
-			EntityMoveHelper entitymovehelper = this.field_179454_a.getMoveHelper();
-
-			if (!entitymovehelper.isUpdating())
-			{
-				return true;
-			}
-			else
-			{
-				double d0 = entitymovehelper.func_179917_d() - this.field_179454_a.posX;
-				double d1 = entitymovehelper.func_179919_e() - this.field_179454_a.posY;
-				double d2 = entitymovehelper.func_179918_f() - this.field_179454_a.posZ;
-				double d3 = d0 * d0 + d1 * d1 + d2 * d2;
-				return d3 < 1.0D || d3 > 3600.0D;
-			}
-		}
-
-		/**
-		 * Returns whether an in-progress EntityAIBase should continue executing
-		 */
-		@Override
-		public boolean continueExecuting()
-		{
-			return false;
-		}
-
-		/**
-		 * Execute a one shot task or start executing a continuous task
-		 */
-		@Override
-		public void startExecuting()
-		{
-			Random random = this.field_179454_a.getRNG();
-			double d0 = this.field_179454_a.posX + (random.nextFloat() * 2.0F - 1.0F) * 16.0F;
-			double d1 = this.field_179454_a.posY + (random.nextFloat() * 2.0F - 1.0F) * 16.0F;
-			double d2 = this.field_179454_a.posZ + (random.nextFloat() * 2.0F - 1.0F) * 16.0F;
-			this.field_179454_a.getMoveHelper().setMoveTo(d0, d1, d2, 1.0D);
-		}
-	}
-
-	class GhastMoveHelper extends EntityMoveHelper
-	{
-		private EntityBabyGhast field_179927_g = EntityBabyGhast.this;
-		private int field_179928_h;
-
-		public GhastMoveHelper()
-		{
-			super(EntityBabyGhast.this);
-		}
-
-		@Override
-		public void onUpdateMoveHelper()
-		{
-			if (this.update)
-			{
-				double d0 = this.posX - this.field_179927_g.posX;
-				double d1 = this.posY - this.field_179927_g.posY;
-				double d2 = this.posZ - this.field_179927_g.posZ;
-				double d3 = d0 * d0 + d1 * d1 + d2 * d2;
-
-				if (this.field_179928_h-- <= 0)
-				{
-					this.field_179928_h += this.field_179927_g.getRNG().nextInt(5) + 2;
-					d3 = MathHelper.sqrt_double(d3);
-
-					if (this.func_179926_b(this.posX, this.posY, this.posZ, d3))
-					{
-						this.field_179927_g.motionX += d0 / d3 * 0.1D;
-						this.field_179927_g.motionY += d1 / d3 * 0.1D;
-						this.field_179927_g.motionZ += d2 / d3 * 0.1D;
-					}
-					else
-					{
-						this.update = false;
-					}
-				}
-			}
-		}
-
-		private boolean func_179926_b(double p_179926_1_, double p_179926_3_, double p_179926_5_, double p_179926_7_)
-		{
-			double d4 = (p_179926_1_ - this.field_179927_g.posX) / p_179926_7_;
-			double d5 = (p_179926_3_ - this.field_179927_g.posY) / p_179926_7_;
-			double d6 = (p_179926_5_ - this.field_179927_g.posZ) / p_179926_7_;
-			AxisAlignedBB axisalignedbb = this.field_179927_g.getEntityBoundingBox();
-
-			for (int i = 1; i < p_179926_7_; ++i)
-			{
-				axisalignedbb = axisalignedbb.offset(d4, d5, d6);
-
-				if (!this.field_179927_g.worldObj.getCollidingBoundingBoxes(this.field_179927_g, axisalignedbb).isEmpty())
-				{
-					return false;
-				}
-			}
-
-			return true;
 		}
 	}
 }

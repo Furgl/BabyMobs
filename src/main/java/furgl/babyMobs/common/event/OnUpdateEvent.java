@@ -3,10 +3,10 @@ package furgl.babyMobs.common.event;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import furgl.babyMobs.util.EntitySpawner;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class OnUpdateEvent 
 {

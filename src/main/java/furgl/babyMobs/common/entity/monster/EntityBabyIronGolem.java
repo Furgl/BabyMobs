@@ -1,8 +1,9 @@
 package furgl.babyMobs.common.entity.monster;
 
-import com.google.common.base.Predicate;
 import com.mojang.authlib.GameProfile;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyDefendVillage;
@@ -10,11 +11,8 @@ import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyLookAtVillager;
 import furgl.babyMobs.common.item.ModItems;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFlower;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -27,7 +25,6 @@ import net.minecraft.entity.ai.EntityAIMoveTowardsTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityGolem;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.monster.IMob;
@@ -37,20 +34,16 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityBabyIronGolem extends EntityGolem
 {
@@ -59,16 +52,17 @@ public class EntityBabyIronGolem extends EntityGolem
 	Village villageObj;
 	private int attackTimer;
 	private int holdRoseTick;
-	public EntityBabyIronGolem(World worldIn)
+
+	public EntityBabyIronGolem(World p_i1694_1_)
 	{
-		super(worldIn);
+		super(p_i1694_1_);
 		this.setSize(0.7F, 1.45F);
 		this.experienceValue = (int)(this.experienceValue * 2.5F);
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.35D);
-		this.tasks.addTask(5, new EntityAIBabyFollowParent(this, 1.1D));
+		this.tasks.addTask(5, new EntityAIBabyFollowParent(this, 1.1D, this.isAIEnabled()));
 		this.setHoldingRose(true);
 
-		((PathNavigateGround)this.getNavigator()).func_179690_a(true);
+		this.getNavigator().setAvoidsWater(true);
 		this.tasks.addTask(1, new EntityAIAttackOnCollide(this, 1.0D, true));
 		this.tasks.addTask(2, new EntityAIMoveTowardsTarget(this, 0.9D, 32.0F));
 		this.tasks.addTask(3, new EntityAIMoveThroughVillage(this, 0.6D, true));
@@ -78,25 +72,12 @@ public class EntityBabyIronGolem extends EntityGolem
 		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIBabyDefendVillage(this));
-		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, new Class[0]));
-		this.targetTasks.addTask(3, new EntityBabyIronGolem.AINearestAttackableTargetNonCreeper(this, EntityLiving.class, 10, false, true, IMob.field_175450_e));
-	}	
-    
-	@Override
-	public void onDeath(DamageSource cause) //first achievement
-    {
-		if (!this.worldObj.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-			((EntityPlayer)cause.getEntity()).triggerAchievement(Achievements.achievementWhyAreTheySoStrong);
-		
-		if (!this.isPlayerCreated() && this.attackingPlayer != null && this.villageObj != null)
-		{
-			this.villageObj.setReputationForPlayer(this.attackingPlayer.getName(), -5);
-		}
-
-		super.onDeath(cause);
-    }
+		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
+		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityLiving.class, 0, false, true, IMob.mobSelector));
+	}
 	
-	@Override
+	//TODO sound and middle click
+    @Override
 	protected boolean func_146066_aG()
 	{
 		return true;
@@ -113,12 +94,7 @@ public class EntityBabyIronGolem extends EntityGolem
 	{
 		return true;
 	}
-
-	@Override
-	public float getEyeHeight()
-	{
-		return 1.3F;
-	}
+	//end
 
 	@Override
 	protected void entityInit()
@@ -127,13 +103,25 @@ public class EntityBabyIronGolem extends EntityGolem
 		this.dataWatcher.addObject(16, Byte.valueOf((byte)0));
 	}
 
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
 	@Override
-	protected void updateAITasks()
+	public boolean isAIEnabled()
+	{
+		return true;
+	}
+
+	/**
+	 * main AI tick function, replaces updateEntityActionState
+	 */
+	@Override
+	protected void updateAITick()
 	{
 		if (--this.homeCheckTimer <= 0)
 		{
 			this.homeCheckTimer = 70 + this.rand.nextInt(50);
-			this.villageObj = this.worldObj.getVillageCollection().getNearestVillage(new BlockPos(this), 32);
+			this.villageObj = this.worldObj.villageCollectionObj.findNearestVillage(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 32);
 
 			if (this.villageObj == null)
 			{
@@ -141,12 +129,12 @@ public class EntityBabyIronGolem extends EntityGolem
 			}
 			else
 			{
-				BlockPos blockpos = this.villageObj.getCenter();
-				this.func_175449_a(blockpos, (int)(this.villageObj.getVillageRadius() * 0.6F));
+				ChunkCoordinates chunkcoordinates = this.villageObj.getCenter();
+				this.setHomeArea(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, (int)(this.villageObj.getVillageRadius() * 0.6F));
 			}
 		}
 
-		super.updateAITasks();
+		super.updateAITick();
 	}
 
 	@Override
@@ -192,14 +180,15 @@ public class EntityBabyIronGolem extends EntityGolem
 			if (player != null)
 				player.triggerAchievement(Achievements.achievementAFlowerForMe);
 		}
+			
 		if (Config.useSpecialAbilities)
 		{
-			if (!this.worldObj.isRemote && this.rand.nextInt(10000) == 0 && this.worldObj.isAirBlock(new BlockPos(this)) && this.worldObj.getBlockState(new BlockPos(this).down()) == Blocks.grass.getDefaultState())
+			if (!this.worldObj.isRemote && this.rand.nextInt(10000) == 0 && this.worldObj.isAirBlock(this.serverPosX, this.serverPosY, this.serverPosZ) && this.worldObj.getBlock(this.serverPosX, this.serverPosY, this.serverPosZ) == Blocks.grass)
 			{
-				this.worldObj.setBlockState(new BlockPos(this), Blocks.red_flower.getDefaultState());
+				this.worldObj.setBlock(this.serverPosX, this.serverPosY, this.serverPosZ, Blocks.red_flower);
 			}
 		}
-		//end      
+		//end  
 		if (this.attackTimer > 0)
 		{
 			--this.attackTimer;
@@ -207,20 +196,19 @@ public class EntityBabyIronGolem extends EntityGolem
 
 		if (this.holdRoseTick > 0)
 		{
-			//--this.holdRoseTick;
+			//	--this.holdRoseTick; TODO removed
 		}
 
 		if (this.motionX * this.motionX + this.motionZ * this.motionZ > 2.500000277905201E-7D && this.rand.nextInt(5) == 0)
 		{
 			int i = MathHelper.floor_double(this.posX);
-			int j = MathHelper.floor_double(this.posY - 0.20000000298023224D);
+			int j = MathHelper.floor_double(this.posY - 0.20000000298023224D - this.yOffset);
 			int k = MathHelper.floor_double(this.posZ);
-			IBlockState iblockstate = this.worldObj.getBlockState(new BlockPos(i, j, k));
-			Block block = iblockstate.getBlock();
+			Block block = this.worldObj.getBlock(i, j, k);
 
 			if (block.getMaterial() != Material.air)
 			{
-				this.worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, this.posX + (this.rand.nextFloat() - 0.5D) * this.width, this.getEntityBoundingBox().minY + 0.1D, this.posZ + (this.rand.nextFloat() - 0.5D) * this.width, 4.0D * (this.rand.nextFloat() - 0.5D), 0.5D, (this.rand.nextFloat() - 0.5D) * 4.0D, new int[] {Block.getStateId(iblockstate)});
+				this.worldObj.spawnParticle("blockcrack_" + Block.getIdFromBlock(block) + "_" + this.worldObj.getBlockMetadata(i, j, k), this.posX + (this.rand.nextFloat() - 0.5D) * this.width, this.boundingBox.minY + 0.1D, this.posZ + (this.rand.nextFloat() - 0.5D) * this.width, 4.0D * (this.rand.nextFloat() - 0.5D), 0.5D, (this.rand.nextFloat() - 0.5D) * 4.0D);
 			}
 		}
 	}
@@ -229,9 +217,9 @@ public class EntityBabyIronGolem extends EntityGolem
 	 * Returns true if this entity can attack entities of the specified class.
 	 */
 	@Override
-	public boolean canAttackClass(Class p_70686_1_)
+	public boolean canAttackClass(Class clazz)
 	{
-		return this.isPlayerCreated() && EntityPlayer.class.isAssignableFrom(p_70686_1_) ? false : super.canAttackClass(p_70686_1_);
+		return this.isPlayerCreated() && EntityPlayer.class.isAssignableFrom(clazz) ? false : super.canAttackClass(clazz);
 	}
 
 	/**
@@ -255,20 +243,40 @@ public class EntityBabyIronGolem extends EntityGolem
 	}
 
 	@Override
-	public boolean attackEntityAsMob(Entity p_70652_1_)
+	public boolean attackEntityAsMob(Entity entity)
 	{
 		this.attackTimer = 10;
-		this.worldObj.setEntityState(this, (byte)4);
-		boolean flag = p_70652_1_.attackEntityFrom(DamageSource.causeMobDamage(this), 7 + this.rand.nextInt(15));
-
-		if (flag)
+		//TODO change zombie villagers
+		if (Config.useSpecialAbilities && entity instanceof EntityZombie && ((EntityZombie)entity).isVillager())
 		{
-			p_70652_1_.motionY += 0.4000000059604645D;
-			this.func_174815_a(this, p_70652_1_);
+			EntityLivingBase entitylivingbase = (EntityLivingBase) entity;
+			if (!((EntityZombie)entitylivingbase).isConverting())
+			{
+				entitylivingbase.addPotionEffect(new PotionEffect(Potion.weakness.id, 100, 0));
+				FakePlayer player = new FakePlayer((WorldServer) entitylivingbase.worldObj, new GameProfile(entitylivingbase.getUniqueID(), ""));
+				player.setCurrentItemOrArmor(0, new ItemStack(Items.golden_apple));
+				((EntityZombie)entitylivingbase).interact(player);
+				entitylivingbase.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 9999, 9, false));
+				entitylivingbase.setCurrentItemOrArmor(0, new ItemStack(Item.getItemFromBlock(Blocks.red_flower)));
+			}
+			this.setAttackTarget(null);this.numTicksToChaseTarget=0;
+			return false;
 		}
+		//end
+		else
+		{
+			this.worldObj.setEntityState(this, (byte)4);
+			boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), 7 + this.rand.nextInt(15));
 
-		this.playSound("mob.irongolem.throw", 1.0F, 1.0F);
-		return flag;
+			if (flag)
+			{
+				entity.motionY += 0.4000000059604645D;
+			}
+
+			this.playSound("mob.irongolem.throw", 1.0F, 1.0F);
+			return flag;
+		}
+		
 	}
 
 	@Override
@@ -303,8 +311,8 @@ public class EntityBabyIronGolem extends EntityGolem
 
 	public void setHoldingRose(boolean p_70851_1_)
 	{
-		this.holdRoseTick =  p_70851_1_ ? 400 : 0;
-		//this.worldObj.setEntityState(this, (byte)11);
+		this.holdRoseTick = p_70851_1_ ? 400 : 0;
+		//this.worldObj.setEntityState(this, (byte)11); TODO removed
 	}
 
 	/**
@@ -325,8 +333,7 @@ public class EntityBabyIronGolem extends EntityGolem
 		return "mob.irongolem.death";
 	}
 
-	@Override
-	protected void playStepSound(BlockPos p_180429_1_, Block p_180429_2_)
+	protected void playStepSound(int x, int y, int z, Block blockIn)
 	{
 		this.playSound("mob.irongolem.walk", 1.0F, 1.0F);
 	}
@@ -351,7 +358,7 @@ public class EntityBabyIronGolem extends EntityGolem
 
 		for (k = 0; k < j; ++k)
 		{
-			this.dropItemWithOffset(Item.getItemFromBlock(Blocks.red_flower), 1, BlockFlower.EnumFlowerType.POPPY.getMeta());
+			this.func_145778_a(Item.getItemFromBlock(Blocks.red_flower), 1, 0.0F);
 		}
 
 		k = 3 + this.rand.nextInt(3);
@@ -386,76 +393,17 @@ public class EntityBabyIronGolem extends EntityGolem
 		}
 	}
 
-	static class AINearestAttackableTargetNonCreeper extends EntityAINearestAttackableTarget
+	/**
+	 * Called when the mob's health reaches 0.
+	 */
+	@Override
+	public void onDeath(DamageSource p_70645_1_)
 	{
-		public AINearestAttackableTargetNonCreeper(final EntityCreature creature, Class p_i45858_2_, int p_i45858_3_, boolean p_i45858_4_, boolean p_i45858_5_, final Predicate predicate)
+		if (!this.isPlayerCreated() && this.attackingPlayer != null && this.villageObj != null)
 		{
-			super(creature, p_i45858_2_, p_i45858_3_, p_i45858_4_, p_i45858_5_, predicate);
-			this.targetEntitySelector = new Predicate()
-			{
-				public boolean func_180096_a(EntityLivingBase entitylivingbase)
-				{
-					if (predicate != null && !predicate.apply(entitylivingbase))
-					{
-						return false;
-					}
-					else if (entitylivingbase instanceof EntityCreeper)
-					{
-						return false;
-					}
-					//TODO change zombie villagers
-					else if (Config.useSpecialAbilities && entitylivingbase instanceof EntityZombie && ((EntityZombie)entitylivingbase).isVillager())
-					{
-						if (!((EntityZombie)entitylivingbase).isConverting())
-						{
-							entitylivingbase.addPotionEffect(new PotionEffect(Potion.weakness.id, 100, 0));
-							FakePlayer player = new FakePlayer((WorldServer) entitylivingbase.worldObj, new GameProfile(entitylivingbase.getUniqueID(), ""));
-							player.setCurrentItemOrArmor(0, new ItemStack(Items.golden_apple));
-							((EntityZombie)entitylivingbase).interact(player);
-							entitylivingbase.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 9999, 9, false, false));
-							entitylivingbase.setCurrentItemOrArmor(0, new ItemStack(Item.getItemFromBlock(Blocks.red_flower)));
-						}
-						return false;
-					}
-					//end
-					else
-					{
-						if (entitylivingbase instanceof EntityPlayer)
-						{
-							double d0 = AINearestAttackableTargetNonCreeper.this.getTargetDistance();
-
-							if (entitylivingbase.isSneaking())
-							{
-								d0 *= 0.800000011920929D;
-							}
-
-							if (entitylivingbase.isInvisible())
-							{
-								float f = ((EntityPlayer)entitylivingbase).getArmorVisibility();
-
-								if (f < 0.1F)
-								{
-									f = 0.1F;
-								}
-
-								d0 *= 0.7F * f;
-							}
-
-							if (entitylivingbase.getDistanceToEntity(creature) > d0)
-							{
-								return false;
-							}
-						}
-
-						return AINearestAttackableTargetNonCreeper.this.isSuitableTarget(entitylivingbase, false);
-					}
-				}
-				@Override
-				public boolean apply(Object p_apply_1_)
-				{
-					return this.func_180096_a((EntityLivingBase)p_apply_1_);
-				}
-			};
+			this.villageObj.setReputationForPlayer(this.attackingPlayer.getCommandSenderName(), -5);
 		}
+
+		super.onDeath(p_70645_1_);
 	}
 }

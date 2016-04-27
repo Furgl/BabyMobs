@@ -8,7 +8,6 @@ import furgl.babyMobs.common.entity.monster.EntityBabyCaveSpider;
 import furgl.babyMobs.common.entity.monster.EntityBabyCreeper;
 import furgl.babyMobs.common.entity.monster.EntityBabyEnderman;
 import furgl.babyMobs.common.entity.monster.EntityBabyGhast;
-import furgl.babyMobs.common.entity.monster.EntityBabyGuardian;
 import furgl.babyMobs.common.entity.monster.EntityBabyIronGolem;
 import furgl.babyMobs.common.entity.monster.EntityBabyOcelot;
 import furgl.babyMobs.common.entity.monster.EntityBabyPigZombie;
@@ -19,6 +18,7 @@ import furgl.babyMobs.common.entity.monster.EntityBabySquid;
 import furgl.babyMobs.common.entity.monster.EntityBabyWitch;
 import furgl.babyMobs.common.entity.monster.EntityBabyWitherSkeleton;
 import furgl.babyMobs.common.entity.monster.EntityBabyZombie;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.monster.EntityBlaze;
@@ -26,7 +26,6 @@ import net.minecraft.entity.monster.EntityCaveSpider;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.entity.monster.EntityGuardian;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntitySkeleton;
@@ -40,13 +39,15 @@ public class EntityAIBabyFollowParent extends EntityAIBase
 {
 	/** The child that is following its parent. */
 	private EntityLiving child;
-	private EntityLiving parent;
+	public EntityLiving parent;
+	private boolean isAIEnabled;
 	private double field1;
 	private int field2;
 
-	public EntityAIBabyFollowParent(EntityLiving entityliving, double par2)
+	public EntityAIBabyFollowParent(EntityLiving entityliving, double par2, boolean isAIEnabled)
 	{
 		this.child = entityliving;
+		this.isAIEnabled = isAIEnabled;
 		this.field1 = par2;
 	}
 
@@ -58,10 +59,10 @@ public class EntityAIBabyFollowParent extends EntityAIBase
 	{
 		if (!(this.child.getAttackTarget() == null))
 			return false;
-		List<?> list = this.child.worldObj.getEntitiesWithinAABB(this.getParent(this.child), this.child.getEntityBoundingBox().expand(8.0D, 4.0D, 8.0D));
+		List list = this.child.worldObj.getEntitiesWithinAABB(this.getParent(this.child), this.child.boundingBox.expand(8.0D, 4.0D, 8.0D));
 		EntityLiving entityliving = null;
 		double d0 = Double.MAX_VALUE;
-		Iterator<?> iterator = list.iterator();
+		Iterator iterator = list.iterator();
 
 		while (iterator.hasNext())
 		{
@@ -90,7 +91,7 @@ public class EntityAIBabyFollowParent extends EntityAIBase
 		}
 	}
 
-	private Class<?> getParent(EntityLiving taskOwner) {
+	private Class getParent(EntityLiving taskOwner) {
 		if (taskOwner.getClass() == EntityBabyCreeper.class)
 		{
 			return EntityCreeper.class;
@@ -114,10 +115,6 @@ public class EntityAIBabyFollowParent extends EntityAIBase
 		else if (taskOwner.getClass() == EntityBabyWitch.class)
 		{
 			return EntityWitch.class;
-		}
-		else if (taskOwner.getClass() == EntityBabyGuardian.class)
-		{
-			return EntityGuardian.class;
 		}
 		else if (taskOwner.getClass() == EntityBabySquid.class)
 		{
@@ -198,9 +195,13 @@ public class EntityAIBabyFollowParent extends EntityAIBase
 		if (--this.field2 <= 0)
 		{
 			this.field2 = 10;
-			if (this.child instanceof EntityBabyGhast)
+			if (!this.isAIEnabled && this.child instanceof EntityCreature)
+				((EntityCreature) this.child).setPathToEntity(this.child.worldObj.getEntityPathToXYZ(child, (int)parent.posX, (int)parent.posY, (int)parent.posZ, 10.0F, true, false, false, true));
+			else if (this.child instanceof EntityBabyGhast)
 			{
-				((EntityBabyGhast) this.child).getMoveHelper().setMoveTo(this.parent.posX, this.parent.posY, this.parent.posZ, this.child.getAIMoveSpeed());
+				((EntityBabyGhast) this.child).waypointX = this.parent.posX;
+				((EntityBabyGhast) this.child).waypointY = this.parent.posY;
+				((EntityBabyGhast) this.child).waypointZ = this.parent.posZ;
 			}
 			else
 				this.child.getNavigator().tryMoveToEntityLiving(this.parent, this.field1);

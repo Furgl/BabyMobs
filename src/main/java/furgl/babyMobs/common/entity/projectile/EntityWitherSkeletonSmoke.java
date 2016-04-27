@@ -18,6 +18,7 @@ public class EntityWitherSkeletonSmoke extends EntityThrowable
 	private int heightIterator;
 	private int entityIterator;
 	private int maxAge;
+	
 	public EntityWitherSkeletonSmoke(World world)
 	{
 		super(world);

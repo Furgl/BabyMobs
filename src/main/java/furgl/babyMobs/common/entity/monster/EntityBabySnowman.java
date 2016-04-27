@@ -1,6 +1,5 @@
 package furgl.babyMobs.common.entity.monster;
 
-import furgl.babyMobs.client.gui.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.projectile.EntitySnowmanSnowball;
@@ -23,41 +22,32 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 
 public class EntityBabySnowman extends EntityGolem implements IRangedAttackMob
 {
-	public EntityBabySnowman(World worldIn)
+
+	public EntityBabySnowman(World p_i1692_1_)
 	{
-		super(worldIn);
+		super(p_i1692_1_);
 		this.setSize(0.35F, 0.95F);
 		this.experienceValue = (int)(this.experienceValue * 2.5F);
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.35D);
-		this.tasks.addTask(5, new EntityAIBabyFollowParent(this, 1.1D));
-		((PathNavigateGround)this.getNavigator()).func_179690_a(false);
-		
+		this.tasks.addTask(5, new EntityAIBabyFollowParent(this, 1.1D, this.isAIEnabled()));
+		this.getNavigator().setAvoidsWater(false);
+
 		this.tasks.addTask(1, new EntityAIArrowAttack(this, 1.25D, 20, 10.0F));
 		this.tasks.addTask(2, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(4, new EntityAILookIdle(this));
-		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityLiving.class, 10, true, false, IMob.mobSelector));
-	}	
-    
-	@Override
-	public void onDeath(DamageSource cause) //first achievement
-    {
-		if (!this.worldObj.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-			((EntityPlayer)cause.getEntity()).triggerAchievement(Achievements.achievementWhyAreTheySoStrong);
-		super.onDeath(cause);
-    }
+		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityLiving.class, 0, true, false, IMob.mobSelector));
+	}
 	
-	@Override
+	//TODO sound and middle click
+    @Override
 	protected boolean func_146066_aG()
 	{
 		return true;
@@ -71,6 +61,16 @@ public class EntityBabySnowman extends EntityGolem implements IRangedAttackMob
 
 	@Override
 	public boolean isChild()
+	{
+		return true;
+	}
+	//end
+
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	@Override
+	public boolean isAIEnabled()
 	{
 		return true;
 	}
@@ -91,45 +91,39 @@ public class EntityBabySnowman extends EntityGolem implements IRangedAttackMob
 	public void onLivingUpdate()
 	{
 		super.onLivingUpdate();
+		int i = MathHelper.floor_double(this.posX);
+		int j = MathHelper.floor_double(this.posY);
+		int k = MathHelper.floor_double(this.posZ);
 
-		if (!this.worldObj.isRemote)
+		if (this.isWet())
 		{
-			int i = MathHelper.floor_double(this.posX);
-			int j = MathHelper.floor_double(this.posY);
-			int k = MathHelper.floor_double(this.posZ);
+			this.attackEntityFrom(DamageSource.drown, 1.0F);
+		}
 
-			if (this.isWet())
+		if (this.worldObj.getBiomeGenForCoords(i, k).getFloatTemperature(i, j, k) > 1.0F)
+		{
+			this.attackEntityFrom(DamageSource.onFire, 1.0F);
+		}
+
+		for (int l = 0; l < 4; ++l)
+		{
+			i = MathHelper.floor_double(this.posX + (l % 2 * 2 - 1) * 0.25F);
+			j = MathHelper.floor_double(this.posY);
+			k = MathHelper.floor_double(this.posZ + (l / 2 % 2 * 2 - 1) * 0.25F);
+
+			//TODO ice
+			if (Config.useSpecialAbilities)
 			{
-				this.attackEntityFrom(DamageSource.drown, 1.0F);
-			}
-
-			if (this.worldObj.getBiomeGenForCoords(new BlockPos(i, 0, k)).getFloatTemperature(new BlockPos(i, j, k)) > 1.0F)
-			{
-				this.attackEntityFrom(DamageSource.onFire, 1.0F);
-			}
-
-
-
-			for (int l = 0; l < 4; ++l)
-			{
-				i = MathHelper.floor_double(this.posX + (l % 2 * 2 - 1) * 0.25F);
-				j = MathHelper.floor_double(this.posY);
-				k = MathHelper.floor_double(this.posZ + (l / 2 % 2 * 2 - 1) * 0.25F);
-
-				//TODO ice
-				if (Config.useSpecialAbilities)
+				if (this.worldObj.getBlock(i, j-1, k).getMaterial() == Material.water/* && this.worldObj.getBiomeGenForCoords(i, k).getFloatTemperature(i, j-1, k) < 0.8F*/ && this.getHealth() > 0)
 				{
-					if (this.worldObj.getBlockState(new BlockPos(i, j-1, k)).getBlock().getMaterial() == Material.water/* && this.worldObj.getBiomeGenForCoords(new BlockPos(i, 0, k)).getFloatTemperature(new BlockPos(i, j-1, k)) < 0.8F*/ && this.getHealth() > 0)
-					{
-						this.worldObj.setBlockState(new BlockPos(i,j-1,k), Blocks.ice.getDefaultState());
-					}
+					this.worldObj.setBlock(i,j-1,k, Blocks.ice);
 				}
-				//end
+			}
+			//end
 
-				if (this.worldObj.getBlockState(new BlockPos(i, j, k)).getBlock().getMaterial() == Material.air/* && this.worldObj.getBiomeGenForCoords(new BlockPos(i, 0, k)).getFloatTemperature(new BlockPos(i, j, k)) < 0.8F */&& Blocks.snow_layer.canPlaceBlockAt(this.worldObj, new BlockPos(i, j, k)) && this.getHealth() > 0)
-				{
-					this.worldObj.setBlockState(new BlockPos(i, j, k), Blocks.snow_layer.getDefaultState());
-				}
+			if (this.worldObj.getBlock(i, j, k).getMaterial() == Material.air/* && this.worldObj.getBiomeGenForCoords(i, k).getFloatTemperature(i, j, k) < 0.8F*/ && Blocks.snow_layer.canPlaceBlockAt(this.worldObj, i, j, k) && this.getHealth() > 0)
+			{
+				this.worldObj.setBlock(i, j, k, Blocks.snow_layer);
 			}
 		}
 	}
@@ -139,8 +133,22 @@ public class EntityBabySnowman extends EntityGolem implements IRangedAttackMob
 	{
 		return Items.snowball;
 	}
-	
+
 	/**
+	 * Drop 0-2 items of this living's type
+	 */
+	@Override
+	protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
+	{
+		int j = this.rand.nextInt(16);
+
+		for (int k = 0; k < j; ++k)
+		{
+			this.dropItem(Items.snowball, 1);
+		}
+	}
+
+    /**
      * Returns the sound this mob makes while it's alive.
      */
     @Override
@@ -166,21 +174,7 @@ public class EntityBabySnowman extends EntityGolem implements IRangedAttackMob
     {
         return null;
     }
-
-	/**
-	 * Drop 0-2 items of this living's type
-	 */
-	@Override
-	protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
-	{
-		int j = this.rand.nextInt(16);
-
-		for (int k = 0; k < j; ++k)
-		{
-			this.dropItem(Items.snowball, 1);
-		}
-	}
-
+	
 	/**
 	 * Attack the specified entity using a ranged attack.
 	 */
@@ -213,11 +207,5 @@ public class EntityBabySnowman extends EntityGolem implements IRangedAttackMob
 			this.worldObj.spawnEntityInWorld(entitysnowball);
 		}
 		//end
-	}
-
-	@Override
-	public float getEyeHeight()
-	{
-		return 0.85F;
 	}
 }

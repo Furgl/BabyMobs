@@ -10,7 +10,6 @@ import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityIronGolem;
-import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -26,9 +25,9 @@ public class EntityZombieChicken extends EntityChicken
 	{
 		super(world);
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));
-		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[] {EntityPigZombie.class}));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, true));
+		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, 0, true));
 		List list = this.tasks.taskEntries;
 		list.remove(4);
 		list.remove(3);
@@ -45,11 +44,7 @@ public class EntityZombieChicken extends EntityChicken
 	@Override
 	public void onUpdate()
 	{
-		if (this.riddenByEntity != null)
-			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
-		else
-			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.35D);
-		if (!this.worldObj.isRemote && this.worldObj.getDifficulty() == EnumDifficulty.PEACEFUL)
+		if (!this.worldObj.isRemote && this.worldObj.difficultySetting == EnumDifficulty.PEACEFUL)
 		{
 			this.setDead();
 		}
@@ -94,7 +89,7 @@ public class EntityZombieChicken extends EntityChicken
 	}
 
 	@Override
-	public boolean attackEntityAsMob(Entity p_70652_1_)
+	public boolean attackEntityAsMob(Entity p_70652_1_) //copied so chicken can attack
 	{
 		float f = (float)this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
 		int i = 0;
@@ -102,7 +97,7 @@ public class EntityZombieChicken extends EntityChicken
 		if (p_70652_1_ instanceof EntityLivingBase)
 		{
 			f += EnchantmentHelper.func_152377_a(this.getHeldItem(), ((EntityLivingBase)p_70652_1_).getCreatureAttribute());
-			i += EnchantmentHelper.getKnockbackModifier(this);
+			i += EnchantmentHelper.getKnockbackModifier(this, null);
 		}
 
 		boolean flag = p_70652_1_.attackEntityFrom(DamageSource.causeMobDamage(this), f);
@@ -123,7 +118,7 @@ public class EntityZombieChicken extends EntityChicken
 				p_70652_1_.setFire(j * 4);
 			}
 
-			this.func_174815_a(this, p_70652_1_);
+			//this.func_174815_a(this, p_70652_1_);
 		}
 
 		return flag;

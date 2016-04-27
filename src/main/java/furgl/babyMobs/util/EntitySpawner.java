@@ -17,6 +17,7 @@ public class EntitySpawner
 	private int totalDelay;
 	private Class entityClass;
 	private Entity entity;
+	
 	//Essential variables - always specified via constructor
 	protected World world;
 	protected Vec3 origin;

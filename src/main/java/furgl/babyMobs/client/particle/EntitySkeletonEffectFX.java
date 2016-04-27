@@ -1,13 +1,13 @@
 package furgl.babyMobs.client.particle;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import furgl.babyMobs.common.entity.monster.EntityBabySkeleton;
 import furgl.babyMobs.util.EntityMover;
 import furgl.babyMobs.util.EntitySpawner;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class EntitySkeletonEffectFX extends EntityFX

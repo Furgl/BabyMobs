@@ -2,13 +2,10 @@ package furgl.babyMobs.client;
 
 import java.lang.reflect.InvocationTargetException;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import furgl.babyMobs.client.gui.Achievements;
-import furgl.babyMobs.client.model.ModelBabyCreeper;
 import furgl.babyMobs.client.model.ModelBabyOcelot;
-import furgl.babyMobs.client.model.ModelBabySkeleton;
-import furgl.babyMobs.client.model.ModelBabySpider;
 import furgl.babyMobs.client.model.ModelBabySquid;
-import furgl.babyMobs.client.model.ModelBabyWitherSkeleton;
 import furgl.babyMobs.client.model.ModelZombieChicken;
 import furgl.babyMobs.client.model.ModelZombiePig;
 import furgl.babyMobs.client.particle.EntityBlazeFlamethrowerFX;
@@ -21,7 +18,6 @@ import furgl.babyMobs.client.renderer.entity.mob.RenderBabyCreeper;
 import furgl.babyMobs.client.renderer.entity.mob.RenderBabyDragon;
 import furgl.babyMobs.client.renderer.entity.mob.RenderBabyEnderman;
 import furgl.babyMobs.client.renderer.entity.mob.RenderBabyGhast;
-import furgl.babyMobs.client.renderer.entity.mob.RenderBabyGuardian;
 import furgl.babyMobs.client.renderer.entity.mob.RenderBabyIronGolem;
 import furgl.babyMobs.client.renderer.entity.mob.RenderBabyOcelot;
 import furgl.babyMobs.client.renderer.entity.mob.RenderBabyPigZombie;
@@ -36,14 +32,12 @@ import furgl.babyMobs.client.renderer.entity.mob.RenderBabyZombie;
 import furgl.babyMobs.client.renderer.entity.mob.RenderZombieChicken;
 import furgl.babyMobs.client.renderer.entity.mob.RenderZombiePig;
 import furgl.babyMobs.common.CommonProxy;
-import furgl.babyMobs.common.block.ModBlocks;
 import furgl.babyMobs.common.entity.monster.EntityBabyBlaze;
 import furgl.babyMobs.common.entity.monster.EntityBabyCaveSpider;
 import furgl.babyMobs.common.entity.monster.EntityBabyCreeper;
 import furgl.babyMobs.common.entity.monster.EntityBabyDragon;
 import furgl.babyMobs.common.entity.monster.EntityBabyEnderman;
 import furgl.babyMobs.common.entity.monster.EntityBabyGhast;
-import furgl.babyMobs.common.entity.monster.EntityBabyGuardian;
 import furgl.babyMobs.common.entity.monster.EntityBabyIronGolem;
 import furgl.babyMobs.common.entity.monster.EntityBabyOcelot;
 import furgl.babyMobs.common.entity.monster.EntityBabyPigZombie;
@@ -79,7 +73,6 @@ import net.minecraft.stats.Achievement;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.AchievementPage;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy extends CommonProxy
 {	
@@ -87,10 +80,8 @@ public class ClientProxy extends CommonProxy
 	public void registerRenders()
 	{
 		registerEntityRenders();
-		ModItems.registerRenders();
-		ModBlocks.registerRenders();
 	}
-	
+
 	@Override
 	public void registerAchievements()
 	{
@@ -159,7 +150,7 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void spawnEntityDragonParticlesFX(EntityBabyDragon entityBabyDragon) 
 	{ 
-		EntitySpawner spawner = new EntitySpawner(EntityDragonParticlesFX.class, entityBabyDragon.worldObj, new Vec3(entityBabyDragon.dragonEgg.xCoord+0.5D, entityBabyDragon.dragonEgg.yCoord, entityBabyDragon.dragonEgg.zCoord+0.5D), 10);
+		EntitySpawner spawner = new EntitySpawner(EntityDragonParticlesFX.class, entityBabyDragon.worldObj, Vec3.createVectorHelper(entityBabyDragon.dragonEgg.xCoord+0.5D, entityBabyDragon.dragonEgg.yCoord, entityBabyDragon.dragonEgg.zCoord+0.5D), 10);
 		spawner.setShapeCircle(0.8D);
 		spawner.setMovementFollowShape(0.1D);
 		spawner.setUpdateTick(10);
@@ -168,35 +159,34 @@ public class ClientProxy extends CommonProxy
 
 	private void registerEntityRenders() 
 	{
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabySpider.class, new RenderBabySpider(Minecraft.getMinecraft().getRenderManager(), new ModelBabySpider(), 0));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabySkeleton.class, new RenderBabySkeleton(Minecraft.getMinecraft().getRenderManager(), new ModelBabySkeleton(), 0));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyCreeper.class, new RenderBabyCreeper(Minecraft.getMinecraft().getRenderManager(), new ModelBabyCreeper(), 0));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyWitherSkeleton.class, new RenderBabyWitherSkeleton(Minecraft.getMinecraft().getRenderManager(), new ModelBabyWitherSkeleton(), 0));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyEnderman.class, new RenderBabyEnderman(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyBlaze.class, new RenderBabyBlaze(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyWitch.class, new RenderBabyWitch(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyGuardian.class, new RenderBabyGuardian(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabySquid.class, new RenderBabySquid(Minecraft.getMinecraft().getRenderManager(), new ModelBabySquid(), 0));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyCaveSpider.class, new RenderBabyCaveSpider(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyZombie.class, new RenderBabyZombie(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyPigZombie.class, new RenderBabyPigZombie(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyGhast.class, new RenderBabyGhast(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabySnowman.class, new RenderBabySnowman(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyIronGolem.class, new RenderBabyIronGolem(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyWither.class, new RenderBabyWither(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyDragon.class, new RenderBabyDragon(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyOcelot.class, new RenderBabyOcelot(Minecraft.getMinecraft().getRenderManager(), new ModelBabyOcelot(), 0));
-		RenderingRegistry.registerEntityRenderingHandler(EntityZombieChicken.class, new RenderZombieChicken(Minecraft.getMinecraft().getRenderManager(), new ModelZombieChicken(), 0));
-		RenderingRegistry.registerEntityRenderingHandler(EntityZombiePig.class, new RenderZombiePig(Minecraft.getMinecraft().getRenderManager(), new ModelZombiePig(), 0));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabySpider.class, new RenderBabySpider());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabySkeleton.class, new RenderBabySkeleton());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyCreeper.class, new RenderBabyCreeper());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyWitherSkeleton.class, new RenderBabyWitherSkeleton());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyEnderman.class, new RenderBabyEnderman());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyBlaze.class, new RenderBabyBlaze());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyWitch.class, new RenderBabyWitch());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabySquid.class, new RenderBabySquid(new ModelBabySquid(), 0.4F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyCaveSpider.class, new RenderBabyCaveSpider());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyZombie.class, new RenderBabyZombie());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyPigZombie.class, new RenderBabyPigZombie());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyGhast.class, new RenderBabyGhast());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabySnowman.class, new RenderBabySnowman());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyIronGolem.class, new RenderBabyIronGolem());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyWither.class, new RenderBabyWither());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyDragon.class, new RenderBabyDragon());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyOcelot.class, new RenderBabyOcelot(new ModelBabyOcelot(), 0.2F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityZombieChicken.class, new RenderZombieChicken(new ModelZombieChicken(), 0));
+		RenderingRegistry.registerEntityRenderingHandler(EntityZombiePig.class, new RenderZombiePig(new ModelZombiePig(), new ModelZombiePig(0.5F), 0));
 		
-		RenderingRegistry.registerEntityRenderingHandler(EntityCaveSpiderVenom.class, new RenderSnowball(Minecraft.getMinecraft().getRenderManager(), ModItems.cave_spider_venom, Minecraft.getMinecraft().getRenderItem()));
-		RenderingRegistry.registerEntityRenderingHandler(EntitySnowmanSnowball.class, new RenderSnowball(Minecraft.getMinecraft().getRenderManager(), Items.snowball, Minecraft.getMinecraft().getRenderItem()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBlazeFlamethrower.class, new RenderSnowball(Minecraft.getMinecraft().getRenderManager(), ModItems.invisible, Minecraft.getMinecraft().getRenderItem()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityCreeperExplosion.class, new RenderSnowball(Minecraft.getMinecraft().getRenderManager(), ModItems.creeper_explosion, Minecraft.getMinecraft().getRenderItem()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityWitherSkeletonSmoke.class, new RenderSnowball(Minecraft.getMinecraft().getRenderManager(), ModItems.invisible, Minecraft.getMinecraft().getRenderItem()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityGhastFireball.class, new RenderFireball(Minecraft.getMinecraft().getRenderManager(), 2.0F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityWitherWitherSkull.class, new RenderWitherSkull(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntitySkeletonArrow.class, new RenderArrow(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityWitherExplosion.class, new RenderSnowball(Minecraft.getMinecraft().getRenderManager(), ModItems.invisible, Minecraft.getMinecraft().getRenderItem()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityCaveSpiderVenom.class, new RenderSnowball(ModItems.cave_spider_venom, 0));
+		RenderingRegistry.registerEntityRenderingHandler(EntitySnowmanSnowball.class, new RenderSnowball(Items.snowball, 0));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBlazeFlamethrower.class, new RenderSnowball(ModItems.invisible, 0));
+		RenderingRegistry.registerEntityRenderingHandler(EntityCreeperExplosion.class, new RenderSnowball(ModItems.creeper_explosion, 0));
+		RenderingRegistry.registerEntityRenderingHandler(EntityWitherSkeletonSmoke.class, new RenderSnowball(ModItems.invisible, 0));
+		RenderingRegistry.registerEntityRenderingHandler(EntityGhastFireball.class, new RenderFireball(2.0F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityWitherWitherSkull.class, new RenderWitherSkull());
+		RenderingRegistry.registerEntityRenderingHandler(EntitySkeletonArrow.class, new RenderArrow());
+		RenderingRegistry.registerEntityRenderingHandler(EntityWitherExplosion.class, new RenderSnowball(ModItems.invisible, 0));
 	}
 }

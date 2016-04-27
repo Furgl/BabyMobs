@@ -1,10 +1,10 @@
 package furgl.babyMobs.common.event;
 
+import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.config.Config;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ConfigChangeEvent 
 {

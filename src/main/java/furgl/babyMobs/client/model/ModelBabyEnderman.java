@@ -1,8 +1,9 @@
 package furgl.babyMobs.client.model;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 
 public class ModelBabyEnderman extends ModelBiped
@@ -48,16 +49,16 @@ public class ModelBabyEnderman extends ModelBiped
 	{
 		isChild = true;
 		this.setRotationAngles(par2, par3, par4, par5, par6, par7, par1);
-		GlStateManager.pushMatrix();
+		GL11.glPushMatrix();
 		float f6 = 2F;
-		GlStateManager.scale(1.5F / f6, 1.5F / f6, 1.5F / f6);
-		GlStateManager.translate(0.0F, 16.0F * par7 + 0.3F,  0.0F);
+		GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
+		GL11.glTranslatef(0.0F, 16.0F * par7 + 0.3F,  0.0F);
 		this.bipedHead.render(par7);
 		this.bipedHeadwear.render(par7);
-		GlStateManager.popMatrix();
-		GlStateManager.pushMatrix();
-		GlStateManager.scale(1.0F / f6, 1.0F / f6, 1.0F / f6);
-		GlStateManager.translate(0.0F, 24.0F * par7, 0.0F);
+		GL11.glPopMatrix();
+		GL11.glPushMatrix();
+		GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
+		GL11.glTranslatef(0.0F, 24.0F * par7, 0.0F);
 		
 		this.bipedBody.render(par7);
 		this.bipedRightLeg.render(par7);
@@ -65,7 +66,7 @@ public class ModelBabyEnderman extends ModelBiped
 		this.bipedRightArm.render(par7);
 		this.bipedLeftArm.render(par7);
 		
-		GlStateManager.popMatrix();
+		GL11.glPopMatrix();
 	}
 	
 	@Override

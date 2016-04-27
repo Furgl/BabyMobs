@@ -11,7 +11,6 @@ import net.minecraft.stats.Achievement;
 
 public class Achievements 
 {
-	public static Achievement achievementWhyAreTheySoStrong;
 	public static Achievement achievementItsGettingHotInHere;
 	public static Achievement achievementLaserTag;
 	public static Achievement achievementItsMine;
@@ -21,19 +20,17 @@ public class Achievements
 	public static Achievement achievementBetterLuckNextTime;
 
 	public static List<Achievement> achievements = new ArrayList<Achievement>();
-
+	
 	public static void init()
 	{
-		achievementWhyAreTheySoStrong = new Achievement("achievement.whyAreTheySoStrong", "whyAreTheySoStrong", 0, 0, Items.spawn_egg, null);
-		achievementItsGettingHotInHere = new Achievement("achievement.itsGettingHotInHere", "itsGettingHotInHere", -1, 2, Items.blaze_powder, achievementWhyAreTheySoStrong);
-		achievementLaserTag = new Achievement("achievement.laserTag", "laserTag", 2, 1, Items.ender_eye, achievementWhyAreTheySoStrong);
-		achievementItsMine = new Achievement("achievement.itsMine", "itsMine", -3, 2, new ItemStack(Items.skull, 1, 1), achievementItsGettingHotInHere);
-		achievementICantSee = new Achievement("achievement.iCantSee", "iCantSee", 2, -1, Items.dye, achievementWhyAreTheySoStrong);
-		achievementBoomBaby = new Achievement("achievement.boomBaby", "boomBaby", -1, -2, Item.getItemFromBlock(Blocks.tnt), achievementWhyAreTheySoStrong);
-		achievementAFlowerForMe = new Achievement("achievement.aFlowerForMe", "aFlowerForMe", -3, 0, Item.getItemFromBlock(Blocks.red_flower), achievementWhyAreTheySoStrong);
-		achievementBetterLuckNextTime = new Achievement("achievement.betterLuckNextTime", "betterLuckNextTime", -3, 4, Items.nether_star, achievementItsMine);
+		achievementItsGettingHotInHere = new Achievement("achievement.itsGettingHotInHere", "itsGettingHotInHere", 0, 0, Items.blaze_powder, null);
+		achievementLaserTag = new Achievement("achievement.laserTag", "laserTag", 0, 1, Items.ender_eye, null);
+		achievementItsMine = new Achievement("achievement.itsMine", "itsMine", 0, 2, new ItemStack(Items.skull, 1, 1), null);
+		achievementICantSee = new Achievement("achievement.iCantSee", "iCantSee", 1, 0, Items.dye, null);
+		achievementBoomBaby = new Achievement("achievement.boomBaby", "boomBaby", 1, 1, Item.getItemFromBlock(Blocks.tnt), null);
+		achievementAFlowerForMe = new Achievement("achievement.aFlowerForMe", "aFlowerForMe", 1, 2, Item.getItemFromBlock(Blocks.red_flower), null);
+		achievementBetterLuckNextTime = new Achievement("achievement.betterLuckNextTime", "betterLuckNextTime", 2, 0, Items.nether_star, null);
 
-		achievements.add(achievementWhyAreTheySoStrong);
 		achievements.add(achievementItsGettingHotInHere);
 		achievements.add(achievementLaserTag);
 		achievements.add(achievementItsMine);
@@ -41,6 +38,5 @@ public class Achievements
 		achievements.add(achievementBoomBaby);
 		achievements.add(achievementAFlowerForMe);
 		achievements.add(achievementBetterLuckNextTime);
-
 	}
 }

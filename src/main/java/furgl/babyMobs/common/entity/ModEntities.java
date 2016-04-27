@@ -1,5 +1,6 @@
 package furgl.babyMobs.common.entity;
 
+import cpw.mods.fml.common.registry.EntityRegistry;
 import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.entity.monster.EntityBabyBlaze;
 import furgl.babyMobs.common.entity.monster.EntityBabyCaveSpider;
@@ -7,7 +8,6 @@ import furgl.babyMobs.common.entity.monster.EntityBabyCreeper;
 import furgl.babyMobs.common.entity.monster.EntityBabyDragon;
 import furgl.babyMobs.common.entity.monster.EntityBabyEnderman;
 import furgl.babyMobs.common.entity.monster.EntityBabyGhast;
-import furgl.babyMobs.common.entity.monster.EntityBabyGuardian;
 import furgl.babyMobs.common.entity.monster.EntityBabyIronGolem;
 import furgl.babyMobs.common.entity.monster.EntityBabyOcelot;
 import furgl.babyMobs.common.entity.monster.EntityBabyPigZombie;
@@ -28,10 +28,9 @@ import furgl.babyMobs.common.entity.projectile.EntityGhastFireball;
 import furgl.babyMobs.common.entity.projectile.EntitySkeletonArrow;
 import furgl.babyMobs.common.entity.projectile.EntitySnowmanSnowball;
 import furgl.babyMobs.common.entity.projectile.EntitySquidInk;
-import furgl.babyMobs.common.entity.projectile.EntityWitherSkeletonSmoke;
 import furgl.babyMobs.common.entity.projectile.EntityWitherExplosion;
+import furgl.babyMobs.common.entity.projectile.EntityWitherSkeletonSmoke;
 import furgl.babyMobs.common.entity.projectile.EntityWitherWitherSkull;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 public class ModEntities 
 {
@@ -45,7 +44,6 @@ public class ModEntities
 		EntityRegistry.registerModEntity(EntityBabyEnderman.class, "babyEnderman", ID++, BabyMobs.instance, 64, 3, true);
 		EntityRegistry.registerModEntity(EntityBabyBlaze.class, "babyBlaze", ID++, BabyMobs.instance, 64, 3, true);
 		EntityRegistry.registerModEntity(EntityBabyWitch.class, "babyWitch", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyGuardian.class, "babyGuardian", ID++, BabyMobs.instance, 64, 3, true);
 		EntityRegistry.registerModEntity(EntityBabySquid.class, "babySquid", ID++, BabyMobs.instance, 64, 3, true);
 		EntityRegistry.registerModEntity(EntityBabyCaveSpider.class, "babyCaveSpider", ID++, BabyMobs.instance, 64, 3, true);
 		EntityRegistry.registerModEntity(EntityBabyZombie.class, "babyZombie", ID++, BabyMobs.instance, 64, 3, true);
@@ -64,7 +62,8 @@ public class ModEntities
 		EntityRegistry.registerModEntity(EntityBlazeFlamethrower.class, "blazeFlamethrower", ID++, BabyMobs.instance, 64, 3, true);
 		EntityRegistry.registerModEntity(EntityCreeperExplosion.class, "creeperExplosion", ID++, BabyMobs.instance, 64, 3, true);
 		EntityRegistry.registerModEntity(EntityWitherSkeletonSmoke.class, "witherSkeletonSmoke", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntitySquidInk.class, "squidInk", ID++, BabyMobs.instance, 64, 3, true);		EntityRegistry.registerModEntity(EntityGhastFireball.class, "ghastFireball", ID++, BabyMobs.instance, 64, 3, true);
+		EntityRegistry.registerModEntity(EntitySquidInk.class, "squidInk", ID++, BabyMobs.instance, 64, 3, true);
+		EntityRegistry.registerModEntity(EntityGhastFireball.class, "ghastFireball", ID++, BabyMobs.instance, 64, 3, true);
 		EntityRegistry.registerModEntity(EntityWitherWitherSkull.class, "witherWitherSkull", ID++, BabyMobs.instance, 64, 3, true);
 		EntityRegistry.registerModEntity(EntitySkeletonArrow.class, "skeletonArrow", ID++, BabyMobs.instance, 64, 3, true);
 		EntityRegistry.registerModEntity(EntityWitherExplosion.class, "witherExplosion", ID++, BabyMobs.instance, 64, 3, true);

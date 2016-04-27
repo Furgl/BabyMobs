@@ -2,12 +2,11 @@ package furgl.babyMobs.client.model;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelBabySquid extends ModelBase
@@ -65,11 +64,11 @@ public class ModelBabySquid extends ModelBase
     {
     	isChild = true;
     	
-		 // scale the whole thing for big or small entities
-		float scaleFactor = 0.5F;
+		 // glScalef the whole thing for big or small entities
+		float glScalefFactor = 0.5F;
 	    GL11.glPushMatrix();
 	    GL11.glTranslatef(0F, 0F, 0F);
-	    GL11.glScalef(scaleFactor, scaleFactor, scaleFactor);
+	    GL11.glScalef(glScalefFactor, glScalefFactor, glScalefFactor);
     	
     	this.setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_, p_78088_1_);
         this.squidBody.render(p_78088_7_);
@@ -79,6 +78,6 @@ public class ModelBabySquid extends ModelBase
             this.squidTentacles[i].render(p_78088_7_);
         }
         
-        GlStateManager.popMatrix();
+        GL11.glPopMatrix();
     }
 }

@@ -3,13 +3,14 @@ package furgl.babyMobs.common.event;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.monster.EntityBabyBlaze;
 import furgl.babyMobs.common.entity.monster.EntityBabyCaveSpider;
 import furgl.babyMobs.common.entity.monster.EntityBabyCreeper;
 import furgl.babyMobs.common.entity.monster.EntityBabyEnderman;
 import furgl.babyMobs.common.entity.monster.EntityBabyGhast;
-import furgl.babyMobs.common.entity.monster.EntityBabyGuardian;
 import furgl.babyMobs.common.entity.monster.EntityBabyIronGolem;
 import furgl.babyMobs.common.entity.monster.EntityBabyPigZombie;
 import furgl.babyMobs.common.entity.monster.EntityBabySkeleton;
@@ -28,7 +29,6 @@ import net.minecraft.entity.monster.EntityCaveSpider;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.entity.monster.EntityGuardian;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntitySkeleton;
@@ -41,8 +41,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class BabyReplaceEvent 
 {
@@ -63,8 +61,7 @@ public class BabyReplaceEvent
 					event.entity.setDead();
 					EntityLiving entityToSpawn = new EntityZombieChicken(entity.worldObj);
 					entityToSpawn.setLocationAndAngles(entity.posX, entity.posY, entity.posZ,  entity.rotationYaw, 0.0F);
-					entityToSpawn.func_180482_a(entity.worldObj.getDifficultyForLocation(entity.getPosition()), (IEntityLivingData)null);
-					((EntityZombieChicken) entityToSpawn).setChickenJockey(true);
+					entityToSpawn.onSpawnWithEgg((IEntityLivingData)null);
 					entity.worldObj.spawnEntityInWorld(entityToSpawn);
 					entity.mountEntity(entityToSpawn);
 					entityToSpawn.playLivingSound();
@@ -74,8 +71,7 @@ public class BabyReplaceEvent
 			{
 				EntityLiving entityToSpawn = new EntityZombieChicken(event.entity.worldObj);
 				entityToSpawn.setLocationAndAngles(event.entity.posX, event.entity.posY, event.entity.posZ,  event.entity.rotationYaw, 0.0F);
-				entityToSpawn.func_180482_a(event.entity.worldObj.getDifficultyForLocation(event.entity.getPosition()), (IEntityLivingData)null);
-				((EntityZombieChicken) entityToSpawn).setChickenJockey(true);
+				entityToSpawn.onSpawnWithEgg((IEntityLivingData)null);
 				event.entity.worldObj.spawnEntityInWorld(entityToSpawn);
 				event.entity.mountEntity(entityToSpawn);
 				entityToSpawn.playLivingSound();
@@ -142,12 +138,12 @@ public class BabyReplaceEvent
 			}
 			else if (event.entity.getClass() == EntityEnderman.class)
 			{
-				if (event.entity.worldObj.getBiomeGenForCoords(event.entity.getPosition()) == BiomeGenBase.sky && rand.nextInt(101) <= Config.babyEndermanEndRate)
+				if (event.entity.worldObj.getBiomeGenForCoords((int) event.entity.posX, (int) event.entity.posZ) == BiomeGenBase.sky && rand.nextInt(101) <= Config.babyEndermanEndRate)
 				{
 					this.spawnEntity(EntityBabyEnderman.class, event.entity);
 					event.entity.setDead();
 				}
-				else if (!(event.entity.worldObj.getBiomeGenForCoords(event.entity.getPosition()) == BiomeGenBase.sky) && rand.nextInt(101) <= Config.babyEndermanRate)
+				else if (!(event.entity.worldObj.getBiomeGenForCoords((int) event.entity.posX, (int) event.entity.posZ) == BiomeGenBase.sky) && rand.nextInt(101) <= Config.babyEndermanRate)
 				{
 					this.spawnEntity(EntityBabyEnderman.class, event.entity);
 					event.entity.setDead();
@@ -168,10 +164,13 @@ public class BabyReplaceEvent
 				if (rand.nextInt(101) <= Config.babyWitchRate)
 				{
 					this.spawnEntity(EntityBabyWitch.class, event.entity);
-					EntityLiving entityToSpawn = (EntityLiving) EntityList.createEntityByName("babymobs.babyOcelot", event.entity.worldObj);
-					entityToSpawn.setLocationAndAngles(event.entity.posX, event.entity.posY, event.entity.posZ,  MathHelper.wrapAngleTo180_float(event.entity.worldObj.rand.nextFloat() * 360.0F), 0.5F);
-					event.entity.worldObj.spawnEntityInWorld(entityToSpawn);
-					entityToSpawn.playLivingSound();
+					if (Config.useSpecialAbilities)
+					{
+						EntityLiving entityToSpawn = (EntityLiving) EntityList.createEntityByName("babymobs.babyOcelot", event.entity.worldObj);
+						entityToSpawn.setLocationAndAngles(event.entity.posX, event.entity.posY, event.entity.posZ,  MathHelper.wrapAngleTo180_float(event.entity.worldObj.rand.nextFloat() * 360.0F), 0.5F);
+						event.entity.worldObj.spawnEntityInWorld(entityToSpawn);
+						entityToSpawn.playLivingSound();
+					}
 					event.entity.setDead();
 				}
 			}
@@ -181,15 +180,6 @@ public class BabyReplaceEvent
 				entityToSpawn.setLocationAndAngles(event.entity.posX, event.entity.posY, event.entity.posZ,  MathHelper.wrapAngleTo180_float(event.entity.worldObj.rand.nextFloat() * 360.0F), 0.5F);
 				event.entity.worldObj.spawnEntityInWorld(entityToSpawn);
 				entityToSpawn.playLivingSound();
-			}
-			else if (event.entity.getClass() == EntityGuardian.class)
-			{
-
-				if (rand.nextInt(101) <= Config.babyGuardianRate)
-				{
-					this.spawnEntity(EntityBabyGuardian.class, event.entity);
-					event.entity.setDead();
-				}
 			}
 			else if (event.entity.getClass() == EntitySquid.class)
 			{
@@ -251,7 +241,10 @@ public class BabyReplaceEvent
 			originalEntity.writeToNBT(nbt);
 			nbt.setLong("UUIDLeast", nbt.getLong("UUIDLeast")+1l);
 			entityToSpawn.readFromNBT(nbt);
-			entityToSpawn.setCustomNameTag(originalEntity.getCustomNameTag());
+			if (entityToSpawn instanceof EntityLiving && originalEntity instanceof EntityLiving)
+			{
+				((EntityLiving)entityToSpawn).setCustomNameTag(((EntityLiving)originalEntity).getCustomNameTag());
+			}
 			world.spawnEntityInWorld(entityToSpawn);
 		} 
 		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException| NoSuchMethodException | SecurityException e) 

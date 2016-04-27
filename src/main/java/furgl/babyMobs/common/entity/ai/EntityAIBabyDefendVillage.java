@@ -38,7 +38,7 @@ public class EntityAIBabyDefendVillage extends EntityAITarget
             {
                 if (this.taskOwner.getRNG().nextInt(20) == 0)
                 {
-                    this.villageAgressorTarget = village.getNearestTargetPlayer(this.irongolem);
+                    this.villageAgressorTarget = village.findNearestVillageAggressor(this.irongolem);
                     return this.isSuitableTarget(this.villageAgressorTarget, false);
                 }
                 else

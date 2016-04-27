@@ -5,7 +5,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
@@ -46,7 +45,7 @@ public class EntityCreeperExplosion extends EntityThrowable
 			for (int i=0; i<2; i++)
 			{
 				BabyMobs.proxy.spawnEntitySquidInkFX(worldObj, this.posX, this.posY+0.3D, this.posZ, 0, 0, 0);
-				this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX, this.posY+0.5D, this.posZ, 0, 0, 0, new int[0]);
+				this.worldObj.spawnParticle("largesmoke", this.posX, this.posY+0.5D, this.posZ, 0, 0, 0);
 			}
 		}
 	}

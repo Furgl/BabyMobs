@@ -1,14 +1,15 @@
 package furgl.babyMobs.client.model;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import furgl.babyMobs.common.entity.monster.EntityBabyOcelot;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelBabyOcelot extends ModelBase
@@ -78,14 +79,14 @@ public class ModelBabyOcelot extends ModelBase
         if (this.isChild)
         {
             float f6 = 2.0F;
-            GlStateManager.pushMatrix();
-            GlStateManager.scale(1.5F / f6, 1.5F / f6, 1.5F / f6);
-            GlStateManager.translate(0.0F, 10.0F * p_78088_7_, 4.0F * p_78088_7_);
+            GL11.glPushMatrix();
+            GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
+            GL11.glTranslatef(0.0F, 10.0F * p_78088_7_, 4.0F * p_78088_7_);
             this.ocelotHead.render(p_78088_7_);
-            GlStateManager.popMatrix();
-            GlStateManager.pushMatrix();
-            GlStateManager.scale(1.0F / f6, 1.0F / f6, 1.0F / f6);
-            GlStateManager.translate(0.0F, 24.0F * p_78088_7_, 0.0F);
+            GL11.glPopMatrix();
+            GL11.glPushMatrix();
+            GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
+            GL11.glTranslatef(0.0F, 24.0F * p_78088_7_, 0.0F);
             this.ocelotBody.render(p_78088_7_);
             this.ocelotBackLeftLeg.render(p_78088_7_);
             this.ocelotBackRightLeg.render(p_78088_7_);
@@ -93,7 +94,7 @@ public class ModelBabyOcelot extends ModelBase
             this.ocelotFrontRightLeg.render(p_78088_7_);
             this.ocelotTail.render(p_78088_7_);
             this.ocelotTail2.render(p_78088_7_);
-            GlStateManager.popMatrix();
+            GL11.glPopMatrix();
         }
         else
         {

@@ -8,7 +8,6 @@ import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
@@ -31,7 +30,7 @@ public class EntitySnowmanSnowball extends EntityThrowable
 		if (this.worldObj.isRemote)
 		{
 			for (int i=0; i<2; i++)
-				this.worldObj.spawnParticle(EnumParticleTypes.SNOW_SHOVEL, this.posX+(this.rand.nextDouble()-0.5D), this.posY+(this.rand.nextDouble()-0.5D), this.posZ+(this.rand.nextDouble()-0.5D), 0, 0.1D, 0, new int[0]);
+				this.worldObj.spawnParticle("snowshovel", this.posX+(this.rand.nextDouble()-0.5D), this.posY+(this.rand.nextDouble()-0.5D), this.posZ+(this.rand.nextDouble()-0.5D), 0, 0.1D, 0);
 		}
 	}
 

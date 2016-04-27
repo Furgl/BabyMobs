@@ -2,14 +2,13 @@ package furgl.babyMobs.client.model;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelBabyWither extends ModelBase
@@ -54,11 +53,11 @@ public class ModelBabyWither extends ModelBase
     {
     	isChild = true;
     	
-		 // scale the whole thing for big or small entities
-		float scaleFactor = 0.5F;
+		 // glScalef the whole thing for big or small entities
+		float glScalefFactor = 0.5F;
 	    GL11.glPushMatrix();
-	    GL11.glTranslatef(0F, 1.5F-1.5F*scaleFactor, 0F);
-	    GL11.glScalef(scaleFactor, scaleFactor, scaleFactor);
+	    GL11.glTranslatef(0F, 1.5F-1.5F*glScalefFactor, 0F);
+	    GL11.glScalef(glScalefFactor, glScalefFactor, glScalefFactor);
     	
     	this.setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_, p_78088_1_);
         ModelRenderer[] amodelrenderer = this.heads;
@@ -81,7 +80,7 @@ public class ModelBabyWither extends ModelBase
             modelrenderer.render(p_78088_7_);
         }
         
-        GlStateManager.popMatrix();
+        GL11.glPopMatrix();
     }
 
     /**
@@ -107,7 +106,6 @@ public class ModelBabyWither extends ModelBase
     @Override
 	public void setLivingAnimations(EntityLivingBase p_78086_1_, float p_78086_2_, float p_78086_3_, float p_78086_4_)
     {
-        //EntityBabyWither EntityBabyWither = (EntityBabyWither)p_78086_1_;
 
         /*for (int i = 1; i < 3; ++i)
         {

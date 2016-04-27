@@ -27,7 +27,6 @@ import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,20 +39,19 @@ import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.stats.AchievementList;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProviderHell;
 import net.minecraftforge.common.util.FakePlayer;
 
 public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttackMob
 {
-	private EntityAIArrowAttack aiArrowAttack = new EntityAIArrowAttack(this, 1.0D, 20, 20, 15.0F);
+	private EntityAIArrowAttack aiArrowAttack = new EntityAIArrowAttack(this, 1.0D, 20, 60, 15.0F);
 	private EntityAIAttackOnCollide aiAttackOnCollide = new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.2D, false);
+
 	public EntityBabyWitherSkeleton(World worldIn)
 	{
 		super(worldIn);
@@ -61,10 +59,10 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 		this.experienceValue = (int)(this.experienceValue * 2.5F);
 		this.setSkeletonType(1);
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.35D);
-		this.maxHurtResistantTime = 50;
+		this.maxHurtResistantTime = 300;
+		this.getNavigator().setAvoidsWater(true);
 
 		this.tasks.addTask(2, new EntityAISwimming(this));
-		this.tasks.addTask(3, this.field_175455_a);
 		this.tasks.addTask(1, new EntityAIBabyAvoidEntity(this, new Predicate()
 		{
 			public boolean func_179945_a(Entity p_179945_1_)
@@ -85,43 +83,9 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 		{
 			this.setCombatTask();
 		}
-	}	
-
-	@Override
-	public void onDeath(DamageSource cause) //first achievement
-	{
-		if (!this.worldObj.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-			((EntityPlayer)cause.getEntity()).triggerAchievement(Achievements.achievementWhyAreTheySoStrong);
-		super.onDeath(cause);
-
-		//TODO skull drop
-		if (cause.getEntity() instanceof EntityPlayer)
-		{
-			int chance = 70 + 10*EnchantmentHelper.getLootingModifier((EntityLivingBase) cause.getEntity());
-			if (this.rand.nextInt(100) <= chance)
-			{
-				this.entityDropItem(new ItemStack(Items.skull, 1, 1), 0.0F);
-			}
-		}
-		//end
-		if (cause.getSourceOfDamage() instanceof EntityArrow && cause.getEntity() instanceof EntityPlayer)
-		{
-			EntityPlayer entityplayer = (EntityPlayer)cause.getEntity();
-			double d0 = entityplayer.posX - this.posX;
-			double d1 = entityplayer.posZ - this.posZ;
-
-			if (d0 * d0 + d1 * d1 >= 2500.0D)
-			{
-				entityplayer.triggerAchievement(AchievementList.snipeSkeleton);
-			}
-		}
-		else if (cause.getEntity() instanceof EntityCreeper && ((EntityCreeper)cause.getEntity()).getPowered() && ((EntityCreeper)cause.getEntity()).isAIEnabled())
-		{
-			((EntityCreeper)cause.getEntity()).func_175493_co();
-			this.entityDropItem(new ItemStack(Items.skull, 1, this.getSkeletonType() == 1 ? 1 : 0), 0.0F);
-		}
 	}
 
+	//TODO sound and middle click
 	@Override
 	protected boolean func_146066_aG()
 	{
@@ -139,6 +103,7 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 	{
 		return true;
 	}
+	//end
 
 	//TODO on attack 
 	@Override
@@ -160,7 +125,7 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 					player.addPotionEffect(new PotionEffect(Potion.confusion.id, 140, 3));
 					player.addPotionEffect(new PotionEffect(Potion.blindness.id, 20, 3));
 					player.knockBack(player, 0.0F, this.posX-player.posX, this.posZ-player.posZ);
-					Vec3 vec = new Vec3(this.posX, this.posY+0.5D, this.posZ);
+					Vec3 vec = Vec3.createVectorHelper(this.posX, this.posY+0.5D, this.posZ);
 					EntitySpawner entitySpawner = new EntitySpawner(EntityWitherSkeletonSmoke.class, this.worldObj, vec, 5);
 					entitySpawner.setShapeSphere(0);
 					entitySpawner.setMovementInOut(-1D);
@@ -173,19 +138,19 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 					for (int i=0; i<100; i++)
 					{
 						BabyMobs.proxy.spawnEntitySquidInkFX(worldObj,this.posX+(rand.nextDouble()-0.5D), this.posY+rand.nextDouble()*1.1D, this.posZ+(rand.nextDouble()-0.5D), 0, 0, 0);
-						this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX+(rand.nextDouble()-0.5D), this.posY+rand.nextDouble()*1.1D, this.posZ+(rand.nextDouble()-0.5D), 0, 0, 0, 0);
+						this.worldObj.spawnParticle("largesmoke", this.posX+(rand.nextDouble()-0.5D), this.posY+rand.nextDouble()*1.1D, this.posZ+(rand.nextDouble()-0.5D), 0, 0, 0);
 					}
 				}
 				if (!this.worldObj.isRemote)
 					this.addPotionEffect(new PotionEffect(Potion.invisibility.id, 50));
 
 				PathNavigate entityPathNavigate = this.getNavigator();
-				Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this, 16, 7, new Vec3(player.posX, player.posY, player.posZ));
+				Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this, 16, 7, Vec3.createVectorHelper(player.posX, player.posY, player.posZ));
 				if (vec3 != null)
 				{
 					while (player.getDistanceSq(vec3.xCoord, vec3.yCoord, vec3.zCoord) < player.getDistanceSqToEntity(this))
 					{
-						vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this, 16, 7, new Vec3(player.posX, player.posY, player.posZ));
+						vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this, 16, 7, Vec3.createVectorHelper(player.posX, player.posY, player.posZ));
 					}
 					entityPathNavigate.setPath(entityPathNavigate.getPathToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord), 1.2D);
 				}
@@ -199,6 +164,7 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 	protected void applyEntityAttributes()
 	{
 		super.applyEntityAttributes();
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
 	}
 
 	@Override
@@ -206,6 +172,15 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 	{
 		super.entityInit();
 		this.dataWatcher.addObject(13, new Byte((byte)0));
+	}
+
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	@Override
+	public boolean isAIEnabled()
+	{
+		return true;
 	}
 
 	/**
@@ -235,8 +210,7 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 		return "mob.skeleton.death";
 	}
 
-	@Override
-	protected void playStepSound(BlockPos p_180429_1_, Block p_180429_2_)
+	protected void playStepSound(int x, int y, int z, Block blockIn)
 	{
 		this.playSound("mob.skeleton.step", 0.15F, 1.0F);
 	}
@@ -275,6 +249,45 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 	@Override
 	public void onLivingUpdate()
 	{
+		if (this.getHeldItem() != null)
+			this.setCurrentItemOrArmor(0, null);
+		if (this.worldObj.isDaytime() && !this.worldObj.isRemote)
+		{
+			float f = this.getBrightness(1.0F);
+
+			if (f > 0.5F && this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F && this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ)))
+			{
+				boolean flag = true;
+				ItemStack itemstack = this.getEquipmentInSlot(4);
+
+				if (itemstack != null)
+				{
+					if (itemstack.isItemStackDamageable())
+					{
+						itemstack.setItemDamage(itemstack.getItemDamageForDisplay() + this.rand.nextInt(2));
+
+						if (itemstack.getItemDamageForDisplay() >= itemstack.getMaxDamage())
+						{
+							this.renderBrokenItemStack(itemstack);
+							this.setCurrentItemOrArmor(4, (ItemStack)null);
+						}
+					}
+
+					flag = false;
+				}
+
+				if (flag)
+				{
+					this.setFire(8);
+				}
+			}
+		}
+
+		if (this.worldObj.isRemote && this.getSkeletonType() == 1)
+		{
+			//this.setSize(0.72F, 2.34F);
+		}
+
 		super.onLivingUpdate();
 	}
 
@@ -290,6 +303,37 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 		{
 			EntityCreature entitycreature = (EntityCreature)this.ridingEntity;
 			this.renderYawOffset = entitycreature.renderYawOffset;
+		}
+	}
+
+	/**
+	 * Called when the mob's health reaches 0.
+	 */
+	@Override
+	public void onDeath(DamageSource cause)
+	{
+		super.onDeath(cause);
+		//TODO skull drop
+		if (cause.getEntity() instanceof EntityPlayer)
+		{
+			int chance = 70 + 10*EnchantmentHelper.getLootingModifier((EntityLivingBase) cause.getEntity());
+			if (this.rand.nextInt(100) <= chance)
+			{
+				this.entityDropItem(new ItemStack(Items.skull, 1, 1), 0.0F);
+			}
+		}
+		//end
+
+		if (cause.getSourceOfDamage() instanceof EntityArrow && cause.getEntity() instanceof EntityPlayer)
+		{
+			EntityPlayer entityplayer = (EntityPlayer)cause.getEntity();
+			double d0 = entityplayer.posX - this.posX;
+			double d1 = entityplayer.posZ - this.posZ;
+
+			if (d0 * d0 + d1 * d1 >= 2500.0D)
+			{
+				entityplayer.triggerAchievement(AchievementList.snipeSkeleton);
+			}
 		}
 	}
 
@@ -335,11 +379,8 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 		}
 	}
 
-	/**
-	 * Makes entity wear random armor based on difficulty
-	 */
 	@Override
-	protected void addRandomArmor()
+	protected void dropRareDrop(int p_70600_1_)
 	{
 		if (this.getSkeletonType() == 1)
 		{
@@ -347,17 +388,20 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 		}
 	}
 
+	/**
+	 * Makes entity wear random armor based on difficulty
+	 */
 	@Override
-	protected void func_180481_a(DifficultyInstance p_180481_1_)
+	protected void addRandomArmor()
 	{
-		super.func_180481_a(p_180481_1_);
+		super.addRandomArmor();
 		this.setCurrentItemOrArmor(0, new ItemStack(Items.bow));
 	}
 
 	@Override
-	public IEntityLivingData func_180482_a(DifficultyInstance p_180482_1_, IEntityLivingData p_180482_2_)
+	public IEntityLivingData onSpawnWithEgg(IEntityLivingData p_110161_1_)
 	{
-		p_180482_2_ = super.func_180482_a(p_180482_1_, p_180482_2_);
+		p_110161_1_ = super.onSpawnWithEgg(p_110161_1_);
 
 		if (this.worldObj.provider instanceof WorldProviderHell && this.getRNG().nextInt(5) > 0)
 		{
@@ -368,25 +412,25 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 		}
 		else
 		{
-			/* this.tasks.addTask(4, this.aiArrowAttack);
-	            this.func_180481_a(p_180482_1_);
-	            this.func_180483_b(p_180482_1_);*/
+			/*this.tasks.addTask(4, this.aiArrowAttack);
+             this.addRandomArmor();
+             this.enchantEquipment();*/
 		}
 
-		this.setCanPickUpLoot(this.rand.nextFloat() < 0.55F * p_180482_1_.getClampedAdditionalDifficulty());
+		this.setCanPickUpLoot(this.rand.nextFloat() < 0.55F * this.worldObj.func_147462_b(this.posX, this.posY, this.posZ));
 
 		/* if (this.getEquipmentInSlot(4) == null)
-	        {
-	            Calendar calendar = this.worldObj.getCurrentDate();
+         {
+             Calendar calendar = this.worldObj.getCurrentDate();
 
-	            if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31 && this.rand.nextFloat() < 0.25F)
-	            {
-	                this.setCurrentItemOrArmor(4, new ItemStack(this.rand.nextFloat() < 0.1F ? Blocks.lit_pumpkin : Blocks.pumpkin));
-	                this.equipmentDropChances[4] = 0.0F;
-	            }
-	        }*/
+             if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31 && this.rand.nextFloat() < 0.25F)
+             {
+                 this.setCurrentItemOrArmor(4, new ItemStack(this.rand.nextFloat() < 0.1F ? Blocks.lit_pumpkin : Blocks.pumpkin));
+                 this.equipmentDropChances[4] = 0.0F;
+             }
+         }*/
 
-		return p_180482_2_;
+		return p_110161_1_;
 	}
 
 	/**
@@ -414,11 +458,11 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 	@Override
 	public void attackEntityWithRangedAttack(EntityLivingBase p_82196_1_, float p_82196_2_)
 	{
-		EntityArrow entityarrow = new EntityArrow(this.worldObj, this, p_82196_1_, 1.6F, 14 - this.worldObj.getDifficulty().getDifficultyId() * 4);
+		EntityArrow entityarrow = new EntityArrow(this.worldObj, this, p_82196_1_, 1.6F, 14 - this.worldObj.difficultySetting.getDifficultyId() * 4);
 		int i = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, this.getHeldItem());
 		int j = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, this.getHeldItem());
-		entityarrow.setDamage(p_82196_2_ * 0.5F + this.rand.nextGaussian() * 0.25D + this.worldObj.getDifficulty().getDifficultyId() * 0.11F);
-		//Original: entityarrow.setDamage((double)(p_82196_2_ * 2.0F) + this.rand.nextGaussian() * 0.25D + (double)((float)this.worldObj.getDifficulty().getDifficultyId() * 0.11F));
+		entityarrow.setDamage(p_82196_2_ * 2.0F + this.rand.nextGaussian() * 0.25D + this.worldObj.difficultySetting.getDifficultyId() * 0.11F);
+
 		if (i > 0)
 		{
 			entityarrow.setDamage(entityarrow.getDamage() + i * 0.5D + 0.5D);
@@ -456,7 +500,7 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 
 		if (p_82201_1_ == 1)
 		{
-			// this.setSize(0.72F, 2.535F);
+			//this.setSize(0.72F, 2.34F);
 		}
 		else
 		{
@@ -495,9 +539,9 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 	 * Sets the held item, or an armor slot. Slot 0 is held item. Slot 1-4 is armor. Params: Item, slot
 	 */
 	@Override
-	public void setCurrentItemOrArmor(int slotIn, ItemStack stack)
+	public void setCurrentItemOrArmor(int slotIn, ItemStack itemStackIn)
 	{
-		super.setCurrentItemOrArmor(slotIn, stack);
+		super.setCurrentItemOrArmor(slotIn, itemStackIn);
 
 		if (!this.worldObj.isRemote && slotIn == 0)
 		{
@@ -513,12 +557,4 @@ public class EntityBabyWitherSkeleton extends EntityMob implements IRangedAttack
 	{
 		return super.getYOffset() - 0.5D;
 	}
-
-	@Override
-	public float getEyeHeight()
-	{
-		return 0.9F;
-	}
 }
-
-

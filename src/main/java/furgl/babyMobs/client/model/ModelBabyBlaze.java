@@ -1,12 +1,13 @@
 package furgl.babyMobs.client.model;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelBabyBlaze extends ModelBase
@@ -35,22 +36,22 @@ public class ModelBabyBlaze extends ModelBase
     {
     	isChild = true;
 		this.setRotationAngles(par2, par3, par4, par5, par6, par7, par1);
-		GlStateManager.pushMatrix();
+		GL11.glPushMatrix();
 		float f6 = 2F;
-		GlStateManager.scale(1.5F / f6, 1.5F / f6, 1.5F / f6);
-		GlStateManager.translate(0.0F, 16.0F * par7 + 0.1F,  0.0F);
+		GL11.glScalef(1.5F / f6, 1.5F / f6, 1.5F / f6);
+		GL11.glTranslatef(0.0F, 16.0F * par7 + 0.1F,  0.0F);
 		this.blazeHead.render(par7);
-		GlStateManager.popMatrix();
-		GlStateManager.pushMatrix();
-		GlStateManager.scale(1.0F / f6, 1.0F / f6, 1.0F / f6);
-		GlStateManager.translate(0.0F, 24.0F * par7, 0.0F);
+		GL11.glPopMatrix();
+		GL11.glPushMatrix();
+		GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
+		GL11.glTranslatef(0.0F, 24.0F * par7, 0.0F);
 
         for (int i = 0; i < this.blazeSticks.length; ++i)
         {
             this.blazeSticks[i].render(par7);
         }
         
-        GlStateManager.popMatrix();
+        GL11.glPopMatrix();
     }
 
     /**

@@ -1,12 +1,9 @@
 package furgl.babyMobs.common.block;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import furgl.babyMobs.common.BabyMobs;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModBlocks 
 {
@@ -18,26 +15,18 @@ public class ModBlocks
 		Blocks.dragon_egg.setCreativeTab(BabyMobs.tab);
 	}
 
-	public static void registerRenders() 
-	{
-		registerRender(disappearingWeb);
-	}
-
 	public static Block registerBlockWithTab(final Block block, final String unlocalizedName) {
-		block.setUnlocalizedName(unlocalizedName);
+		block.setBlockName(unlocalizedName);
 		block.setCreativeTab(BabyMobs.tab);
+		block.setBlockTextureName("babymobs:" + block.getUnlocalizedName().substring(5));
 		GameRegistry.registerBlock(block, unlocalizedName);
 		return block;
 	}
 
 	public static Block registerBlockWithoutTab(final Block block, final String unlocalizedName) {
-		block.setUnlocalizedName(unlocalizedName);
+		block.setBlockName(unlocalizedName);
+		block.setBlockTextureName("babymobs:" + block.getUnlocalizedName().substring(5));
 		GameRegistry.registerBlock(block, unlocalizedName);
 		return block;
-	}
-
-	public static void registerRender(Block block)
-	{	
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(block), 0, new ModelResourceLocation("babymobs:" + block.getUnlocalizedName().substring(5), "inventory"));
 	}
 }

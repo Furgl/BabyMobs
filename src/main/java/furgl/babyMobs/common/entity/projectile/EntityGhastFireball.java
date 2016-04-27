@@ -37,7 +37,7 @@ public class EntityGhastFireball extends EntityLargeFireball
 	protected void onImpact(MovingObjectPosition mop)
 	{
 		super.onImpact(mop);
-		if (!this.worldObj.isRemote)
+		if (!this.worldObj.isRemote && this.shootingEntity != null)
 		{
 			for (int i=0; i<15; i++)
 			{
