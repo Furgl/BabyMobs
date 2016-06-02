@@ -33,7 +33,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = BabyMobs.MODID, name = BabyMobs.MODNAME, version = BabyMobs.VERSION, guiFactory = "furgl.babyMobs.client.gui.BabyMobsGuiFactory")
+@Mod(modid = BabyMobs.MODID, name = BabyMobs.MODNAME, version = BabyMobs.VERSION, guiFactory = "furgl.babyMobs.client.gui.config.BabyMobsGuiFactory")
 public class BabyMobs
 {
 	public static final String MODID = "babymobs";
