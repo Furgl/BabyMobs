@@ -7,21 +7,29 @@ import furgl.babyMobs.client.gui.creativeTab.BabyMobsCreativeTab;
 import furgl.babyMobs.common.block.ModBlocks;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ModEntities;
+import furgl.babyMobs.common.event.AttackEvent;
 import furgl.babyMobs.common.event.BabyReplaceEvent;
 import furgl.babyMobs.common.event.BlockPatternEvent;
 import furgl.babyMobs.common.event.BreakSpeedEvent;
 import furgl.babyMobs.common.event.ConfigChangeEvent;
+import furgl.babyMobs.common.event.InteractHorseEvent;
 import furgl.babyMobs.common.event.OnUpdateEvent;
+import furgl.babyMobs.common.event.SetAttackTargetEvent;
 import furgl.babyMobs.common.event.SpawnDragonEvent;
 import furgl.babyMobs.common.event.SummonCommandEvent;
+import furgl.babyMobs.common.event.ZombieTrapEvent;
 import furgl.babyMobs.common.item.ModItems;
 import furgl.babyMobs.common.item.spawnEgg.ItemBabySpawnEgg;
+import furgl.babyMobs.common.packet.PacketMotionY;
+import furgl.babyMobs.common.packet.PacketVolatileLevitation;
+import furgl.babyMobs.common.potion.ModPotions;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -32,27 +40,35 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = BabyMobs.MODID, name = BabyMobs.MODNAME, version = BabyMobs.VERSION, guiFactory = "furgl.babyMobs.client.gui.config.BabyMobsGuiFactory")
 public class BabyMobs
 {
 	public static final String MODID = "babymobs";
 	public static final String MODNAME = "Baby Mobs";
-	public static final String VERSION = "1.4";
+	public static final String VERSION = "1.5";
 	@Mod.Instance("babymobs")
 	public static BabyMobs instance;
 	@SidedProxy(clientSide = "furgl.babyMobs.client.ClientProxy", serverSide = "furgl.babyMobs.common.CommonProxy")
 	public static CommonProxy proxy;
 	public static final BabyMobsCreativeTab tab = new BabyMobsCreativeTab("tabBabyMobs");
+	public static SimpleNetworkWrapper network;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		network = NetworkRegistry.INSTANCE.newSimpleChannel("babyMobsChannel");
+		registerPackets();
 		Config.init(event.getSuggestedConfigurationFile());		
 		ModEntities.registerEntities();
 		ModItems.init();
 		ModBlocks.init();
 		Achievements.init();
+		ModPotions.preInit();
 		registerDispenserBehaviors();
 	}
 
@@ -60,8 +76,10 @@ public class BabyMobs
 	public void init(FMLInitializationEvent event)
 	{
 		registerEventListeners();
+		registerCraftingRecipes();
 		proxy.registerAchievements();
 		proxy.registerRenders();
+		ModPotions.init();
 	}
 
 	@EventHandler
@@ -79,6 +97,22 @@ public class BabyMobs
 		MinecraftForge.EVENT_BUS.register(new SummonCommandEvent());
 		MinecraftForge.EVENT_BUS.register(new ConfigChangeEvent());
 		MinecraftForge.EVENT_BUS.register(new OnUpdateEvent());
+		MinecraftForge.EVENT_BUS.register(new AttackEvent());
+		MinecraftForge.EVENT_BUS.register(new SetAttackTargetEvent());
+		MinecraftForge.EVENT_BUS.register(new ZombieTrapEvent());
+		MinecraftForge.EVENT_BUS.register(new InteractHorseEvent());
+	}
+	
+	private void registerPackets()
+	{
+		int id = 0;
+		network.registerMessage(PacketVolatileLevitation.Handler.class, PacketVolatileLevitation.class, id++, Side.CLIENT);
+		network.registerMessage(PacketMotionY.Handler.class, PacketMotionY.class, id++, Side.CLIENT);
+	}
+	
+	private void registerCraftingRecipes()
+	{
+		GameRegistry.addRecipe(new ItemStack(ModItems.golden_bread), "NNN", "NBN", "NNN", 'N', Items.gold_nugget, 'B', Items.bread);
 	}
 
 	public void registerDispenserBehaviors()
@@ -118,6 +152,44 @@ public class BabyMobs
 			{
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	/***
+	 * Returns field of reflected variable
+	 * 
+	 * @param clazz Class that variable is in
+	 * @param name Name of variable
+	 * @param instance Instance to get variable from
+	 */
+	public static Object reflect(Class clazz, String name, Object instance) {
+		try {
+			Field field = clazz.getDeclaredField(name);
+			field.setAccessible(true);
+			return field.get(instance);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/***
+	 * Sets value of reflected variable
+	 * 
+	 * @param clazz Class that variable is in
+	 * @param name Name of variable
+	 * @param instance Instance to get variable from
+	 * @param value Value to set variable to
+	 */
+	public static void reflect(Class clazz, String name, Object instance, Object value) {
+		try {
+			Field field = clazz.getDeclaredField(name);
+			field.setAccessible(true);
+			field.set(instance, value);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

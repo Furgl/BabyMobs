@@ -2,74 +2,45 @@ package furgl.babyMobs.common.entity.monster;
 
 import furgl.babyMobs.common.BabyMobs;
 import net.minecraft.block.BlockDragonEgg;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.IEntityMultiPart;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityDragonPart;
-import net.minecraft.entity.monster.IMob;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData, */IEntityMultiPart, IMob
+public class EntityBabyDragon extends EntityDragon
 {
+	public static final DataParameter<BlockPos> DRAGON_BLOCK_POS = EntityDataManager.<BlockPos>createKey(EntityBabyDragon.class, DataSerializers.BLOCK_POS);
+	public Vec3d dragonEgg;
+	private boolean hasDragonEgg;
 	public double targetX;
 	public double targetY;
 	public double targetZ;
-	/** Ring buffer array for the last 64 Y-positions and yaw rotations. Used to calculate offsets for the animations. */
-	public double[][] ringBuffer = new double[64][3];
-	/** Index into the ring buffer. Incremented once per tick and restarts at 0 once it reaches the end of the buffer. */
-	public int ringBufferIndex = -1;
-	/** An array containing all body parts of this dragon */
-	public EntityDragonPart[] dragonPartArray;
-	/** The head bounding box of a dragon */
-	public EntityDragonPart dragonPartHead;
-	/** The body bounding box of a dragon */
-	public EntityDragonPart dragonPartBody;
-	public EntityDragonPart dragonPartTail1;
-	public EntityDragonPart dragonPartTail2;
-	public EntityDragonPart dragonPartTail3;
-	public EntityDragonPart dragonPartWing1;
-	public EntityDragonPart dragonPartWing2;
-	/** Animation time at previous tick. */
-	public float prevAnimTime;
-	/** Animation time, used to control the speed of the animation cycles (wings flapping, jaw opening, etc.) */
-	public float animTime;
-	/** Force selecting a new flight target at next tick if set to true. */
-	public boolean forceNewTarget;
-	/** Activated if the dragon is flying though obsidian, white stone or bedrock. Slows movement and animation speed. */
-	public boolean slowed;
 	private BlockPos target;
-	public int deathTicks;
-
-	public Vec3 dragonEgg;
-	private boolean hasDragonEgg;
+	private boolean forceNewTarget;
 
 	public EntityBabyDragon(World worldIn)
 	{
 		super(worldIn);
 		this.setSize(0.2F, 0.2F);
-		this.targetY = 80.0D;
 		if (!this.worldObj.isRemote)
 			this.hasDragonEgg = false;
-		this.renderDistanceWeight = 5D;
-
-		this.dragonPartArray = new EntityDragonPart[] {this.dragonPartHead = new EntityDragonPart(this, "head", 6.0F, 6.0F), this.dragonPartBody = new EntityDragonPart(this, "body", 8.0F, 8.0F), this.dragonPartTail1 = new EntityDragonPart(this, "tail", 4.0F, 4.0F), this.dragonPartTail2 = new EntityDragonPart(this, "tail", 4.0F, 4.0F), this.dragonPartTail3 = new EntityDragonPart(this, "tail", 4.0F, 4.0F), this.dragonPartWing1 = new EntityDragonPart(this, "wing", 4.0F, 4.0F), this.dragonPartWing2 = new EntityDragonPart(this, "wing", 4.0F, 4.0F)};
-		this.setHealth(this.getMaxHealth());
-		this.noClip = true;
-		this.isImmuneToFire = true;
-		this.ignoreFrustumCheck = true;
 	}
 
-	public EntityBabyDragon(World world, Vec3 dragonEgg)
+	public EntityBabyDragon(World world, Vec3d dragonEgg)
 	{
 		this(world);
 		this.dragonEgg = dragonEgg;
@@ -77,7 +48,7 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 	}
 
 	@Override
-	public ItemStack getPickedResult(MovingObjectPosition target)
+	public ItemStack getPickedResult(RayTraceResult target)
 	{
 		return new ItemStack(Item.getItemFromBlock(Blocks.dragon_egg));
 	}
@@ -89,53 +60,36 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 	}
 
 	@Override
-	protected void applyEntityAttributes()
+	public boolean isNonBoss()
 	{
-		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(150.0D);
+		return true;
 	}
 
 	@Override
 	protected void entityInit()
 	{
 		super.entityInit();
-		this.dataWatcher.addObject(29, Integer.valueOf(0)); //dragonEgg x
-		this.dataWatcher.addObject(30, Integer.valueOf(0)); //dragonEgg y
-		this.dataWatcher.addObject(31, Integer.valueOf(0)); //dragonEgg z
+		this.dataWatcher.register(DRAGON_BLOCK_POS, new BlockPos(0,0,0)); //dragonEgg block pos
 	}
 
-	/**
-	 * Returns a double[3] array with movement offsets, used to calculate trailing tail/neck positions. [0] = yaw
-	 * offset, [1] = y offset, [2] = unused, always 0. Parameters: buffer index offset, partial ticks.
-	 */
-	public double[] getMovementOffsets(int p_70974_1_, float p_70974_2_)
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean isInRangeToRenderDist(double distance)
 	{
-		if (this.getHealth() <= 0.0F)
+		double d0 = this.getEntityBoundingBox().getAverageEdgeLength();
+
+		if (Double.isNaN(d0))
 		{
-			p_70974_2_ = 0.0F;
+			d0 = 1.0D;
 		}
 
-		p_70974_2_ = 1.0F - p_70974_2_;
-		int j = this.ringBufferIndex - p_70974_1_ * 1 & 63;
-		int k = this.ringBufferIndex - p_70974_1_ * 1 - 1 & 63;
-		double[] adouble = new double[3];
-		double d0 = this.ringBuffer[j][0];
-		double d1 = MathHelper.wrapAngleTo180_double(this.ringBuffer[k][0] - d0);
-		adouble[0] = d0 + d1 * p_70974_2_;
-		d0 = this.ringBuffer[j][1];
-		d1 = this.ringBuffer[k][1] - d0;
-		adouble[1] = d0 + d1 * p_70974_2_;
-		adouble[2] = this.ringBuffer[j][2] + (this.ringBuffer[k][2] - this.ringBuffer[j][2]) * p_70974_2_;
-		return adouble;
+		d0 = d0 * 64.0D * 5D;
+		return distance < d0 * d0;
 	}
 
-	/**
-	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-	 * use this to react to sunlight and start to burn.
-	 */
 	@Override
 	public void onLivingUpdate()
-	{    	
+	{   
 		//TODO spawning
 		if (!this.worldObj.isRemote && this.ticksExisted == 1)
 		{
@@ -148,24 +102,20 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 					array[1] = (int) this.dragonEgg.yCoord;
 					array[2] = (int) this.dragonEgg.zCoord;
 					this.getEntityData().setIntArray("dragonEgg", array);
-					this.dataWatcher.updateObject(29, (int) dragonEgg.xCoord);
-					this.dataWatcher.updateObject(30, (int) dragonEgg.yCoord);
-					this.dataWatcher.updateObject(31, (int) dragonEgg.zCoord);
+					this.dataWatcher.set(DRAGON_BLOCK_POS, new BlockPos(dragonEgg));
 				}
 			}
 			else //server and already spawned with egg
 			{
-				this.dragonEgg = new Vec3(this.getEntityData().getIntArray("dragonEgg")[0], this.getEntityData().getIntArray("dragonEgg")[1], this.getEntityData().getIntArray("dragonEgg")[2]);
-				this.dataWatcher.updateObject(29, (int) dragonEgg.xCoord);
-				this.dataWatcher.updateObject(30, (int) dragonEgg.yCoord);
-				this.dataWatcher.updateObject(31, (int) dragonEgg.zCoord);
+				this.dragonEgg = new Vec3d(this.getEntityData().getIntArray("dragonEgg")[0], this.getEntityData().getIntArray("dragonEgg")[1], this.getEntityData().getIntArray("dragonEgg")[2]);
+				this.dataWatcher.set(DRAGON_BLOCK_POS, new BlockPos(dragonEgg));
 				this.hasDragonEgg = true;
 			}
 		}
 
 		if (this.worldObj.isRemote && this.ticksExisted == 2)
 		{
-			this.dragonEgg = new Vec3(this.dataWatcher.getWatchableObjectInt(29), this.dataWatcher.getWatchableObjectInt(30), this.dataWatcher.getWatchableObjectInt(31));
+			this.dragonEgg = new Vec3d(this.dataWatcher.get(DRAGON_BLOCK_POS));
 			if (!(this.worldObj.getBlockState(new BlockPos(this.dragonEgg)).getBlock() instanceof BlockDragonEgg))
 				this.hasDragonEgg = false;
 			else
@@ -203,7 +153,7 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 
 			if (f1 <= -0.3F && f >= -0.3F && !this.isSilent())
 			{
-				this.worldObj.playSound(this.posX, this.posY, this.posZ, "mob.enderdragon.wings", this.getSoundVolume(), 0.8F + this.rand.nextFloat() * 0.3F, false);
+				this.worldObj.playSound(this.posX, this.posY, this.posZ, SoundEvents.entity_enderdragon_flap, this.getSoundCategory(), this.getSoundVolume(), 0.8F + this.rand.nextFloat() * 0.3F, false);
 			}
 		}
 
@@ -259,12 +209,12 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 			{
 				if (this.newPosRotationIncrements > 0)
 				{
-					d10 = this.posX + (this.newPosX - this.posX) / this.newPosRotationIncrements;
-					d0 = this.posY + (this.newPosY - this.posY) / this.newPosRotationIncrements;
-					d1 = this.posZ + (this.newPosZ - this.posZ) / this.newPosRotationIncrements;
-					d2 = MathHelper.wrapAngleTo180_double(this.newRotationYaw - this.rotationYaw);
+					d10 = this.posX + (this.interpTargetX - this.posX) / this.newPosRotationIncrements;
+					d0 = this.posY + (this.interpTargetY - this.posY) / this.newPosRotationIncrements;
+					d1 = this.posZ + (this.interpTargetZ - this.posZ) / this.newPosRotationIncrements;
+					d2 = MathHelper.wrapAngleTo180_double(this.interpTargetYaw - this.rotationYaw);
 					this.rotationYaw = (float)(this.rotationYaw + d2 / this.newPosRotationIncrements);
-					this.rotationPitch = (float)(this.rotationPitch + (this.newRotationPitch - this.rotationPitch) / this.newPosRotationIncrements);
+					this.rotationPitch = (float)(this.rotationPitch + (this.newPosX - this.rotationPitch) / this.newPosRotationIncrements);
 					--this.newPosRotationIncrements;
 					this.setPosition(d10, d0, d1);
 					this.setRotation(this.rotationYaw, this.rotationPitch);
@@ -302,7 +252,7 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 
 				if (this.forceNewTarget || d2 < 100.0D || d2 > 22500.0D || this.isCollidedHorizontally || this.isCollidedVertically)
 				{
-					this.setNewTarget();
+					//this.setNewTarget();
 				}
 
 				d0 /= MathHelper.sqrt_double(d10 * d10 + d1 * d1);
@@ -323,9 +273,9 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 					d6 = -50.0D;
 				}
 
-				Vec3 vec3 = (new Vec3(this.targetX - this.posX, this.targetY - this.posY, this.targetZ - this.posZ)).normalize();
+				Vec3d vec3 = (new Vec3d(this.targetX - this.posX, this.targetY - this.posY, this.targetZ - this.posZ)).normalize();
 				d8 = (-MathHelper.cos(this.rotationYaw * (float)Math.PI / 180.0F));
-				Vec3 vec31 = (new Vec3(MathHelper.sin(this.rotationYaw * (float)Math.PI / 180.0F), this.motionY, d8)).normalize();
+				Vec3d vec31 = (new Vec3d(MathHelper.sin(this.rotationYaw * (float)Math.PI / 180.0F), this.motionY, d8)).normalize();
 				float f5 = ((float)vec31.dotProduct(vec3) + 0.5F) / 1.5F;
 
 				if (f5 < 0.0F)
@@ -350,7 +300,7 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 
 				this.moveEntity(this.motionX * 0.2D, this.motionY * 0.2D, this.motionZ * 0.2D); //TODO slow
 
-				Vec3 vec32 = (new Vec3(this.motionX, this.motionY, this.motionZ)).normalize();
+				Vec3d vec32 = (new Vec3d(this.motionX, this.motionY, this.motionZ)).normalize();
 				float f9 = ((float)vec32.dotProduct(vec31) + 1.0F) / 2.0F;
 				f9 = 0.8F + 0.15F * f9;
 				this.motionX *= f9;
@@ -409,7 +359,7 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 				}
 
 				double[] adouble2 = this.getMovementOffsets(12 + j * 2, 1.0F);
-				float f14 = this.rotationYaw * (float)Math.PI / 180.0F + this.simplifyAngle(adouble2[0] - adouble1[0]) * (float)Math.PI / 180.0F * 1.0F;
+				float f14 = this.rotationYaw * (float)Math.PI / 180.0F + (float)MathHelper.wrapAngleTo180_double(adouble2[0] - adouble1[0]) * (float)Math.PI / 180.0F * 1.0F;
 				float f15 = MathHelper.sin(f14);
 				float f16 = MathHelper.cos(f14);
 				float f17 = 1.5F;
@@ -418,23 +368,6 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 				entitydragonpart.setLocationAndAngles(this.posX - (f11 * f17 + f15 * f18) * f2, this.posY + (adouble2[1] - adouble1[1]) * 1.0D - (f18 + f17) * f10 + 1.5D, this.posZ + (f4 * f17 + f16 * f18) * f2, 0.0F, 0.0F);
 			}
 		}
-	}
-
-
-	/**
-	 * Sets a new target for the flight AI. It can be a random coordinate or a nearby player.
-	 */
-	private void setNewTarget()
-	{
-
-	}
-
-	/**
-	 * Simplifies the value of a number by adding/subtracting 180 to the point that the number is between -180 and 180.
-	 */
-	private float simplifyAngle(double p_70973_1_)
-	{
-		return (float)MathHelper.wrapAngleTo180_double(p_70973_1_);
 	}
 
 	/**
@@ -464,15 +397,6 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 	protected void despawnEntity() {}
 
 	/**
-	 * Return the Entity parts making up this Entity (currently only for dragons)
-	 */
-	@Override
-	public Entity[] getParts()
-	{
-		return this.dragonPartArray;
-	}
-
-	/**
 	 * Returns true if other Entities should be prevented from moving through this Entity.
 	 */
 	@Override
@@ -481,37 +405,13 @@ public class EntityBabyDragon extends EntityLiving implements /*IBossDisplayData
 		return false;
 	}
 
-	@Override
-	public World getWorld()
-	{
-		return this.worldObj;
-	}
-
-	/**
-	 * Returns the sound this mob makes while it's alive.
-	 */
-	@Override
-	protected String getLivingSound()
-	{
-		return "mob.enderdragon.growl";
-	}
-
-	/**
-	 * Returns the sound this mob makes when it is hurt.
-	 */
-	@Override
-	protected String getHurtSound()
-	{
-		return "mob.enderdragon.hit";
-	}
-
 	/**
 	 * Returns the volume for the sounds this mob makes.
 	 */
 	@Override
 	protected float getSoundVolume()
 	{
-		return 1.5F;
+		return 0.1F;
 	}
 
 	@Override

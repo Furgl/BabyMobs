@@ -16,9 +16,9 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
@@ -39,12 +39,12 @@ public class EntityBabyZombie extends EntityZombie
 	public void onDeath(DamageSource cause) //first achievement
     {
 		if (!this.worldObj.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-			((EntityPlayer)cause.getEntity()).triggerAchievement(Achievements.achievementWhyAreTheySoStrong);
+			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
 		super.onDeath(cause);
     }
 
 	@Override
-	public ItemStack getPickedResult(MovingObjectPosition target)
+	public ItemStack getPickedResult(RayTraceResult target)
 	{
 		return new ItemStack(ModItems.baby_zombie_egg);
 	}
@@ -104,7 +104,7 @@ public class EntityBabyZombie extends EntityZombie
 			((EntityChicken)entityLivingIn).setGrowingAge(-2000000);
 			entityzombiechicken.onInitialSpawn(this.worldObj.getDifficultyForLocation(new BlockPos(entityzombiechicken)), (IEntityLivingData)null);
 			this.worldObj.spawnEntityInWorld(entityzombiechicken);
-			this.mountEntity(entityzombiechicken);
+			this.startRiding(entityzombiechicken, true);
 			entityzombiechicken.playLivingSound();
 		}
 	}

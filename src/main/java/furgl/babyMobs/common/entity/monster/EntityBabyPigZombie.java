@@ -16,9 +16,9 @@ import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
@@ -39,12 +39,12 @@ public class EntityBabyPigZombie extends EntityPigZombie
 	public void onDeath(DamageSource cause) //first achievement
     {
 		if (!this.worldObj.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-			((EntityPlayer)cause.getEntity()).triggerAchievement(Achievements.achievementWhyAreTheySoStrong);
+			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
 		super.onDeath(cause);
     }
 
 	@Override
-	public ItemStack getPickedResult(MovingObjectPosition target)
+	public ItemStack getPickedResult(RayTraceResult target)
 	{
 		return new ItemStack(ModItems.baby_pig_zombie_egg);
 	}
@@ -52,21 +52,20 @@ public class EntityBabyPigZombie extends EntityPigZombie
 	@Override
 	public double getYOffset()
 	{
-		return super.getYOffset() + 0.1D;
+		return super.getYOffset() - 0.2D;
 	}
 
 	@Override
 	public void onUpdate()
 	{
 		super.onUpdate();
-
 		//Sync anger with zombie pig
 		if (!this.worldObj.isRemote)
 		{
-			if (!this.isAngry() && this.ridingEntity instanceof EntityZombiePig &&((EntityZombiePig)this.ridingEntity).getAttackTarget() != null)
+			if (!this.isAngry() && this.getRidingEntity() instanceof EntityZombiePig &&((EntityZombiePig)this.getRidingEntity()).getAttackTarget() != null)
 			{
-				EntityLivingBase target = ((EntityZombiePig) this.ridingEntity).getAttackTarget();
-				if ((((EntityZombiePig)this.ridingEntity).getAttackTarget() != null) && target != null && target instanceof EntityPlayer && !(target instanceof FakePlayer))
+				EntityLivingBase target = ((EntityZombiePig) this.getRidingEntity()).getAttackTarget();
+				if ((((EntityZombiePig)this.getRidingEntity()).getAttackTarget() != null) && target != null && target instanceof EntityPlayer && !(target instanceof FakePlayer))
 				{
 					this.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) target), 0);
 				}
@@ -118,7 +117,7 @@ public class EntityBabyPigZombie extends EntityPigZombie
 			((EntityPig)entityLivingIn).setGrowingAge(-2000000);
 			entityzombiepig.onInitialSpawn(this.worldObj.getDifficultyForLocation(new BlockPos(entityzombiepig)), (IEntityLivingData)null);
 			this.worldObj.spawnEntityInWorld(entityzombiepig);
-			this.mountEntity(entityzombiepig);
+			this.startRiding(entityzombiepig, true);
 			entityzombiepig.playLivingSound();
 		}
 	}

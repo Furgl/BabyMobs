@@ -3,7 +3,7 @@ package furgl.babyMobs.common.block;
 import furgl.babyMobs.common.BabyMobs;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -23,6 +23,7 @@ public class ModBlocks
 		registerRender(disappearingWeb);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Block registerBlockWithTab(final Block block, final String unlocalizedName) {
 		block.setUnlocalizedName(unlocalizedName);
 		block.setCreativeTab(BabyMobs.tab);
@@ -30,6 +31,7 @@ public class ModBlocks
 		return block;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Block registerBlockWithoutTab(final Block block, final String unlocalizedName) {
 		block.setUnlocalizedName(unlocalizedName);
 		GameRegistry.registerBlock(block, unlocalizedName);

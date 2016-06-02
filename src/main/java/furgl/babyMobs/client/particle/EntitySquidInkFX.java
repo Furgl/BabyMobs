@@ -1,34 +1,28 @@
 package furgl.babyMobs.client.particle;
 
-import furgl.babyMobs.util.EntityMover;
 import furgl.babyMobs.util.EntitySpawner;
-import net.minecraft.client.particle.EntityFX;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class EntitySquidInkFX extends EntityFX
+public class EntitySquidInkFX extends EntityCustomFX
 {
-	private boolean spawnedBySpawner;
-	private EntitySpawner spawner;
-	private int heightIterator;
-	private int entityIterator;
-	private int maxAge;
 
-	public EntitySquidInkFX(World world, double x, double y, double z, double motionX, double motionY, double motionZ)
+	public EntitySquidInkFX(World world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
 	{
-		super(world, x, y, z, motionX, motionY, motionZ);
+		super(world, x, y, z, xSpeed, ySpeed, zSpeed);
 		this.particleRed = this.particleGreen = this.particleBlue = (float)(Math.random() * 0.30000001192092896D);
-		this.motionX *= 0.10000000149011612D;
-        this.motionY *= 0.10000000149011612D;
-        this.motionZ *= 0.10000000149011612D;
-        this.motionX += motionX;
-        this.motionY += motionY;
-        this.motionZ += motionZ;
+		this.xSpeed *= 0.10000000149011612D;
+        this.ySpeed *= 0.10000000149011612D;
+        this.zSpeed *= 0.10000000149011612D;
+        this.xSpeed += xSpeed;
+        this.ySpeed += ySpeed;
+        this.zSpeed += zSpeed;
 		this.particleScale *= 0.75F;
-		this.noClip = false;
+		//this.noClip = false;
 		this.maxAge = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
+		this.particleMaxAge = this.maxAge;
 	}
 
 	/**Used by EntitySpawner*/
@@ -44,34 +38,25 @@ public class EntitySquidInkFX extends EntityFX
 	@Override
 	public void onUpdate()
 	{
-		this.prevPosX = this.posX;
-		this.prevPosY = this.posY;
-		this.prevPosZ = this.posZ;
-		this.ticksExisted++;
-		if (this.ticksExisted > this.maxAge)
-			this.setDead();
-		if (this.spawnedBySpawner)
-			this.entityIterator = EntityMover.updateMovement(this, this.spawner, this.heightIterator, this.entityIterator);
-		else
-			this.moveEntity(this.motionX, this.motionY, this.motionZ);
+		super.onUpdate();
 
 		//EntitySmokeFX
 		this.setParticleTextureIndex(7 - this.ticksExisted * 8 / this.maxAge);
 
 		if (this.posY == this.prevPosY)
 		{
-			this.motionX *= 1.1D;
-			this.motionZ *= 1.1D;
+			this.xSpeed *= 1.1D;
+			this.zSpeed *= 1.1D;
 		}
 
-		this.motionX *= 0.9599999785423279D;
-		this.motionY *= 0.9599999785423279D;
-		this.motionZ *= 0.9599999785423279D;
+		this.xSpeed *= 0.9599999785423279D;
+		this.ySpeed *= 0.9599999785423279D;
+		this.zSpeed *= 0.9599999785423279D;
 
-		if (this.onGround)
+		if (this.isCollided) //changed from onGround
 		{
-			this.motionX *= 0.699999988079071D;
-			this.motionZ *= 0.699999988079071D;
+			this.xSpeed *= 0.699999988079071D;
+			this.zSpeed *= 0.699999988079071D;
 		}
 	}
 }

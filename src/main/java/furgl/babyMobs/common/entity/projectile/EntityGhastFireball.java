@@ -3,7 +3,7 @@ package furgl.babyMobs.common.entity.projectile;
 import furgl.babyMobs.common.BabyMobs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityLargeFireball;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntityGhastFireball extends EntityLargeFireball
@@ -34,7 +34,7 @@ public class EntityGhastFireball extends EntityLargeFireball
 	}
 
 	@Override
-	protected void onImpact(MovingObjectPosition mop)
+	protected void onImpact(RayTraceResult mop)
 	{
 		super.onImpact(mop);
 		if (!this.worldObj.isRemote)

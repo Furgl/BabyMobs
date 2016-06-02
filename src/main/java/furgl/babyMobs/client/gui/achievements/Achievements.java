@@ -24,7 +24,7 @@ public class Achievements
 
 	public static void init()
 	{
-		achievementWhyAreTheySoStrong = new Achievement("achievement.whyAreTheySoStrong", "whyAreTheySoStrong", 0, 0, Items.spawn_egg, null);
+		achievementWhyAreTheySoStrong = new Achievement("achievement.whyAreTheySoStrong", "whyAreTheySoStrong", 0, 0, Items.spawn_egg, null).initIndependentStat();
 		achievementItsGettingHotInHere = new Achievement("achievement.itsGettingHotInHere", "itsGettingHotInHere", -1, 2, Items.blaze_powder, achievementWhyAreTheySoStrong);
 		achievementLaserTag = new Achievement("achievement.laserTag", "laserTag", 2, 1, Items.ender_eye, achievementWhyAreTheySoStrong);
 		achievementItsMine = new Achievement("achievement.itsMine", "itsMine", -3, 2, new ItemStack(Items.skull, 1, 1), achievementItsGettingHotInHere);
@@ -41,6 +41,5 @@ public class Achievements
 		achievements.add(achievementBoomBaby);
 		achievements.add(achievementAFlowerForMe);
 		achievements.add(achievementBetterLuckNextTime);
-
 	}
 }

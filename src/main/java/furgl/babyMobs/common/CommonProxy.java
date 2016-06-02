@@ -7,7 +7,7 @@ import furgl.babyMobs.common.entity.monster.EntityBabySkeleton;
 import furgl.babyMobs.common.entity.projectile.EntityGhastFireball;
 import furgl.babyMobs.common.entity.projectile.EntityWitherSkeletonSmoke;
 import furgl.babyMobs.util.EntitySpawner;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class CommonProxy 
@@ -22,7 +22,7 @@ public class CommonProxy
 
 	public void spawnEntitySkeletonEffectFX(World world, EntityBabySkeleton entityBabySkeleton, float red, float green, float blue) { }
 	
-	public void spawnEntityBlazeFlamethrowerFX(EntityBabyBlaze entityBabyBlaze, Vec3 vec) { }
+	public void spawnEntityBlazeFlamethrowerFX(EntityBabyBlaze entityBabyBlaze, Vec3d vec) { }
 	
 	public void spawnEntityBlazeFlamethrowerFX(EntityGhastFireball entityGhastFireball) { }
 

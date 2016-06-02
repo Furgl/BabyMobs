@@ -5,11 +5,11 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.potion.Potion;
+import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntitySnowmanSnowball extends EntityThrowable
@@ -36,7 +36,7 @@ public class EntitySnowmanSnowball extends EntityThrowable
 	}
 
 	@Override
-	protected void onImpact(MovingObjectPosition mop)
+	protected void onImpact(RayTraceResult mop)
 	{
 		if (!this.worldObj.isRemote)
 		{
@@ -46,7 +46,7 @@ public class EntitySnowmanSnowball extends EntityThrowable
 				if (mop.entityHit instanceof EntityBlaze || mop.entityHit instanceof EntityBabyBlaze)
 					b0 = 3;
 				mop.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), b0);
-				((EntityLiving) mop.entityHit).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 0));
+				((EntityLiving) mop.entityHit).addPotionEffect(new PotionEffect(MobEffects.moveSlowdown, 60, 0));
 			}
 			this.setDead();
 		}

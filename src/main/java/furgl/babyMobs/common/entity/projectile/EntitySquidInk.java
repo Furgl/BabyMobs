@@ -4,7 +4,7 @@ import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.util.EntitySpawner;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.Potion;
+import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
@@ -33,8 +33,8 @@ public class EntitySquidInk extends EntityWitherSkeletonSmoke
 		{
 			if (!player.capabilities.isCreativeMode)
 			{
-				player.triggerAchievement(Achievements.achievementICantSee);
-				player.addPotionEffect(new PotionEffect(Potion.blindness.id, 60, 1));
+				player.addStat(Achievements.achievementICantSee);
+				player.addPotionEffect(new PotionEffect(MobEffects.blindness, 60, 1));
 			}
 		}
 	}

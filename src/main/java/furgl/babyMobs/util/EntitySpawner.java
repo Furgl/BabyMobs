@@ -5,9 +5,11 @@ import java.util.Random;
 
 import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.event.OnUpdateEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class EntitySpawner
@@ -17,9 +19,10 @@ public class EntitySpawner
 	private int totalDelay;
 	private Class entityClass;
 	private Entity entity;
+	private EntityFX entityFX;
 	//Essential variables - always specified via constructor
 	protected World world;
-	protected Vec3 origin;
+	protected Vec3d origin;
 	protected int numEntities;
 	protected double x;
 	protected double y;
@@ -49,7 +52,7 @@ public class EntitySpawner
 	protected int updateTime = 10;
 
 	/**Spawns custom Entity's or EntityFX's with custom shape/movement*/
-	public EntitySpawner(Class entityClass, World world, Vec3 origin, int numEntities)
+	public EntitySpawner(Class entityClass, World world, Vec3d origin, int numEntities)
 	{
 		this.entityClass = entityClass;
 		this.world = world;
@@ -228,9 +231,17 @@ public class EntitySpawner
 		{
 			try 
 			{
-				entity = (Entity) this.entityClass.getConstructor(World.class, double.class, double.class, double.class, EntitySpawner.class, int.class, int.class).newInstance(this.world, this.x, this.y, this.z, this, this.heightIterator, this.entityIterator);
+				Object object = this.entityClass.getConstructor(World.class, double.class, double.class, double.class, EntitySpawner.class, int.class, int.class).newInstance(this.world, this.x, this.y, this.z, this, this.heightIterator, this.entityIterator);
+				if (object instanceof Entity) {
+				entity = (Entity) object;
 				entity.setPosition(x, y, z);
 				world.spawnEntityInWorld(entity);
+				}
+				else {
+					entityFX = (EntityFX) object;
+					entityFX.setPosition(x, y, z);
+					Minecraft.getMinecraft().effectRenderer.addEffect(entityFX);
+				}
 			} 
 			catch (InstantiationException | IllegalAccessException | IllegalArgumentException| InvocationTargetException | NoSuchMethodException | SecurityException e) 
 			{

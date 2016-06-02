@@ -1,71 +1,50 @@
 package furgl.babyMobs.client.renderer.entity.mob;
 
-import java.util.Random;
-
 import org.lwjgl.opengl.GL11;
 
 import furgl.babyMobs.client.model.ModelBabyEnderman;
-import furgl.babyMobs.client.renderer.entity.layers.LayerBabyEndermanEyes;
-import furgl.babyMobs.client.renderer.entity.layers.LayerBabyHeldBlock;
+import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.entity.monster.EntityBabyEnderman;
-import net.minecraft.block.material.Material;
+import net.minecraft.client.model.ModelEnderman;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.entity.RenderEnderman;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderBabyEnderman extends RenderLiving<EntityBabyEnderman>
+public class RenderBabyEnderman extends RenderEnderman
 {
 	private static final ResourceLocation beam = new ResourceLocation("babymobs:textures/entity/enderman_laser.png");
-	private static final ResourceLocation endermanTextures = new ResourceLocation("textures/entity/enderman/enderman.png");
-	private ModelBabyEnderman babyEndermanModel;
-	private Random rnd = new Random();
-
+	
 	public RenderBabyEnderman(RenderManager renderManager)
 	{
-		super(renderManager, new ModelBabyEnderman(0.0F), 0.25F);
-		this.babyEndermanModel = (ModelBabyEnderman) super.mainModel;
-		this.addLayer(new LayerBabyEndermanEyes(this));
-		this.addLayer(new LayerBabyHeldBlock(this));
+		super(renderManager);
+		this.mainModel = new ModelBabyEnderman(0.0F);
+		BabyMobs.reflect(RenderEnderman.class, "endermanModel", this, (ModelEnderman) this.mainModel);
 	}
 
-	/**
-	 * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
-	 * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
-	 * (Render<T extends Entity>) and this method has signature public void func_76986_a(T entity, double d, double d1,
-	 * double d2, float f, float f1). But JAD is pre 1.5 so doe
-	 */
 	@Override
-	public void doRender(EntityBabyEnderman entity, double x, double y, double z, float entityYaw, float partialTicks)
+	public void doRender(EntityEnderman entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
-		this.babyEndermanModel.isCarrying = entity.func_175489_ck().getBlock().getMaterial() != Material.air;
-		this.babyEndermanModel.isAttacking = entity.isScreaming();
-
-		if (entity.isScreaming())
-		{
-			double d3 = 0.02D;
-			x += this.rnd.nextGaussian() * d3;
-			z += this.rnd.nextGaussian() * d3;
-		}
 
 		//TODO beam
-		EntityLivingBase entitylivingbase = entity.getTargetedEntity();
+		EntityLivingBase entitylivingbase = ((EntityBabyEnderman) entity).getTargetedEntity();
 
 		if (entitylivingbase != null && !entity.isDead)
 		{
-			entity.setScreaming(true);
+			//entity.setScreaming(true);
 			Tessellator tessellator = Tessellator.getInstance();
-            WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+            VertexBuffer worldrenderer = tessellator.getBuffer();
             this.bindTexture(beam);
             GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, 10497.0F);
             GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, 10497.0F);
@@ -81,9 +60,9 @@ public class RenderBabyEnderman extends RenderLiving<EntityBabyEnderman>
             	GlStateManager.translate((float)x, (float)y + f6 + 0.3F, (float)z);
             else 
             	GlStateManager.translate((float)x, (float)y + f6 + 0.0F, (float)z);
-            Vec3 vec3 = this.func_177110_a(entitylivingbase, entitylivingbase.height * 0.5D, partialTicks);
-            Vec3 vec31 = this.func_177110_a(entity, f6, partialTicks);
-            Vec3 vec32 = vec3.subtract(vec31);
+            Vec3d vec3 = this.func_177110_a(entitylivingbase, entitylivingbase.height * 0.5D, partialTicks);
+            Vec3d vec31 = this.func_177110_a(entity, f6, partialTicks);
+            Vec3d vec32 = vec3.subtract(vec31);
             //double d3 = vec32.lengthVector();
             double d0 = vec32.lengthVector() + 0.0D;
             vec32 = vec32.normalize();
@@ -138,10 +117,10 @@ public class RenderBabyEnderman extends RenderLiving<EntityBabyEnderman>
             worldrenderer.pos(d18, d0, d19).tex(0.0D, d23).color(j, k, l, 255).endVertex();
             double d24 = 0.0D;
 
-            /*if (entity.ticksExisted % 2 == 0)
+            if (entity.ticksExisted % 2 == 0)
             {
                 d24 = 0.5D;
-            }*/
+            }
 
             worldrenderer.pos(d4, d0, d5).tex(0.5D, d24 + 0.5D).color(j, k, l, 255).endVertex();
             worldrenderer.pos(d6, d0, d7).tex(1.0D, d24 + 0.5D).color(j, k, l, 255).endVertex();
@@ -156,20 +135,12 @@ public class RenderBabyEnderman extends RenderLiving<EntityBabyEnderman>
 		}
 	}
 
-	private Vec3 func_177110_a(EntityLivingBase entityLivingBaseIn, double p_177110_2_, float p_177110_4_)
+	private Vec3d func_177110_a(EntityLivingBase entityLivingBaseIn, double p_177110_2_, float p_177110_4_)
     {
         double d0 = entityLivingBaseIn.lastTickPosX + (entityLivingBaseIn.posX - entityLivingBaseIn.lastTickPosX) * (double)p_177110_4_;
         double d1 = p_177110_2_ + entityLivingBaseIn.lastTickPosY + (entityLivingBaseIn.posY - entityLivingBaseIn.lastTickPosY) * (double)p_177110_4_;
         double d2 = entityLivingBaseIn.lastTickPosZ + (entityLivingBaseIn.posZ - entityLivingBaseIn.lastTickPosZ) * (double)p_177110_4_;
-        return new Vec3(d0, d1, d2);
+        return new Vec3d(d0, d1, d2);
     }
 	//end
-
-	/**
-     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
-     */
-    protected ResourceLocation getEntityTexture(EntityBabyEnderman entity)
-    {
-        return endermanTextures;
-    }
 }

@@ -1,47 +1,156 @@
 package furgl.babyMobs.common.entity.monster;
 
-import java.util.List;
-
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
+import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityZombiePig extends EntityPig
 {
+	private static final DataParameter<Boolean> CONVERTING = EntityDataManager.<Boolean>createKey(EntityZombiePig.class, DataSerializers.BOOLEAN);
 	boolean isAngry;
-	
+	private int conversionTime;
+
 	public EntityZombiePig(World world)
 	{
 		super(world);
 		this.isImmuneToFire = true;
-		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));
+		this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, false));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true, new Class[] {EntityPigZombie.class}));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, true));
-		List list = this.tasks.taskEntries;
-		list.remove(6);
-		list.remove(5);
-		list.remove(4);
-		list.remove(3);
-		list.remove(2);
-		list.remove(1);
 	}
+
+	@Override
+	protected void initEntityAI()
+	{
+		this.tasks.addTask(0, new EntityAISwimming(this));
+		this.tasks.addTask(6, new EntityAIWander(this, 1.0D));
+		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
+		this.tasks.addTask(8, new EntityAILookIdle(this));
+	}
+
+	//TODO convert
+	@Override
+	protected void entityInit()
+	{
+		super.entityInit();
+		this.getDataManager().register(CONVERTING, Boolean.valueOf(false));
+	}
+	
+	public boolean isConverting()
+    {
+        return ((Boolean)this.getDataManager().get(CONVERTING)).booleanValue();
+    }
+
+	public void startConversion(int ticks)
+	{
+		this.conversionTime = ticks;
+		this.getDataManager().set(CONVERTING, Boolean.valueOf(true));
+		this.removePotionEffect(MobEffects.weakness);
+		this.addPotionEffect(new PotionEffect(MobEffects.damageBoost, ticks, Math.min(this.worldObj.getDifficulty().getDifficultyId() - 1, 0)));
+		this.worldObj.setEntityState(this, (byte)16);
+	}
+
+	protected void convert()
+	{
+		EntityPig entitypig = new EntityPig(this.worldObj);
+		entitypig.copyLocationAndAnglesFrom(this);
+		entitypig.onInitialSpawn(this.worldObj.getDifficultyForLocation(new BlockPos(entitypig)), (IEntityLivingData)null);
+
+		this.worldObj.removeEntity(this);
+		entitypig.setNoAI(this.isAIDisabled());
+		
+        entitypig.setGrowingAge(-24000);
+
+		if (this.hasCustomName())
+		{
+			entitypig.setCustomNameTag(this.getCustomNameTag());
+			entitypig.setAlwaysRenderNameTag(this.getAlwaysRenderNameTag());
+		}
+
+		this.worldObj.spawnEntityInWorld(entitypig);
+		entitypig.addPotionEffect(new PotionEffect(MobEffects.confusion, 200, 0));
+		this.worldObj.playAuxSFXAtEntity((EntityPlayer)null, 1027, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 0);
+	}
+
+	@Override
+	public boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack)
+	{
+		if (stack != null && stack.getItem() == Items.golden_carrot && stack.getMetadata() == 0 && this.isPotionActive(MobEffects.weakness)) {
+			if (!player.capabilities.isCreativeMode)
+				--stack.stackSize;
+			if (!this.worldObj.isRemote)
+				this.startConversion(this.rand.nextInt(1000) + 200);
+			return true;
+		}
+		else
+			return false;
+	}
+
+	@Override
+	protected boolean canDespawn()
+	{
+		return !this.isConverting();
+	}
+
+	@Override
+	public void writeEntityToNBT(NBTTagCompound tagCompound)
+	{
+		super.writeEntityToNBT(tagCompound);
+		tagCompound.setInteger("ConversionTime", this.isConverting() ? this.conversionTime : -1);
+	}
+	
+	@Override
+	public void readEntityFromNBT(NBTTagCompound tagCompund)
+    {
+        super.readEntityFromNBT(tagCompund);
+        if (tagCompund.hasKey("ConversionTime", 99) && tagCompund.getInteger("ConversionTime") > -1)
+            this.startConversion(tagCompund.getInteger("ConversionTime"));
+    }
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+    public void handleStatusUpdate(byte id)
+    {
+        if (id == 16)
+            if (!this.isSilent())
+                this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.entity_zombie_villager_cure, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+        else
+            super.handleStatusUpdate(id);
+    }
+	//end
 
 	@Override
 	protected float getSoundPitch()
@@ -65,13 +174,25 @@ public class EntityZombiePig extends EntityPig
 	@Override
 	public void onUpdate()
 	{
+		if (!this.worldObj.isRemote && this.getDataManager().get(CONVERTING).booleanValue())
+		{
+			this.conversionTime -= 1;
+			if (this.conversionTime <= 0)
+				this.convert();
+		}
+
+		if (this.isBeingRidden())
+			this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+		else
+			this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
+
 		//sync anger with rider
 		if (!this.worldObj.isRemote)
 		{
-			if (this.getAttackTarget() == null && this.riddenByEntity instanceof EntityBabyPigZombie && ((EntityBabyPigZombie)this.riddenByEntity).isAngry())
+			if (this.getAttackTarget() == null && this.getLowestRidingEntity() instanceof EntityBabyPigZombie && ((EntityBabyPigZombie)this.getLowestRidingEntity()).isAngry())
 			{
-				EntityLivingBase target = ((EntityBabyPigZombie) this.riddenByEntity).getAttackTarget();
-				if (((EntityBabyPigZombie)this.riddenByEntity).isAngry() && target != null && target instanceof EntityPlayer && !(target instanceof FakePlayer))
+				EntityLivingBase target = ((EntityBabyPigZombie) this.getLowestRidingEntity()).getAttackTarget();
+				if (((EntityBabyPigZombie)this.getLowestRidingEntity()).isAngry() && target != null && target instanceof EntityPlayer && !(target instanceof FakePlayer))
 				{
 					this.setRevengeTarget(target);
 					this.attackingPlayer = (EntityPlayer) target;
@@ -106,12 +227,6 @@ public class EntityZombiePig extends EntityPig
 	}
 
 	@Override
-	public boolean interact(EntityPlayer player)
-	{
-		return false;
-	}
-
-	@Override
 	protected Item getDropItem()
 	{
 		return Items.rotten_flesh;
@@ -134,20 +249,20 @@ public class EntityZombiePig extends EntityPig
 	protected void applyEntityAttributes()
 	{
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(35.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.35D);
-		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
+		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
 	}
 
 	@Override
 	public boolean attackEntityAsMob(Entity p_70652_1_)
 	{
-		float f = (float)this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
+		float f = (float)this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
 		int i = 0;
 
 		if (p_70652_1_ instanceof EntityLivingBase)
 		{
-			f += EnchantmentHelper.func_152377_a(this.getHeldItem(), ((EntityLivingBase)p_70652_1_).getCreatureAttribute());
+			f += EnchantmentHelper.getModifierForCreature(this.getHeldItem(EnumHand.MAIN_HAND), ((EntityLivingBase)p_70652_1_).getCreatureAttribute());
 			i += EnchantmentHelper.getKnockbackModifier(this);
 		}
 

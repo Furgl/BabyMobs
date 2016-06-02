@@ -20,6 +20,7 @@ entity.babymobs.caveSpiderVenom.name=Venom
 entity.babymobs.creeperExplosion.name=Explosion
 entity.babymobs.zombiePig.name=Zombie Pig
 entity.babymobs.zombieChicken.name=Zombie Chicken
+entity.babymobs.babyShulker.name=Baby Shulker
 
 item.baby_spider_egg.name=Spawn Baby Spider
 item.baby_skeleton_egg.name=Spawn Baby Skeleton
@@ -38,13 +39,17 @@ item.baby_snowman_egg.name=Spawn Baby Snowman
 item.baby_iron_golem_egg.name=Spawn Baby Iron Golem
 item.baby_wither_egg.name=Spawn Baby Wither
 item.baby_dragon_egg.name=Spawn Baby Dragon
+item.baby_shulker_egg.name=Spawn Baby Shulker
 item.invisible.name=Invisible
 item.cave_spider_venom.name=Venom
 item.creeper_explosion.name=Explosion
+item.golden_bread.name=Golden Bread
 
 tile.disappearingWeb.name=Disappearing Cobweb
 
 itemGroup.tabBabyMobs=Baby Mobs
+
+effect.volatile_levitation=Volatile Levitation
 
 achievement.itsGettingHotInHere=It's Getting Hot in Here!
 achievement.itsGettingHotInHere.desc=Get set on fire by a Baby Blaze's flamethrower

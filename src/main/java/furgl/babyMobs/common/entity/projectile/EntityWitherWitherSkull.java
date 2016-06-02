@@ -2,7 +2,7 @@ package furgl.babyMobs.common.entity.projectile;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityWitherSkull;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntityWitherWitherSkull extends EntityWitherSkull
@@ -12,27 +12,13 @@ public class EntityWitherWitherSkull extends EntityWitherSkull
 		super(world);
 	}
 
-	public EntityWitherWitherSkull(World world, EntityLivingBase entitylivingbase, double accelX, double accelY, double accelZ, EntityLivingBase target) 
+	public EntityWitherWitherSkull(World world, EntityLivingBase entitylivingbase, double accelX, double accelY, double accelZ) 
 	{
 		super(world, entitylivingbase, accelX, accelY, accelZ);
-		if (target != null)
-			this.setTarget(target);
 	}
 
 	@Override
-	public void entityInit()
-	{
-		super.entityInit();
-		this.dataWatcher.addObject(20, Integer.valueOf(0));		
-	}
-
-	private void setTarget(EntityLivingBase target)
-	{
-		this.dataWatcher.updateObject(20, target.getEntityId());
-	}
-
-	@Override
-	protected void onImpact(MovingObjectPosition mop)
+	protected void onImpact(RayTraceResult mop)
 	{
 		super.onImpact(mop);
 		if (!this.worldObj.isRemote)

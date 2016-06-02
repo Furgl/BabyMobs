@@ -7,7 +7,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntityBlazeFlamethrower extends EntityThrowable
@@ -55,13 +55,13 @@ public class EntityBlazeFlamethrower extends EntityThrowable
 	}
 
 	@Override
-	protected void onImpact(MovingObjectPosition mop)
+	protected void onImpact(RayTraceResult mop)
 	{
 		if (!this.worldObj.isRemote)
 		{
 			if (mop.entityHit instanceof EntityPlayer && !((EntityPlayer)mop.entityHit).isImmuneToFire() && ((EntityPlayer)mop.entityHit).attackEntityFrom(DamageSource.onFire, 1.0F))
 			{
-				((EntityPlayer)mop.entityHit).triggerAchievement(Achievements.achievementItsGettingHotInHere);
+				((EntityPlayer)mop.entityHit).addStat(Achievements.achievementItsGettingHotInHere);
 				((EntityPlayer)mop.entityHit).setFire(3);
 			}
 		}

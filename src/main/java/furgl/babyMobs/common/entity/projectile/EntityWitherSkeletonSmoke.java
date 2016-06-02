@@ -6,13 +6,18 @@ import furgl.babyMobs.util.EntitySpawner;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.potion.Potion;
+import net.minecraft.entity.projectile.EntityTippedArrow;
+import net.minecraft.init.MobEffects;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntityWitherSkeletonSmoke extends EntityThrowable
 {
+    private static final DataParameter<Integer> PARTICLES_PER_TICK = EntityDataManager.<Integer>createKey(EntityTippedArrow.class, DataSerializers.VARINT);
 	private boolean spawnedBySpawner;
 	private EntitySpawner spawner;
 	private int heightIterator;
@@ -52,17 +57,17 @@ public class EntityWitherSkeletonSmoke extends EntityThrowable
 	public void entityInit()
 	{
 		super.entityInit();
-		this.dataWatcher.addObject(20, Integer.valueOf(0));		
+		this.dataWatcher.register(PARTICLES_PER_TICK, Integer.valueOf(0));		
 	}
 
 	private int getParticlesPerTick()
 	{
-		return this.dataWatcher.getWatchableObjectInt(20);
+		return this.dataWatcher.get(PARTICLES_PER_TICK);
 	}
 
 	private void setParticlesPerTick(int particlesPerTick)
 	{
-		this.dataWatcher.updateObject(20, particlesPerTick);;
+		this.dataWatcher.set(PARTICLES_PER_TICK, particlesPerTick);;
 	}
 
 	@Override
@@ -87,7 +92,7 @@ public class EntityWitherSkeletonSmoke extends EntityThrowable
 		{
 			if (!player.capabilities.isCreativeMode)
 			{
-				player.addPotionEffect(new PotionEffect(Potion.blindness.id, 60, 1));
+				player.addPotionEffect(new PotionEffect(MobEffects.blindness, 60, 1));
 			}
 		}
 	}
@@ -99,5 +104,5 @@ public class EntityWitherSkeletonSmoke extends EntityThrowable
 	}
 
 	@Override
-	protected void onImpact(MovingObjectPosition mop) {}
+	protected void onImpact(RayTraceResult mop) {}
 }

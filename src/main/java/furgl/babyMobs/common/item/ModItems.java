@@ -6,7 +6,7 @@ import furgl.babyMobs.common.item.projectile.ItemCreeperExplosion;
 import furgl.babyMobs.common.item.projectile.ItemInvisible;
 import furgl.babyMobs.common.item.spawnEgg.ItemBabySpawnEgg;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -28,10 +28,13 @@ public class ModItems
 	public static Item baby_snowman_egg;
 	public static Item baby_iron_golem_egg;
 	public static Item baby_wither_egg;
-
+	public static Item baby_shulker_egg;
+	
 	public static Item invisible;
 	public static Item cave_spider_venom;
 	public static Item creeper_explosion;
+	
+	public static Item golden_bread;
 
 	public static void init() 
 	{
@@ -51,10 +54,13 @@ public class ModItems
 		baby_snowman_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babySnowman"), "baby_snowman_egg");
 		baby_iron_golem_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyIronGolem"), "baby_iron_golem_egg");
 		baby_wither_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyWither"), "baby_wither_egg");
+		baby_shulker_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyShulker"), "baby_shulker_egg");
 
 		invisible = registerItemWithoutTab(new ItemInvisible(), "invisible");
 		cave_spider_venom = registerItemWithoutTab(new ItemCaveSpiderVenom(), "cave_spider_venom");
 		creeper_explosion = registerItemWithoutTab(new ItemCreeperExplosion(), "creeper_explosion");
+		
+		golden_bread = registerItemWithTab(new ItemGoldenBread(10, 1.2F, false), "golden_bread");
 	}
 
 	public static void registerRenders()
@@ -75,12 +81,16 @@ public class ModItems
 		registerRender(baby_snowman_egg);
 		registerRender(baby_iron_golem_egg);
 		registerRender(baby_wither_egg);
+		registerRender(baby_shulker_egg);
 
 		registerRender(invisible);
 		registerRender(cave_spider_venom);
 		registerRender(creeper_explosion);
+		
+		registerRender(golden_bread);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Item registerItemWithTab(final Item item, final String unlocalizedName) {
 		item.setUnlocalizedName(unlocalizedName);
 		item.setCreativeTab(BabyMobs.tab);
@@ -88,6 +98,7 @@ public class ModItems
 		return item;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Item registerItemWithoutTab(final Item item, final String unlocalizedName) {
 		item.setUnlocalizedName(unlocalizedName);
 		GameRegistry.registerItem(item, unlocalizedName);
