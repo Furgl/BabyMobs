@@ -154,42 +154,4 @@ public class BabyMobs
 			}
 		}
 	}
-	
-	/***
-	 * Returns field of reflected variable
-	 * 
-	 * @param clazz Class that variable is in
-	 * @param name Name of variable
-	 * @param instance Instance to get variable from
-	 */
-	public static Object reflect(Class clazz, String name, Object instance) {
-		try {
-			Field field = clazz.getDeclaredField(name);
-			field.setAccessible(true);
-			return field.get(instance);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	/***
-	 * Sets value of reflected variable
-	 * 
-	 * @param clazz Class that variable is in
-	 * @param name Name of variable
-	 * @param instance Instance to get variable from
-	 * @param value Value to set variable to
-	 */
-	public static void reflect(Class clazz, String name, Object instance, Object value) {
-		try {
-			Field field = clazz.getDeclaredField(name);
-			field.setAccessible(true);
-			field.set(instance, value);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
 }

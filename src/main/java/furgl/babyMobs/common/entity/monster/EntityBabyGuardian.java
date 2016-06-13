@@ -1,7 +1,6 @@
 package furgl.babyMobs.common.entity.monster;
 
 import furgl.babyMobs.client.gui.achievements.Achievements;
-import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
@@ -19,6 +18,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class EntityBabyGuardian extends EntityGuardian
 {
@@ -45,7 +45,7 @@ public class EntityBabyGuardian extends EntityGuardian
 	
 	public boolean hasTargetedEntity()
     {
-		DataParameter<Integer> dataParam = (DataParameter<Integer>) BabyMobs.reflect(EntityGuardian.class, "TARGET_ENTITY", this);
+		DataParameter<Integer> dataParam = (DataParameter<Integer>) ReflectionHelper.getPrivateValue(EntityGuardian.class, this, 1);
         return this.dataWatcher.get(dataParam) != 0;
     }
 

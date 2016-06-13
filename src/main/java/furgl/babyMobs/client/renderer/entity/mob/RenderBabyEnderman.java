@@ -3,7 +3,6 @@ package furgl.babyMobs.client.renderer.entity.mob;
 import org.lwjgl.opengl.GL11;
 
 import furgl.babyMobs.client.model.ModelBabyEnderman;
-import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.entity.monster.EntityBabyEnderman;
 import net.minecraft.client.model.ModelEnderman;
 import net.minecraft.client.renderer.GlStateManager;
@@ -17,6 +16,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -29,7 +29,7 @@ public class RenderBabyEnderman extends RenderEnderman
 	{
 		super(renderManager);
 		this.mainModel = new ModelBabyEnderman(0.0F);
-		BabyMobs.reflect(RenderEnderman.class, "endermanModel", this, (ModelEnderman) this.mainModel);
+		ReflectionHelper.setPrivateValue(RenderEnderman.class, this, (ModelEnderman) this.mainModel, 1);
 	}
 
 	@Override

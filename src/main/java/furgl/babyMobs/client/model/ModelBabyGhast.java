@@ -1,10 +1,10 @@
 package furgl.babyMobs.client.model;
 
-import furgl.babyMobs.common.BabyMobs;
 import net.minecraft.client.model.ModelGhast;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -16,9 +16,9 @@ public class ModelBabyGhast extends ModelGhast
 
     public ModelBabyGhast()
     {
-       super();
-       this.body = (ModelRenderer) BabyMobs.reflect(ModelGhast.class, "body", this);
-       this.tentacles = (ModelRenderer[]) BabyMobs.reflect(ModelGhast.class, "tentacles", this);
+        super();
+        this.body = (ModelRenderer) ReflectionHelper.getPrivateValue(ModelGhast.class, this, 0);
+        this.tentacles = (ModelRenderer[]) ReflectionHelper.getPrivateValue(ModelGhast.class, this, 1);
     }
 
     @Override

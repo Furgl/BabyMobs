@@ -1,7 +1,6 @@
 package furgl.babyMobs.client.renderer.entity.mob;
 
 import furgl.babyMobs.client.model.ModelBabyShulker;
-import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.entity.monster.EntityBabyShulker;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -15,20 +14,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderBabyShulker extends RenderShulker
 {
-    private static ResourceLocation field_188342_a;
-	
+	private static final ResourceLocation field_188342_a = new ResourceLocation("textures/entity/shulker/endergolem.png");
+
 	public RenderBabyShulker(RenderManager renderManager, ModelBabyShulker model)
 	{
 		super(renderManager, model);
-		RenderBabyShulker.field_188342_a = (ResourceLocation) BabyMobs.reflect(RenderShulker.class, "field_188342_a", this);
 		for (LayerRenderer layer : this.layerRenderers) {
-        	if (layer.getClass().getSimpleName().equals("HeadLayer"))
-        	{
-        		this.layerRenderers.remove(layer);
-        		break;
-        	}
-        }
-        this.addLayer(new RenderBabyShulker.HeadLayer());
+			if (layer.getClass().getSimpleName().equals("HeadLayer"))
+			{
+				this.layerRenderers.remove(layer);
+				break;
+			}
+		}
+		this.addLayer(new RenderBabyShulker.HeadLayer());
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -42,6 +40,51 @@ public class RenderBabyShulker extends RenderShulker
 		{
 			GlStateManager.pushMatrix();
 
+			/*switch (entitylivingbaseIn.func_184696_cZ())
+			{
+			case DOWN:
+			default:
+				break;
+			case EAST:
+				GlStateManager.rotate(90.0F, 0.0F, 0.0F, 1.0F);
+				GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
+				GlStateManager.translate(1.0F, -1.0F, 0.0F);
+				GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+				break;
+			case WEST:
+				GlStateManager.rotate(-90.0F, 0.0F, 0.0F, 1.0F);
+				GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
+				GlStateManager.translate(-1.0F, -1.0F, 0.0F);
+				GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+				break;
+			case NORTH:
+				GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
+				GlStateManager.translate(0.0F, -1.0F, -1.0F);
+				break;
+			case SOUTH:
+				GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+				GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
+				GlStateManager.translate(0.0F, -1.0F, 1.0F);
+				break;
+			case UP:
+				GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);
+				GlStateManager.translate(0.0F, -2.0F, 0.0F);
+			}*/
+
+			ModelRenderer modelrenderer = ((ModelBabyShulker)RenderBabyShulker.this.getMainModel()).field_187066_a;
+			modelrenderer.rotateAngleY = netHeadYaw * 0.017453292F;
+			modelrenderer.rotateAngleX = headPitch * 0.017453292F;
+			RenderBabyShulker.this.bindTexture(RenderBabyShulker.field_188342_a);
+
+			float f6 = 2F;
+			GlStateManager.scale(1.5F / f6, 1.5F / f6, 1.5F / f6);
+			GlStateManager.translate(0.0F, 16.0F * scale + 0.3F,  0.0F);
+
+			GlStateManager.popMatrix();
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(1.0F / f6, 1.0F / f6, 1.0F / f6);
+			GlStateManager.translate(0.0F, 24.0F * scale, 0.0F);
+			
 			switch (entitylivingbaseIn.func_184696_cZ())
 			{
 			case DOWN:
@@ -73,10 +116,7 @@ public class RenderBabyShulker extends RenderShulker
 				GlStateManager.translate(0.0F, -2.0F, 0.0F);
 			}
 
-			ModelRenderer modelrenderer = ((ModelBabyShulker)RenderBabyShulker.this.getMainModel()).field_187066_a;
-			modelrenderer.rotateAngleY = netHeadYaw * 0.017453292F;
-			modelrenderer.rotateAngleX = headPitch * 0.017453292F;
-			RenderBabyShulker.this.bindTexture(RenderBabyShulker.field_188342_a);
+			modelrenderer.render(scale);
 			GlStateManager.popMatrix();
 		}
 

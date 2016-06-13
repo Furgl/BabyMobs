@@ -31,7 +31,7 @@ public class EntityAIZombieRiders extends EntityAISkeletonRiders
 		this.horse.tasks.removeTask(this);
 		this.horse.setType(HorseArmorType.ZOMBIE);
 		this.horse.setHorseTamed(true);
-		this.horse.setGrowingAge(0);
+		//this.horse.setGrowingAge(0);
 		this.horse.worldObj.addWeatherEffect(new EntityLightningBolt(this.horse.worldObj, this.horse.posX, this.horse.posY, this.horse.posZ, true));
 		EntityZombie entityzombie = this.setupZombie(difficultyinstance, this.horse);
 		entityzombie.startRiding(this.horse);

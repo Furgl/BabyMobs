@@ -1,6 +1,5 @@
 package furgl.babyMobs.client.model;
 
-import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.entity.monster.EntityBabyGuardian;
 import net.minecraft.client.model.ModelGuardian;
 import net.minecraft.client.model.ModelRenderer;
@@ -8,19 +7,20 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityGuardian;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelBabyGuardian extends ModelGuardian
 {
-	private ModelRenderer guardianBody;
+    private ModelRenderer guardianBody;
     private ModelRenderer[] guardianSpines;
 	
 	public ModelBabyGuardian()
 	{
 		super();
-		this.guardianBody = (ModelRenderer) BabyMobs.reflect(ModelGuardian.class, "guardianBody", this);
+		this.guardianBody = (ModelRenderer) ReflectionHelper.getPrivateValue(ModelGuardian.class, this, 0);
 		this.guardianSpines = new ModelRenderer[12];
 		for (int i = 0; i < this.guardianSpines.length; ++i)
 		{

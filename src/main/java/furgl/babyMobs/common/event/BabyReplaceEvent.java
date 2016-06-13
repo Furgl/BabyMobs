@@ -4,8 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.UUID;
 
-import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIUndeadHorseMate;
 import furgl.babyMobs.common.entity.ai.EntityAIZombieRiders;
@@ -55,6 +55,7 @@ import net.minecraft.world.biome.BiomeGenEnd;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class BabyReplaceEvent 
 {
@@ -105,7 +106,7 @@ public class BabyReplaceEvent
 			{
 				if (((EntityZombie) event.getEntity()).isChild())
 					((EntityZombie) event.getEntity()).setChild(false); //prevent baby zombies spawning naturally
-				if (rand.nextInt(101) <= Config.babyZombieRate || event.getEntity().getRidingEntity() instanceof EntityHorse && ((EntityHorse)event.getEntity().getRidingEntity()).isChild())
+				if (rand.nextInt(100) < Config.babyZombieRate || event.getEntity().getRidingEntity() instanceof EntityHorse && ((EntityHorse)event.getEntity().getRidingEntity()).isChild())
 				{
 					Entity entity = this.spawnEntity(EntityBabyZombie.class, event.getEntity());
 					event.getEntity().setDead();
@@ -136,7 +137,7 @@ public class BabyReplaceEvent
 			{
 				if (((EntityPigZombie) event.getEntity()).isChild())
 					((EntityPigZombie) event.getEntity()).setChild(false); //prevent baby zombie pigmen spawning naturally
-				if (rand.nextInt(101) <= Config.babyPigZombieRate)
+				if (rand.nextInt(100) < Config.babyPigZombieRate)
 				{
 					Entity entity = this.spawnEntity(EntityBabyPigZombie.class, event.getEntity());
 					event.getEntity().setDead();
@@ -160,7 +161,7 @@ public class BabyReplaceEvent
 				((EntityHorse)event.getEntity()).setHorseTamed(true);
 				Iterator it = event.getEntity().getRecursivePassengers().iterator();
 				Entity entity = it.hasNext() ? (Entity) it.next() : null;
-				if (rand.nextInt(101) <= Config.babySkeletonHorseRate || entity instanceof EntitySkeleton && ((EntitySkeleton) entity).isChild())
+				if (rand.nextInt(100) < Config.babySkeletonHorseRate || entity instanceof EntitySkeleton && ((EntitySkeleton) entity).isChild())
 				{
 					EntityHorse horse = (EntityHorse) this.spawnEntity(EntityHorse.class, event.getEntity());
 					horse.setType(HorseArmorType.SKELETON);
@@ -174,7 +175,7 @@ public class BabyReplaceEvent
 				((EntityHorse)event.getEntity()).setHorseTamed(true);
 				Iterator it = event.getEntity().getRecursivePassengers().iterator();
 				Entity entity = it.hasNext() ? (Entity) it.next() : null;
-				if (rand.nextInt(101) <= Config.babyZombieHorseRate || entity instanceof EntityZombie && ((EntityZombie) entity).isChild())
+				if (rand.nextInt(100) < Config.babyZombieHorseRate || entity instanceof EntityZombie && ((EntityZombie) entity).isChild())
 				{
 					EntityHorse horse = (EntityHorse) this.spawnEntity(EntityHorse.class, event.getEntity());
 					horse.setType(HorseArmorType.ZOMBIE);
@@ -182,7 +183,7 @@ public class BabyReplaceEvent
 					horse.setSkeletonTrap(((EntityHorse)event.getEntity()).isSkeletonTrap());
 					if (horse.isSkeletonTrap())
 					{
-						EntityAISkeletonRiders skeletonTrapAI = (EntityAISkeletonRiders) BabyMobs.reflect(EntityHorse.class, "skeletonTrapAI", horse);
+						EntityAISkeletonRiders skeletonTrapAI = (EntityAISkeletonRiders) ReflectionHelper.getPrivateValue(EntityHorse.class, horse, 12);
 						horse.tasks.removeTask(skeletonTrapAI);
 						horse.tasks.addTask(1, new EntityAIZombieRiders(horse));
 					}
@@ -191,7 +192,7 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntitySpider.class)
 			{
-				if (rand.nextInt(101) <= Config.babySpiderRate)
+				if (rand.nextInt(100) < Config.babySpiderRate)
 				{
 					this.spawnEntity(EntityBabySpider.class, event.getEntity());
 					event.getEntity().setDead();
@@ -199,7 +200,7 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntityShulker.class)
 			{
-				if (rand.nextInt(101) <= Config.babyShulkerRate)
+				if (rand.nextInt(100) < Config.babyShulkerRate)
 				{
 					this.spawnEntity(EntityBabyShulker.class, event.getEntity());
 					event.getEntity().setDead();
@@ -207,7 +208,7 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntitySkeleton.class && ((EntitySkeleton) event.getEntity()).getSkeletonType() == 0)
 			{
-				if (rand.nextInt(101) <= Config.babySkeletonRate || event.getEntity().getRidingEntity() instanceof EntityHorse && ((EntityHorse)event.getEntity().getRidingEntity()).isChild())
+				if (rand.nextInt(100) < Config.babySkeletonRate || event.getEntity().getRidingEntity() instanceof EntityHorse && ((EntityHorse)event.getEntity().getRidingEntity()).isChild())
 				{
 					this.spawnEntity(EntityBabySkeleton.class, event.getEntity());
 					event.getEntity().setDead();
@@ -217,7 +218,7 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntityCreeper.class)
 			{
-				if (rand.nextInt(101) <= Config.babyCreeperRate)
+				if (rand.nextInt(100) < Config.babyCreeperRate)
 				{
 					this.spawnEntity(EntityBabyCreeper.class, event.getEntity());
 					event.getEntity().setDead();
@@ -225,7 +226,7 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntitySkeleton.class && ((EntitySkeleton) event.getEntity()).getSkeletonType() == 1)
 			{
-				if (rand.nextInt(101) <= Config.babyWitherSkeletonRate)
+				if (rand.nextInt(100) < Config.babyWitherSkeletonRate)
 				{
 					this.spawnEntity(EntityBabyWitherSkeleton.class, event.getEntity());
 					event.getEntity().setDead();
@@ -233,12 +234,12 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntityEnderman.class)
 			{
-				if (event.getEntity().worldObj.getBiomeGenForCoords(event.getEntity().getPosition()) instanceof BiomeGenEnd && rand.nextInt(101) <= Config.babyEndermanEndRate)
+				if (event.getEntity().worldObj.getBiomeGenForCoords(event.getEntity().getPosition()) instanceof BiomeGenEnd && rand.nextInt(100) < Config.babyEndermanEndRate)
 				{
 					this.spawnEntity(EntityBabyEnderman.class, event.getEntity());
 					event.getEntity().setDead();
 				}
-				else if (!(event.getEntity().worldObj.getBiomeGenForCoords(event.getEntity().getPosition()) instanceof BiomeGenEnd) && rand.nextInt(101) <= Config.babyEndermanRate)
+				else if (!(event.getEntity().worldObj.getBiomeGenForCoords(event.getEntity().getPosition()) instanceof BiomeGenEnd) && rand.nextInt(100) < Config.babyEndermanRate)
 				{
 					this.spawnEntity(EntityBabyEnderman.class, event.getEntity());
 					event.getEntity().setDead();
@@ -246,7 +247,7 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntityBlaze.class)
 			{
-				if (rand.nextInt(101) <= Config.babyBlazeRate)
+				if (rand.nextInt(100) < Config.babyBlazeRate)
 				{
 					this.spawnEntity(EntityBabyBlaze.class, event.getEntity());
 					event.getEntity().setDead();
@@ -254,7 +255,7 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntityWitch.class)
 			{
-				if (rand.nextInt(101) <= Config.babyWitchRate)
+				if (rand.nextInt(100) < Config.babyWitchRate)
 				{
 					this.spawnEntity(EntityBabyWitch.class, event.getEntity());
 					EntityLiving entityToSpawn = (EntityLiving) EntityList.createEntityByName("babymobs.babyOcelot", event.getEntity().worldObj);
@@ -273,7 +274,7 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntityGuardian.class)
 			{
-				if (rand.nextInt(101) <= Config.babyGuardianRate)
+				if (rand.nextInt(100) < Config.babyGuardianRate)
 				{
 					this.spawnEntity(EntityBabyGuardian.class, event.getEntity());
 					event.getEntity().setDead();
@@ -281,7 +282,7 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntitySquid.class)
 			{
-				if (rand.nextInt(101) <= Config.babySquidRate)
+				if (rand.nextInt(100) < Config.babySquidRate)
 				{
 					this.spawnEntity(EntityBabySquid.class, event.getEntity());
 					event.getEntity().setDead();
@@ -289,7 +290,7 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntityCaveSpider.class)
 			{
-				if (rand.nextInt(101) <= Config.babyCaveSpiderRate)
+				if (rand.nextInt(100) < Config.babyCaveSpiderRate)
 				{
 					this.spawnEntity(EntityBabyCaveSpider.class, event.getEntity());
 					event.getEntity().setDead();
@@ -297,7 +298,7 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntityGhast.class)
 			{
-				if (rand.nextInt(101) <= Config.babyGhastRate)
+				if (rand.nextInt(100) < Config.babyGhastRate)
 				{
 					this.spawnEntity(EntityBabyGhast.class, event.getEntity());
 					event.getEntity().setDead();
@@ -305,7 +306,7 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntityIronGolem.class  && (!((EntityIronGolem) event.getEntity()).isPlayerCreated()))
 			{
-				if (rand.nextInt(101) <= Config.babyIronGolemRate)
+				if (rand.nextInt(100) < Config.babyIronGolemRate)
 				{
 					this.spawnEntity(EntityBabyIronGolem.class, event.getEntity());
 					event.getEntity().setDead();
@@ -333,9 +334,9 @@ public class BabyReplaceEvent
 			entityToSpawn = (Entity) entityToSpawnClass.getConstructor(World.class).newInstance(world);
 			NBTTagCompound nbt = new NBTTagCompound();
 			originalEntity.writeToNBT(nbt);
-			nbt.setLong("UUIDLeast", nbt.getLong("UUIDLeast")+1L);
 			entityToSpawn.readFromNBT(nbt);
 			entityToSpawn.setCustomNameTag(originalEntity.getCustomNameTag());
+			entityToSpawn.setUniqueId(UUID.randomUUID());
 			world.spawnEntityInWorld(entityToSpawn);
 		} 
 		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException| NoSuchMethodException | SecurityException e) 

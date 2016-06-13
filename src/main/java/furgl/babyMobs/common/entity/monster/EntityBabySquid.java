@@ -1,7 +1,6 @@
 package furgl.babyMobs.common.entity.monster;
 
 import furgl.babyMobs.client.gui.achievements.Achievements;
-import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.projectile.EntitySquidInk;
 import furgl.babyMobs.common.item.ModItems;
@@ -17,6 +16,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class EntityBabySquid extends EntitySquid
 {
@@ -71,8 +71,9 @@ public class EntityBabySquid extends EntitySquid
 				entitySpawner.setMovementInOut(-1D);
 				entitySpawner.setRandVar(0.5D);
 				entitySpawner.run();
+				
+				ReflectionHelper.setPrivateValue(EntitySquid.class, this, 2.0F, 8);
 
-				BabyMobs.reflect(EntitySquid.class, "randomMotionSpeed", this, 2.0F);
 				this.squidRotation = (float) (Math.PI-1);
 				this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.entity_slime_attack, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 8F, false);
 			}

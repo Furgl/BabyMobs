@@ -1,7 +1,6 @@
 package furgl.babyMobs.common.entity.monster;
 
 import furgl.babyMobs.client.gui.achievements.Achievements;
-import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
@@ -16,6 +15,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class EntityBabyCreeper extends EntityCreeper
 {
@@ -74,8 +74,8 @@ public class EntityBabyCreeper extends EntityCreeper
 		{
 			if (Config.useSpecialAbilities)
 			{
-				int ignitedTime = (int) BabyMobs.reflect(EntityCreeper.class, "timeSinceIgnited", this);
-				int fuse = (int) BabyMobs.reflect(EntityCreeper.class, "fuseTime", this);
+				int ignitedTime = (int) ReflectionHelper.getPrivateValue(EntityCreeper.class, this, 4);
+				int fuse = (int) ReflectionHelper.getPrivateValue(EntityCreeper.class, this, 5);
 				
 				if (rand.nextInt(20)==0 && this.worldObj.isRemote)
 				{
@@ -103,7 +103,7 @@ public class EntityBabyCreeper extends EntityCreeper
 	{
 		if (!this.worldObj.isRemote)
 		{
-			int ignitedTime = (int) BabyMobs.reflect(EntityCreeper.class, "timeSinceIgnited", this);
+			int ignitedTime = (int) ReflectionHelper.getPrivateValue(EntityCreeper.class, this, 4);
 			boolean flag = this.worldObj.getGameRules().getBoolean("mobGriefing");
 			float f = this.getPowered() ? 2.0F : 1.0F;
 			this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, this.explosionRadius * f, flag);

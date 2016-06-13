@@ -70,5 +70,11 @@ public class AttackEvent
 				event.setCanceled(true);
 			}
 		}
+		else if (!event.getEntity().worldObj.isRemote && event.getSource().getEntity() instanceof EntityZombie && ((EntityZombie)event.getSource().getEntity()).isConverting())
+			event.setCanceled(true);
+		else if (!event.getEntity().worldObj.isRemote && event.getSource().getEntity() instanceof EntityZombieChicken && ((EntityZombieChicken)event.getSource().getEntity()).isConverting())
+			event.setCanceled(true);
+		else if (!event.getEntity().worldObj.isRemote && event.getSource().getEntity() instanceof EntityZombiePig && ((EntityZombiePig)event.getSource().getEntity()).isConverting())
+			event.setCanceled(true);
 	}
 }

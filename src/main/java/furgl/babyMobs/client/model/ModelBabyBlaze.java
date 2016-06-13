@@ -1,10 +1,10 @@
 package furgl.babyMobs.client.model;
 
-import furgl.babyMobs.common.BabyMobs;
 import net.minecraft.client.model.ModelBlaze;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -18,8 +18,8 @@ public class ModelBabyBlaze extends ModelBlaze
     public ModelBabyBlaze()
     {
     	super();
-    	this.blazeSticks = (ModelRenderer[]) BabyMobs.reflect(ModelBlaze.class, "blazeSticks", this);
-    	this.blazeHead = (ModelRenderer) BabyMobs.reflect(ModelBlaze.class, "blazeHead", this);
+    	this.blazeSticks = (ModelRenderer[]) ReflectionHelper.getPrivateValue(ModelBlaze.class, this, 0);
+    	this.blazeHead = (ModelRenderer) ReflectionHelper.getPrivateValue(ModelBlaze.class, this, 1);
     }
 
     /**

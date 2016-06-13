@@ -1,28 +1,28 @@
 package furgl.babyMobs.client.model;
 
-import furgl.babyMobs.common.BabyMobs;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.ModelWither;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelBabyWither extends ModelWither
 {
-    private ModelRenderer[] pieces;
-    private ModelRenderer[] heads;
+    private ModelRenderer[] field_82905_a; //pieces
+    private ModelRenderer[] field_82904_b; //heads
 
     public ModelBabyWither(float p_i46302_1_)
     {
         super(p_i46302_1_);
-        this.pieces = (ModelRenderer[]) BabyMobs.reflect(ModelWither.class, "field_82905_a", this);
-        this.pieces[0] = new ModelRenderer(this, 0, 16);
-        this.heads = new ModelRenderer[1];
-        this.heads[0] = new ModelRenderer(this, 0, 0);
-        this.heads[0].addBox(-4.0F, -1.0F, -4.0F, 8, 8, 8, p_i46302_1_);
+        this.field_82905_a = (ModelRenderer[]) ReflectionHelper.getPrivateValue(ModelWither.class, this, 0);
+        this.field_82905_a[0] = new ModelRenderer(this, 0, 16);
+        this.field_82904_b = new ModelRenderer[1];
+        this.field_82904_b[0] = new ModelRenderer(this, 0, 0);
+        this.field_82904_b[0].addBox(-4.0F, -1.0F, -4.0F, 8, 8, 8, p_i46302_1_);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ModelBabyWither extends ModelWither
 	    GlStateManager.scale(scaleFactor, scaleFactor, scaleFactor);
     	
     	this.setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_, p_78088_1_);
-        ModelRenderer[] amodelrenderer = this.heads;
+        ModelRenderer[] amodelrenderer = this.field_82904_b;
         int i = amodelrenderer.length;
         int j;
         ModelRenderer modelrenderer;
@@ -45,7 +45,7 @@ public class ModelBabyWither extends ModelWither
             modelrenderer = amodelrenderer[j];
             modelrenderer.render(p_78088_7_);
         }
-        amodelrenderer = this.pieces;
+        amodelrenderer = this.field_82905_a;
         i = amodelrenderer.length;
         for (j = 0; j < i; ++j)
         {
@@ -59,6 +59,6 @@ public class ModelBabyWither extends ModelWither
     @Override
 	public void setLivingAnimations(EntityLivingBase p_78086_1_, float p_78086_2_, float p_78086_3_, float p_78086_4_)
     {
-        
+
     }
 }
