@@ -92,6 +92,13 @@ public class EntityZombiePig extends EntityPig
 		}
 		super.onUpdate();
 	}
+	
+		
+	@Override
+    protected boolean canDespawn()
+    {
+        return true;
+    }
 
 	@Override
 	public boolean isBreedingItem(ItemStack stack)
