@@ -60,12 +60,16 @@ public class EntityZombiePig extends EntityPig
 		return super.attackEntityFrom(source, amount);
 	}
 
+	
+	@Override
+    protected boolean canDespawn()
+    {
+        return true;
+    }
+
 	@Override
 	public void onUpdate()
 	{
-		//TODO ANGER NOT WORKING PROPERLY - ALSO ADD ANGER WHEN PIGMEN ATTACKED AND MAYBE STUFF IN
-		//ATTACKBABYAI FOR CHICKEN AND PIG
-		
 		//sync anger with rider
 		if (!this.worldObj.isRemote)
 		{
