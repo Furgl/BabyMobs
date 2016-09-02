@@ -47,11 +47,11 @@ import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntitySquid;
-import net.minecraft.entity.passive.HorseArmorType;
+import net.minecraft.entity.passive.HorseType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenEnd;
+import net.minecraft.world.biome.BiomeEnd;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -62,16 +62,16 @@ public class BabyReplaceEvent
 	@SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
 	public void onEvent(LivingEvent.LivingUpdateEvent event)
 	{
-		if (event.getEntity() instanceof EntityHorse && !((EntityHorse)event.getEntity()).isTame() && (((EntityHorse)event.getEntity()).getType() == HorseArmorType.ZOMBIE || ((EntityHorse)event.getEntity()).getType() == HorseArmorType.SKELETON))
+		if (event.getEntity() instanceof EntityHorse && !((EntityHorse)event.getEntity()).isTame() && (((EntityHorse)event.getEntity()).getType() == HorseType.ZOMBIE || ((EntityHorse)event.getEntity()).getType() == HorseType.SKELETON))
 			((EntityHorse)event.getEntity()).setHorseTamed(true);
-		if (!event.getEntity().worldObj.isRemote && event.getEntity().ticksExisted == 1 && event.getEntity() instanceof EntityHorse && (((EntityHorse)event.getEntity()).getType() == HorseArmorType.ZOMBIE || ((EntityHorse)event.getEntity()).getType() == HorseArmorType.SKELETON))
+		if (!event.getEntity().worldObj.isRemote && event.getEntity().ticksExisted == 1 && event.getEntity() instanceof EntityHorse && (((EntityHorse)event.getEntity()).getType() == HorseType.ZOMBIE || ((EntityHorse)event.getEntity()).getType() == HorseType.SKELETON))
 		{
 			EntityHorse horse = (EntityHorse) event.getEntity();
 			boolean hasZombieAI = false;
 			boolean hasUndeadHorseMateAI = false;
 			ArrayList<EntityAIBase> list = new ArrayList<EntityAIBase>();
 			for (EntityAITaskEntry task : horse.tasks.taskEntries) {
-				if (horse.isSkeletonTrap() && ((EntityHorse)event.getEntity()).getType() == HorseArmorType.ZOMBIE)
+				if (horse.isSkeletonTrap() && ((EntityHorse)event.getEntity()).getType() == HorseType.ZOMBIE)
 				{
 					if (task.action.getClass().getSimpleName().equals("EntityAISkeletonRiders"))
 					{
@@ -93,7 +93,7 @@ public class BabyReplaceEvent
 			}
 			for (EntityAIBase task : list)
 				horse.tasks.removeTask(task);
-			if (!hasZombieAI && horse.isSkeletonTrap() && ((EntityHorse)event.getEntity()).getType() == HorseArmorType.ZOMBIE)
+			if (!hasZombieAI && horse.isSkeletonTrap() && ((EntityHorse)event.getEntity()).getType() == HorseType.ZOMBIE)
 				horse.tasks.addTask(1, new EntityAIZombieRiders(horse));
 			if (!hasUndeadHorseMateAI)
 				horse.tasks.addTask(1, new EntityAIUndeadHorseMate(horse, 1.0D));
@@ -142,7 +142,7 @@ public class BabyReplaceEvent
 					Entity entity = this.spawnEntity(EntityBabyPigZombie.class, event.getEntity());
 					event.getEntity().setDead();
 					EntityLiving entityToSpawn = (EntityLiving) EntityList.createEntityByName("babymobs.zombiePig", entity.worldObj);
-					entityToSpawn.setLocationAndAngles(entity.posX, entity.posY, entity.posZ,  MathHelper.wrapAngleTo180_float(entity.worldObj.rand.nextFloat() * 360.0F), 0.5F);
+					entityToSpawn.setLocationAndAngles(entity.posX, entity.posY, entity.posZ,  MathHelper.wrapDegrees(entity.worldObj.rand.nextFloat() * 360.0F), 0.5F);
 					entity.worldObj.spawnEntityInWorld(entityToSpawn);
 					entity.startRiding(entityToSpawn);
 					entityToSpawn.playLivingSound();
@@ -151,12 +151,12 @@ public class BabyReplaceEvent
 			else if (event.getEntity().getClass() == EntityBabyPigZombie.class)
 			{
 				EntityLiving entityToSpawn = (EntityLiving) EntityList.createEntityByName("babymobs.zombiePig", event.getEntity().worldObj);
-				entityToSpawn.setLocationAndAngles(event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ,  MathHelper.wrapAngleTo180_float(event.getEntity().worldObj.rand.nextFloat() * 360.0F), 0.5F);
+				entityToSpawn.setLocationAndAngles(event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ,  MathHelper.wrapDegrees(event.getEntity().worldObj.rand.nextFloat() * 360.0F), 0.5F);
 				event.getEntity().worldObj.spawnEntityInWorld(entityToSpawn);
 				event.getEntity().startRiding(entityToSpawn);
 				entityToSpawn.playLivingSound();
 			}
-			else if (event.getEntity().getClass() == EntityHorse.class && ((EntityHorse)event.getEntity()).getType() == HorseArmorType.SKELETON)
+			else if (event.getEntity().getClass() == EntityHorse.class && ((EntityHorse)event.getEntity()).getType() == HorseType.SKELETON)
 			{
 				((EntityHorse)event.getEntity()).setHorseTamed(true);
 				Iterator it = event.getEntity().getRecursivePassengers().iterator();
@@ -164,13 +164,13 @@ public class BabyReplaceEvent
 				if (rand.nextInt(100) < Config.babySkeletonHorseRate || entity instanceof EntitySkeleton && ((EntitySkeleton) entity).isChild())
 				{
 					EntityHorse horse = (EntityHorse) this.spawnEntity(EntityHorse.class, event.getEntity());
-					horse.setType(HorseArmorType.SKELETON);
+					horse.setType(HorseType.SKELETON);
 					horse.setGrowingAge(-24000);
 					horse.setSkeletonTrap(((EntityHorse)event.getEntity()).isSkeletonTrap());
 					event.getEntity().setDead();
 				}
 			}
-			else if (event.getEntity().getClass() == EntityHorse.class && ((EntityHorse)event.getEntity()).getType() == HorseArmorType.ZOMBIE)
+			else if (event.getEntity().getClass() == EntityHorse.class && ((EntityHorse)event.getEntity()).getType() == HorseType.ZOMBIE)
 			{
 				((EntityHorse)event.getEntity()).setHorseTamed(true);
 				Iterator it = event.getEntity().getRecursivePassengers().iterator();
@@ -178,7 +178,7 @@ public class BabyReplaceEvent
 				if (rand.nextInt(100) < Config.babyZombieHorseRate || entity instanceof EntityZombie && ((EntityZombie) entity).isChild())
 				{
 					EntityHorse horse = (EntityHorse) this.spawnEntity(EntityHorse.class, event.getEntity());
-					horse.setType(HorseArmorType.ZOMBIE);
+					horse.setType(HorseType.ZOMBIE);
 					horse.setGrowingAge(-24000);
 					horse.setSkeletonTrap(((EntityHorse)event.getEntity()).isSkeletonTrap());
 					if (horse.isSkeletonTrap())
@@ -234,12 +234,12 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntityEnderman.class)
 			{
-				if (event.getEntity().worldObj.getBiomeGenForCoords(event.getEntity().getPosition()) instanceof BiomeGenEnd && rand.nextInt(100) < Config.babyEndermanEndRate)
+				if (event.getEntity().worldObj.getBiomeGenForCoords(event.getEntity().getPosition()) instanceof BiomeEnd && rand.nextInt(100) < Config.babyEndermanEndRate)
 				{
 					this.spawnEntity(EntityBabyEnderman.class, event.getEntity());
 					event.getEntity().setDead();
 				}
-				else if (!(event.getEntity().worldObj.getBiomeGenForCoords(event.getEntity().getPosition()) instanceof BiomeGenEnd) && rand.nextInt(100) < Config.babyEndermanRate)
+				else if (!(event.getEntity().worldObj.getBiomeGenForCoords(event.getEntity().getPosition()) instanceof BiomeEnd) && rand.nextInt(100) < Config.babyEndermanRate)
 				{
 					this.spawnEntity(EntityBabyEnderman.class, event.getEntity());
 					event.getEntity().setDead();
@@ -259,7 +259,7 @@ public class BabyReplaceEvent
 				{
 					this.spawnEntity(EntityBabyWitch.class, event.getEntity());
 					EntityLiving entityToSpawn = (EntityLiving) EntityList.createEntityByName("babymobs.babyOcelot", event.getEntity().worldObj);
-					entityToSpawn.setLocationAndAngles(event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ,  MathHelper.wrapAngleTo180_float(event.getEntity().worldObj.rand.nextFloat() * 360.0F), 0.5F);
+					entityToSpawn.setLocationAndAngles(event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ,  MathHelper.wrapDegrees(event.getEntity().worldObj.rand.nextFloat() * 360.0F), 0.5F);
 					event.getEntity().worldObj.spawnEntityInWorld(entityToSpawn);
 					entityToSpawn.playLivingSound();
 					event.getEntity().setDead();
@@ -268,7 +268,7 @@ public class BabyReplaceEvent
 			else if (event.getEntity().getClass() == EntityBabyWitch.class)
 			{
 				EntityLiving entityToSpawn = (EntityLiving) EntityList.createEntityByName("babymobs.babyOcelot", event.getEntity().worldObj);
-				entityToSpawn.setLocationAndAngles(event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ,  MathHelper.wrapAngleTo180_float(event.getEntity().worldObj.rand.nextFloat() * 360.0F), 0.5F);
+				entityToSpawn.setLocationAndAngles(event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ,  MathHelper.wrapDegrees(event.getEntity().worldObj.rand.nextFloat() * 360.0F), 0.5F);
 				event.getEntity().worldObj.spawnEntityInWorld(entityToSpawn);
 				entityToSpawn.playLivingSound();
 			}

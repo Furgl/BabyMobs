@@ -29,7 +29,7 @@ public class EntityCaveSpiderVenom extends EntityThrowable
 		super.onUpdate();
 		
 		if (this.ticksExisted == 1)
-			this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.entity_generic_drink, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.1F + 1.7F, false);
+			this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ENTITY_GENERIC_DRINK, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.1F + 1.7F, false);
 		
 		if (this.worldObj.isRemote)
 		{
@@ -48,7 +48,7 @@ public class EntityCaveSpiderVenom extends EntityThrowable
 				mop.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), 1F);
 				if (mop.entityHit instanceof EntityPlayer)
 				{
-					((EntityPlayer) mop.entityHit).addPotionEffect(new PotionEffect(MobEffects.poison, 60, 0));
+					((EntityPlayer) mop.entityHit).addPotionEffect(new PotionEffect(MobEffects.POISON, 60, 0));
 				}
 			}
 			this.setDead();

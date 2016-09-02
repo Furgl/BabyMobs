@@ -67,7 +67,7 @@ public class EntityBabyCaveSpider extends EntityCaveSpider
 	protected void entityInit()
 	{
 		super.entityInit();
-		this.dataWatcher.register(SPITTING, (byte)0);//added
+		this.dataManager.register(SPITTING, (byte)0);//added
 	}
 
 	@Override
@@ -84,15 +84,15 @@ public class EntityBabyCaveSpider extends EntityCaveSpider
 					double d0 = this.getDistanceSqToEntity(entitylivingbase);
 
 					if (d0 > 10.0D)
-						this.dataWatcher.set(SPITTING, (byte)1);
+						this.dataManager.set(SPITTING, (byte)1);
 					else
-						this.dataWatcher.set(SPITTING, (byte)0);
+						this.dataManager.set(SPITTING, (byte)0);
 				}
 				else
-					this.dataWatcher.set(SPITTING, (byte)0);
+					this.dataManager.set(SPITTING, (byte)0);
 			}
 
-			if (this.dataWatcher.get(SPITTING) == 1 && this.getAttackTarget() instanceof EntityPlayer && !(this.getAttackTarget() instanceof FakePlayer) && !(((EntityPlayer) this.getAttackTarget()).capabilities.isCreativeMode))
+			if (this.dataManager.get(SPITTING) == 1 && this.getAttackTarget() instanceof EntityPlayer && !(this.getAttackTarget() instanceof FakePlayer) && !(((EntityPlayer) this.getAttackTarget()).capabilities.isCreativeMode))
 			{
 				this.spitting = true;
 				this.spittingCounter = 40;
@@ -118,7 +118,7 @@ public class EntityBabyCaveSpider extends EntityCaveSpider
 			if (this.spitting)
 			{
 				this.spittingCounter--;
-				this.addPotionEffect(new PotionEffect(MobEffects.moveSlowdown, 2, 9));
+				this.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 2, 9));
 				if (this.spittingCounter == 0)
 					this.spitting = false;
 			}

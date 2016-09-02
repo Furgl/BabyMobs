@@ -55,8 +55,8 @@ public class EntityWitherExplosion extends EntityThrowable
 		{
 			if (!player.capabilities.isCreativeMode)
 			{
-				player.addPotionEffect(new PotionEffect(MobEffects.wither, 40));
-				this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.entity_wither_shoot, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.1F + 1.8F, false);
+				player.addPotionEffect(new PotionEffect(MobEffects.WITHER, 40));
+				this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ENTITY_WITHER_SHOOT, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.1F + 1.8F, false);
 				this.setDead();
 			}
 		}

@@ -59,7 +59,7 @@ public class ItemBabySpawnEgg extends Item
 		{
 			IBlockState iblockstate = worldIn.getBlockState(pos);
 
-			if (iblockstate.getBlock() == Blocks.mob_spawner)
+			if (iblockstate.getBlock() == Blocks.MOB_SPAWNER)
 			{
 				TileEntity tileentity = worldIn.getTileEntity(pos);
 
@@ -123,7 +123,7 @@ public class ItemBabySpawnEgg extends Item
 
 			if (nbttagcompound != null && nbttagcompound.hasKey("EntityTag", 10))
 			{
-				if (!entityWorld.isRemote && targetEntity.func_184213_bq() && (p_185079_1_ == null || !minecraftserver.getPlayerList().canSendCommands(p_185079_1_.getGameProfile())))
+				if (!entityWorld.isRemote && targetEntity.ignoreItemEntityData() && (p_185079_1_ == null || !minecraftserver.getPlayerList().canSendCommands(p_185079_1_.getGameProfile())))
 				{
 					return;
 				}
@@ -150,7 +150,7 @@ public class ItemBabySpawnEgg extends Item
 		}
 		else
 		{
-			RayTraceResult raytraceresult = this.getMovingObjectPositionFromPlayer(worldIn, playerIn, true);
+			RayTraceResult raytraceresult = this.rayTrace(worldIn, playerIn, true);
 
 			if (raytraceresult != null && raytraceresult.typeOfHit == RayTraceResult.Type.BLOCK)
 			{
@@ -182,7 +182,7 @@ public class ItemBabySpawnEgg extends Item
 							--itemStackIn.stackSize;
 						}
 
-						playerIn.addStat(StatList.func_188057_b(this));
+						playerIn.addStat(StatList.getObjectUseStats(this));
 						return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
 					}
 				}
@@ -204,7 +204,7 @@ public class ItemBabySpawnEgg extends Item
 	 */
 	public static Entity spawnCreature(World worldIn, String name, double x, double y, double z)
 	{
-		if (!EntityList.stringToClassMapping.containsKey(name))
+		if (!EntityList.isStringValidEntityName(name))
 		{
 			return null;
 		}
@@ -219,7 +219,7 @@ public class ItemBabySpawnEgg extends Item
 				if (entity instanceof EntityLivingBase)
 				{
 					EntityLiving entityliving = (EntityLiving)entity;
-					entity.setLocationAndAngles(x, y, z, MathHelper.wrapAngleTo180_float(worldIn.rand.nextFloat() * 360.0F), 0.0F);
+					entity.setLocationAndAngles(x, y, z, MathHelper.wrapDegrees(worldIn.rand.nextFloat() * 360.0F), 0.0F);
 					entityliving.rotationYawHead = entityliving.rotationYaw;
 					entityliving.renderYawOffset = entityliving.rotationYaw;
 					entityliving.onInitialSpawn(worldIn.getDifficultyForLocation(new BlockPos(entityliving)), (IEntityLivingData)null);

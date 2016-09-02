@@ -1,13 +1,13 @@
 package furgl.babyMobs.util;
 
-import furgl.babyMobs.client.particle.EntityCustomFX;
+import furgl.babyMobs.client.particle.EntityCustomParticle;
 import net.minecraft.entity.Entity;
 
-/**Moves Entity's or EntityFX's with custom movement.
- * Requires the Entity or EntityFX to have been spawned with EntitySpawner*/
+/**Moves Entity's or Particle's with custom movement.
+ * Requires the Entity or Particle to have been spawned with EntitySpawner*/
 public class EntityMover 
 {
-	/**Moves Entity or EntityFX with custom movement*/
+	/**Moves Entity or Particle with custom movement*/
 	public static int updateMovement(Entity entity, EntitySpawner spawner, int heightIterator, int entityIterator)
 	{
 		switch(spawner.movement)
@@ -96,8 +96,8 @@ public class EntityMover
 		}
 	}
 	
-	/**Moves Entity or EntityFX with custom movement*/
-	public static int updateMovement(EntityCustomFX entity, EntitySpawner spawner, int heightIterator, int entityIterator)
+	/**Moves Entity or Particle with custom movement*/
+	public static int updateMovement(EntityCustomParticle entity, EntitySpawner spawner, int heightIterator, int entityIterator)
 	{
 		switch(spawner.movement)
 		{
@@ -108,9 +108,9 @@ public class EntityMover
 				if (entity.ticksExisted % spawner.updateTime == 0 || entity.ticksExisted == 1)
 				{
 					entityIterator++;
-					entity.setXSpeed((spawner.radius * Math.cos(2*Math.PI*(entityIterator)/Math.max(spawner.numEntities, 10)) + spawner.origin.xCoord - entity.getX()) * 0.3D);
-					entity.setYSpeed(0.0D);  
-					entity.setZSpeed((spawner.radius * Math.sin(2*Math.PI*(entityIterator)/Math.max(spawner.numEntities, 10)) + spawner.origin.zCoord - entity.getZ()) * 0.3D);
+					entity.setMotionX((spawner.radius * Math.cos(2*Math.PI*(entityIterator)/Math.max(spawner.numEntities, 10)) + spawner.origin.xCoord - entity.getX()) * 0.3D);
+					entity.setMotionY(0.0D);  
+					entity.setMotionZ((spawner.radius * Math.sin(2*Math.PI*(entityIterator)/Math.max(spawner.numEntities, 10)) + spawner.origin.zCoord - entity.getZ()) * 0.3D);
 					EntityMover.updateEntity(entity, spawner, heightIterator, entityIterator);
 				}
 				break;
@@ -118,18 +118,18 @@ public class EntityMover
 				if (entity.ticksExisted % spawner.updateTime == 0 || entity.ticksExisted == 1)
 				{
 					entityIterator++;
-					entity.setXSpeed(((Math.cos((float) (2*Math.PI*heightIterator/Math.max(spawner.numEntities, 10))) * spawner.radius * Math.cos(2*Math.PI*(entityIterator)/spawner.numEntities) + spawner.origin.xCoord) - entity.getX()) * 0.3D);
-					entity.setYSpeed(0.0F);
-					entity.setZSpeed(((Math.cos((float) (2*Math.PI*heightIterator/Math.max(spawner.numEntities, 10))) * spawner.radius * Math.sin(2*Math.PI*(entityIterator)/spawner.numEntities) + spawner.origin.zCoord) - entity.getZ()) * 0.3D);
+					entity.setMotionX(((Math.cos((float) (2*Math.PI*heightIterator/Math.max(spawner.numEntities, 10))) * spawner.radius * Math.cos(2*Math.PI*(entityIterator)/spawner.numEntities) + spawner.origin.xCoord) - entity.getX()) * 0.3D);
+					entity.setMotionY(0.0F);
+					entity.setMotionZ(((Math.cos((float) (2*Math.PI*heightIterator/Math.max(spawner.numEntities, 10))) * spawner.radius * Math.sin(2*Math.PI*(entityIterator)/spawner.numEntities) + spawner.origin.zCoord) - entity.getZ()) * 0.3D);
 					EntityMover.updateEntity(entity, spawner, heightIterator, entityIterator);
 				}
 				break;
 			case "line": 
 				if (entity.ticksExisted == 1)
 				{
-					entity.setXSpeed(- spawner.length * Math.sin(Math.PI * spawner.yaw / 180)   / 200);
-					entity.setYSpeed(- spawner.length * Math.sin(Math.PI * spawner.pitch / 180) / 200);
-					entity.setZSpeed(  spawner.length * Math.cos(Math.PI * spawner.yaw / 180)   / 200);
+					entity.setMotionX(- spawner.length * Math.sin(Math.PI * spawner.yaw / 180)   / 200);
+					entity.setMotionY(- spawner.length * Math.sin(Math.PI * spawner.pitch / 180) / 200);
+					entity.setMotionZ(  spawner.length * Math.cos(Math.PI * spawner.yaw / 180)   / 200);
 					EntityMover.updateEntity(entity, spawner, heightIterator, entityIterator);
 				}
 				break;
@@ -138,50 +138,50 @@ public class EntityMover
 		case "in/out":
 			if (entity.ticksExisted == 1)
 			{
-				entity.setXSpeed((spawner.origin.xCoord - entity.getX()) / 20);
-				entity.setYSpeed((spawner.origin.yCoord - entity.getY()) / 20);
-				entity.setZSpeed((spawner.origin.zCoord - entity.getZ()) / 20);
+				entity.setMotionX((spawner.origin.xCoord - entity.getX()) / 20);
+				entity.setMotionY((spawner.origin.yCoord - entity.getY()) / 20);
+				entity.setMotionZ((spawner.origin.zCoord - entity.getZ()) / 20);
 				EntityMover.updateEntity(entity, spawner, heightIterator, entityIterator);
 			}
 			break;
 		case "random":
 			if (entity.ticksExisted == 1)
 			{
-				entity.setXSpeed(spawner.rand.nextDouble()-0.5D);
-				entity.setYSpeed(spawner.rand.nextDouble()-0.5D);
-				entity.setZSpeed(spawner.rand.nextDouble()-0.5D);
+				entity.setMotionX(spawner.rand.nextDouble()-0.5D);
+				entity.setMotionY(spawner.rand.nextDouble()-0.5D);
+				entity.setMotionZ(spawner.rand.nextDouble()-0.5D);
 				EntityMover.updateEntity(entity, spawner, heightIterator, entityIterator);
 			}
 			break;
 		case "target":
 			if (spawner.homing || entity.ticksExisted == 1)
 			{
-				entity.setXSpeed((spawner.target.posX - entity.getX()) / 20);
-				entity.setYSpeed(((spawner.target.posY + spawner.target.height/2) - entity.getY()) / 20);
-				entity.setZSpeed((spawner.target.posZ - entity.getZ()) / 20);
+				entity.setMotionX((spawner.target.posX - entity.getX()) / 20);
+				entity.setMotionY(((spawner.target.posY + spawner.target.height/2) - entity.getY()) / 20);
+				entity.setMotionZ((spawner.target.posZ - entity.getZ()) / 20);
 				EntityMover.updateEntity(entity, spawner, heightIterator, entityIterator);
 			}
 			break;
 		}
-		entity.moveEntity(entity.getXSpeed(), entity.getYSpeed(), entity.getZSpeed());	
+		entity.moveEntity(entity.getMotionX(), entity.getMotionY(), entity.getMotionZ());	
 		return entityIterator;
 	}
 	
 	/**Normalizes speed according to EntitySpawner.movementSpeed*/
-	private static void updateEntity(EntityCustomFX entity, EntitySpawner spawner, int heightIterator, int entityIterator)
+	private static void updateEntity(EntityCustomParticle entity, EntitySpawner spawner, int heightIterator, int entityIterator)
 	{
-		double norm = Math.sqrt(Math.pow(entity.getXSpeed(), 2) + Math.pow(entity.getYSpeed(), 2) + Math.pow(entity.getZSpeed(), 2));
+		double norm = Math.sqrt(Math.pow(entity.getMotionX(), 2) + Math.pow(entity.getMotionY(), 2) + Math.pow(entity.getMotionZ(), 2));
 		if (spawner.shape.equals("circle") || spawner.shape.equals("sphere"))
 		{
-			entity.setXSpeed(entity.getXSpeed() * spawner.movementSpeed);
-			entity.setYSpeed(entity.getYSpeed() * spawner.movementSpeed);
-			entity.setZSpeed(entity.getZSpeed() * spawner.movementSpeed);
+			entity.setMotionX(entity.getMotionX() * spawner.movementSpeed);
+			entity.setMotionY(entity.getMotionY() * spawner.movementSpeed);
+			entity.setMotionZ(entity.getMotionZ() * spawner.movementSpeed);
 		}
 		else
 		{
-			entity.setXSpeed(entity.getXSpeed() * spawner.movementSpeed / norm);
-			entity.setYSpeed(entity.getYSpeed() * spawner.movementSpeed / norm);
-			entity.setZSpeed(entity.getZSpeed() * spawner.movementSpeed / norm);
+			entity.setMotionX(entity.getMotionX() * spawner.movementSpeed / norm);
+			entity.setMotionY(entity.getMotionY() * spawner.movementSpeed / norm);
+			entity.setMotionZ(entity.getMotionZ() * spawner.movementSpeed / norm);
 		}
 	}
 }

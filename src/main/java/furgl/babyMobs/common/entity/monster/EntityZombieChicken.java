@@ -75,8 +75,8 @@ public class EntityZombieChicken extends EntityChicken
 	{
 		this.conversionTime = ticks;
 		this.getDataManager().set(CONVERTING, Boolean.valueOf(true));
-		this.removePotionEffect(MobEffects.weakness);
-		this.addPotionEffect(new PotionEffect(MobEffects.damageBoost, ticks, Math.min(this.worldObj.getDifficulty().getDifficultyId() - 1, 0)));
+		this.removePotionEffect(MobEffects.WEAKNESS);
+		this.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, ticks, Math.min(this.worldObj.getDifficulty().getDifficultyId() - 1, 0)));
 		this.worldObj.setEntityState(this, (byte)16);
 	}
 	
@@ -96,14 +96,14 @@ public class EntityZombieChicken extends EntityChicken
         }
 
         this.worldObj.spawnEntityInWorld(entitychicken);
-        entitychicken.addPotionEffect(new PotionEffect(MobEffects.confusion, 200, 0));
-        this.worldObj.playAuxSFXAtEntity((EntityPlayer)null, 1027, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 0);
+        entitychicken.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 200, 0));
+        this.worldObj.playEvent((EntityPlayer)null, 1027, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 0);
     }
 	
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack)
 	{
-		if (stack != null && stack.getItem() == ModItems.golden_bread && stack.getMetadata() == 0 && this.isPotionActive(MobEffects.weakness)) {
+		if (stack != null && stack.getItem() == ModItems.golden_bread && stack.getMetadata() == 0 && this.isPotionActive(MobEffects.WEAKNESS)) {
 			if (!player.capabilities.isCreativeMode)
 				--stack.stackSize;
 			if (!this.worldObj.isRemote)
@@ -141,7 +141,7 @@ public class EntityZombieChicken extends EntityChicken
     {
         if (id == 16)
             if (!this.isSilent())
-                this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.entity_zombie_villager_cure, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+                this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
         else
             super.handleStatusUpdate(id);
     }
@@ -192,9 +192,9 @@ public class EntityZombieChicken extends EntityChicken
 
 		for (int k = 0; k < j; ++k)
 		{
-			this.dropItem(Items.feather, 1);
+			this.dropItem(Items.FEATHER, 1);
 		}
-		this.dropItem(Items.rotten_flesh, 1);
+		this.dropItem(Items.ROTTEN_FLESH, 1);
 	}
 
 	@Override

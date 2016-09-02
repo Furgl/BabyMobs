@@ -69,7 +69,7 @@ public class EntityBabyWither extends EntityWither
 
 	private void launchWitherSkullToCoords(int par1, double x, double y, double z, boolean invulnerable)
 	{
-		this.worldObj.playAuxSFXAtEntity((EntityPlayer)null, 1014, new BlockPos(this), 0);
+		this.worldObj.playEvent((EntityPlayer)null, 1014, new BlockPos(this), 0);
 		double d3 = this.func_82214_u(par1);
 		double d4 = this.func_82208_v(par1);
 		double d5 = this.func_82213_w(par1);
@@ -205,7 +205,7 @@ public class EntityBabyWither extends EntityWither
 		//TODO drops changed
 		if (this.worldObj.rand.nextInt(3) == 0)
 		{
-			EntityItem entityitem = this.dropItem(Items.nether_star, 1);
+			EntityItem entityitem = this.dropItem(Items.NETHER_STAR, 1);
 
 			if (entityitem != null)
 			{
@@ -221,7 +221,7 @@ public class EntityBabyWither extends EntityWither
 				EntityPlayer entityplayer = (EntityPlayer)iterator.next();
 				entityplayer.addStat(Achievements.achievementBetterLuckNextTime);
 			}
-			this.entityDropItem(new ItemStack(Items.skull, 1, 1), 0.0F);
+			this.entityDropItem(new ItemStack(Items.SKULL, 1, 1), 0.0F);
 		}
 		//end
 
@@ -232,7 +232,7 @@ public class EntityBabyWither extends EntityWither
 			while (iterator.hasNext())
 			{
 				EntityPlayer entityplayer = (EntityPlayer)iterator.next();
-				entityplayer.addStat(AchievementList.killWither);
+				entityplayer.addStat(AchievementList.KILL_WITHER);
 			}
 		}
 	}

@@ -13,7 +13,7 @@ public class BabyMobsCreativeTab extends CreativeTabs
 
 	@Override
 	public Item getTabIconItem() {
-		return Items.spawn_egg;
+		return Items.SPAWN_EGG;
 	}
 	
 }

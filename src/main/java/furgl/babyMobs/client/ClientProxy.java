@@ -4,7 +4,7 @@ import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.client.model.ModelBabyShulker;
 import furgl.babyMobs.client.model.ModelBabySquid;
 import furgl.babyMobs.client.particle.EntityBlazeFlamethrowerFX;
-import furgl.babyMobs.client.particle.EntityCustomFX;
+import furgl.babyMobs.client.particle.EntityCustomParticle;
 import furgl.babyMobs.client.particle.EntityDragonParticlesFX;
 import furgl.babyMobs.client.particle.EntitySkeletonEffectFX;
 import furgl.babyMobs.client.particle.EntitySquidInkFX;
@@ -64,6 +64,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelChicken;
 import net.minecraft.client.model.ModelOcelot;
 import net.minecraft.client.model.ModelPig;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.entity.RenderFireball;
 import net.minecraft.client.renderer.entity.RenderPigZombie;
 import net.minecraft.client.renderer.entity.RenderShulkerBullet;
@@ -98,9 +99,9 @@ public class ClientProxy extends CommonProxy
 	}
 	
 	@Override
-	public Class getEntityFXClass()
+	public Class getParticleClass()
 	{
-		return EntityCustomFX.class;
+		return EntityCustomParticle.class;
 	}
 	
 	@Override
@@ -108,7 +109,7 @@ public class ClientProxy extends CommonProxy
 	{ 
 		try 
 		{
-			EntityCustomFX particle = (EntityCustomFX) entityClass.getConstructor(World.class, double.class, double.class, double.class, EntitySpawner.class, int.class, int.class).newInstance(world, x, y, z, spawner, heightIterator, entityIterator);
+			Particle particle = (Particle) entityClass.getConstructor(World.class, double.class, double.class, double.class, EntitySpawner.class, int.class, int.class).newInstance(world, x, y, z, spawner, heightIterator, entityIterator);
 			Minecraft.getMinecraft().effectRenderer.addEffect(particle);
 		} 
 		catch (Exception e) 
@@ -121,7 +122,7 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void spawnEntitySkeletonEffectFX(World world, EntityBabySkeleton entityBabySkeleton, float red, float green, float blue) 
 	{
-		EntitySkeletonEffectFX effect = new EntitySkeletonEffectFX(world, entityBabySkeleton, red, green, blue);
+		Particle effect = new EntitySkeletonEffectFX(world, entityBabySkeleton, red, green, blue);
 		Minecraft.getMinecraft().effectRenderer.addEffect(effect);
 	}
 	
@@ -189,7 +190,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabyShulker.class, new RenderBabyShulker(Minecraft.getMinecraft().getRenderManager(), new ModelBabyShulker()));
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityCaveSpiderVenom.class, new RenderSnowball(Minecraft.getMinecraft().getRenderManager(), ModItems.cave_spider_venom, Minecraft.getMinecraft().getRenderItem()));
-		RenderingRegistry.registerEntityRenderingHandler(EntitySnowmanSnowball.class, new RenderSnowball(Minecraft.getMinecraft().getRenderManager(), Items.snowball, Minecraft.getMinecraft().getRenderItem()));
+		RenderingRegistry.registerEntityRenderingHandler(EntitySnowmanSnowball.class, new RenderSnowball(Minecraft.getMinecraft().getRenderManager(), Items.SNOWBALL, Minecraft.getMinecraft().getRenderItem()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlazeFlamethrower.class, new RenderSnowball(Minecraft.getMinecraft().getRenderManager(), ModItems.invisible, Minecraft.getMinecraft().getRenderItem()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityCreeperExplosion.class, new RenderSnowball(Minecraft.getMinecraft().getRenderManager(), ModItems.creeper_explosion, Minecraft.getMinecraft().getRenderItem()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityWitherSkeletonSmoke.class, new RenderSnowball(Minecraft.getMinecraft().getRenderManager(), ModItems.invisible, Minecraft.getMinecraft().getRenderItem()));

@@ -15,7 +15,7 @@ public class SummonCommandEvent
 		if (event.getCommand().getClass() == CommandSummon.class && event.getParameters()[0].equals("babymobs.babyDragon"))
 		{
 			TextComponentString component = new TextComponentString("A Baby Dragon can only be summoned by placing a Dragon Egg.");
-			component.getChatStyle().setColor(TextFormatting.RED);
+			component.getStyle().setColor(TextFormatting.RED);
 			event.getSender().addChatMessage(component);
 			event.setCanceled(true);
 		}

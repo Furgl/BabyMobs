@@ -6,7 +6,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class EntityBlazeFlamethrowerFX extends EntityCustomFX
+public class EntityBlazeFlamethrowerFX extends EntityCustomParticle
 {
 	public EntityBlazeFlamethrowerFX(World world, double x, double y, double z, double motionX, double motionY, double motionZ)
 	{

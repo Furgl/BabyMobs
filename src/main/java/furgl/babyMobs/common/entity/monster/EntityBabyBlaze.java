@@ -73,7 +73,7 @@ public class EntityBabyBlaze extends EntityBlaze
 	protected void entityInit()
 	{
 		super.entityInit();
-		this.dataWatcher.register(FLAMETHROWER, Byte.valueOf((byte)0));//added
+		this.dataManager.register(FLAMETHROWER, Byte.valueOf((byte)0));//added
 	}
 
 	/**
@@ -94,14 +94,14 @@ public class EntityBabyBlaze extends EntityBlaze
 					double d0 = this.getDistanceSqToEntity(entitylivingbase);
 
 					if (d0 < 40.0D)
-						this.dataWatcher.set(FLAMETHROWER, (byte)1);
+						this.dataManager.set(FLAMETHROWER, (byte)1);
 					else
-						this.dataWatcher.set(FLAMETHROWER, (byte)0);
+						this.dataManager.set(FLAMETHROWER, (byte)0);
 				}
 				else
-					this.dataWatcher.set(FLAMETHROWER, (byte)0);
+					this.dataManager.set(FLAMETHROWER, (byte)0);
 			}
-			if (this.dataWatcher.get(FLAMETHROWER) == 1 && this.getHealth() > 0)
+			if (this.dataManager.get(FLAMETHROWER) == 1 && this.getHealth() > 0)
 			{
 				EntityLivingBase entitylivingbase = this.getAttackTarget();
 				if (entitylivingbase instanceof EntityPlayer && !(entitylivingbase instanceof FakePlayer))
@@ -115,7 +115,7 @@ public class EntityBabyBlaze extends EntityBlaze
 						this.motionY *= 0.1D;
 				}
 				if (this.ticksExisted % 10 == 0)
-					this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.entity_ghast_shoot, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.2F + 0.0F, false);
+					this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ENTITY_GHAST_SHOOT, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.2F + 0.0F, false);
 				Vec3d vec = new Vec3d(this.posX, 0.5 + this.posY, this.posZ);
 
 				if (this.ticksExisted % 10 == 0 && entitylivingbase instanceof EntityPlayer && !(entitylivingbase instanceof FakePlayer))

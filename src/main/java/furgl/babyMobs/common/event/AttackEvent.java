@@ -37,7 +37,7 @@ public class AttackEvent
 		else if (!event.getEntity().worldObj.isRemote && event.getSource().getEntity() instanceof EntityIronGolem && event.getEntityLiving() instanceof EntityZombie) {
 			EntityZombie zombie = (EntityZombie) event.getEntityLiving();
 			if (Config.useSpecialAbilities && zombie.isVillager() && !zombie.isConverting()) {
-				zombie.addPotionEffect(new PotionEffect(MobEffects.weakness, 100, 0));
+				zombie.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 100, 0));
 				try {
 					Method method = EntityZombie.class.getDeclaredMethod("startConversion", int.class);
 					method.setAccessible(true);
@@ -45,28 +45,28 @@ public class AttackEvent
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
-				zombie.addPotionEffect(new PotionEffect(MobEffects.moveSlowdown, 9999, 9, false, false));
-				zombie.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Item.getItemFromBlock(Blocks.red_flower)));
+				zombie.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 9999, 9, false, false));
+				zombie.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Item.getItemFromBlock(Blocks.RED_FLOWER)));
 				event.setCanceled(true);
 			}
 		}//convert ZombiePig
 		else if (!event.getEntity().worldObj.isRemote && event.getSource().getEntity() instanceof EntityIronGolem && event.getEntityLiving() instanceof EntityZombiePig) {
 			EntityZombiePig pig = (EntityZombiePig) event.getEntityLiving();
 			if (Config.useSpecialAbilities && !pig.isConverting()) {
-				pig.addPotionEffect(new PotionEffect(MobEffects.weakness, 100, 0));
+				pig.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 100, 0));
 				pig.startConversion(1000);
-				pig.addPotionEffect(new PotionEffect(MobEffects.moveSlowdown, 9999, 9, false, false));
-				pig.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Item.getItemFromBlock(Blocks.red_flower)));
+				pig.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 9999, 9, false, false));
+				pig.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Item.getItemFromBlock(Blocks.RED_FLOWER)));
 				event.setCanceled(true);
 			}
 		}//convert ZombieChicken
 		else if (!event.getEntity().worldObj.isRemote && event.getSource().getEntity() instanceof EntityIronGolem && event.getEntityLiving() instanceof EntityZombieChicken) {
 			EntityZombieChicken chicken = (EntityZombieChicken) event.getEntityLiving();
 			if (Config.useSpecialAbilities && !chicken.isConverting()) {
-				chicken.addPotionEffect(new PotionEffect(MobEffects.weakness, 100, 0));
+				chicken.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 100, 0));
 				chicken.startConversion(1000);
-				chicken.addPotionEffect(new PotionEffect(MobEffects.moveSlowdown, 9999, 9, false, false));
-				chicken.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Item.getItemFromBlock(Blocks.red_flower)));
+				chicken.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 9999, 9, false, false));
+				chicken.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Item.getItemFromBlock(Blocks.RED_FLOWER)));
 				event.setCanceled(true);
 			}
 		}

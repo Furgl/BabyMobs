@@ -57,12 +57,12 @@ public class EntityBabyShulkerBullet extends EntityShulkerBullet
 	}
 
 	@Override
-	protected void func_184567_a(RayTraceResult result)
+	protected void bulletHit(RayTraceResult result)
 	{
 		if (result.entityHit == null)
 		{
 			((WorldServer)this.worldObj).spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY, this.posZ, 2, 0.2D, 0.2D, 0.2D, 0.0D, new int[0]);
-			this.playSound(SoundEvents.entity_shulker_bullet_hit, 1.0F, 1.0F);
+			this.playSound(SoundEvents.ENTITY_SHULKER_BULLET_HIT, 1.0F, 1.0F);
 		}
 		else
 		{

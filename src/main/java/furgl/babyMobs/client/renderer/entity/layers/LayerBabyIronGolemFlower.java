@@ -42,8 +42,8 @@ public class LayerBabyIronGolemFlower implements LayerRenderer
             int k = i / 65536;
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j / 1.0F, k / 1.0F);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            this.field_177154_a.bindTexture(TextureMap.locationBlocksTexture);
-            blockrendererdispatcher.renderBlockBrightness(Blocks.red_flower.getDefaultState(), 1.0F);
+            this.field_177154_a.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            blockrendererdispatcher.renderBlockBrightness(Blocks.RED_FLOWER.getDefaultState(), 1.0F);
             GlStateManager.popMatrix();
             GlStateManager.disableRescaleNormal();
         }

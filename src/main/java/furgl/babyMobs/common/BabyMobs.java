@@ -112,7 +112,7 @@ public class BabyMobs
 	
 	private void registerCraftingRecipes()
 	{
-		GameRegistry.addRecipe(new ItemStack(ModItems.golden_bread), "NNN", "NBN", "NNN", 'N', Items.gold_nugget, 'B', Items.bread);
+		GameRegistry.addRecipe(new ItemStack(ModItems.golden_bread), "NNN", "NBN", "NNN", 'N', Items.GOLD_NUGGET, 'B', Items.BREAD);
 	}
 
 	public void registerDispenserBehaviors()
@@ -124,7 +124,7 @@ public class BabyMobs
 			{
 				if (fields[i].get(new Object()) instanceof ItemBabySpawnEgg)
 				{
-					BlockDispenser.dispenseBehaviorRegistry.putObject((Item) fields[i].get(ModItems.class), new BehaviorDefaultDispenseItem()
+					BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject((Item) fields[i].get(ModItems.class), new BehaviorDefaultDispenseItem()
 					{
 						/**
 						 * Dispense the specified stack, play the dispense sound and spawn particles.

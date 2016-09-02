@@ -71,7 +71,7 @@ public class RenderBabyShulker extends RenderShulker
 				GlStateManager.translate(0.0F, -2.0F, 0.0F);
 			}*/
 
-			ModelRenderer modelrenderer = ((ModelBabyShulker)RenderBabyShulker.this.getMainModel()).field_187066_a;
+			ModelRenderer modelrenderer = ((ModelBabyShulker)RenderBabyShulker.this.getMainModel()).head;
 			modelrenderer.rotateAngleY = netHeadYaw * 0.017453292F;
 			modelrenderer.rotateAngleX = headPitch * 0.017453292F;
 			RenderBabyShulker.this.bindTexture(RenderBabyShulker.field_188342_a);
@@ -85,7 +85,7 @@ public class RenderBabyShulker extends RenderShulker
 			GlStateManager.scale(1.0F / f6, 1.0F / f6, 1.0F / f6);
 			GlStateManager.translate(0.0F, 24.0F * scale, 0.0F);
 			
-			switch (entitylivingbaseIn.func_184696_cZ())
+			switch (entitylivingbaseIn.getAttachmentFacing())
 			{
 			case DOWN:
 			default:

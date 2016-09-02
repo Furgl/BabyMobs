@@ -50,7 +50,7 @@ public class EntityBabyDragon extends EntityDragon
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target)
 	{
-		return new ItemStack(Item.getItemFromBlock(Blocks.dragon_egg));
+		return new ItemStack(Item.getItemFromBlock(Blocks.DRAGON_EGG));
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class EntityBabyDragon extends EntityDragon
 	protected void entityInit()
 	{
 		super.entityInit();
-		this.dataWatcher.register(DRAGON_BLOCK_POS, new BlockPos(0,0,0)); //dragonEgg block pos
+		this.dataManager.register(DRAGON_BLOCK_POS, new BlockPos(0,0,0)); //dragonEgg block pos
 	}
 
 	@Override
@@ -102,20 +102,20 @@ public class EntityBabyDragon extends EntityDragon
 					array[1] = (int) this.dragonEgg.yCoord;
 					array[2] = (int) this.dragonEgg.zCoord;
 					this.getEntityData().setIntArray("dragonEgg", array);
-					this.dataWatcher.set(DRAGON_BLOCK_POS, new BlockPos(dragonEgg));
+					this.dataManager.set(DRAGON_BLOCK_POS, new BlockPos(dragonEgg));
 				}
 			}
 			else //server and already spawned with egg
 			{
 				this.dragonEgg = new Vec3d(this.getEntityData().getIntArray("dragonEgg")[0], this.getEntityData().getIntArray("dragonEgg")[1], this.getEntityData().getIntArray("dragonEgg")[2]);
-				this.dataWatcher.set(DRAGON_BLOCK_POS, new BlockPos(dragonEgg));
+				this.dataManager.set(DRAGON_BLOCK_POS, new BlockPos(dragonEgg));
 				this.hasDragonEgg = true;
 			}
 		}
 
 		if (this.worldObj.isRemote && this.ticksExisted == 2)
 		{
-			this.dragonEgg = new Vec3d(this.dataWatcher.get(DRAGON_BLOCK_POS));
+			this.dragonEgg = new Vec3d(this.dataManager.get(DRAGON_BLOCK_POS));
 			if (!(this.worldObj.getBlockState(new BlockPos(this.dragonEgg)).getBlock() instanceof BlockDragonEgg))
 				this.hasDragonEgg = false;
 			else
@@ -153,7 +153,7 @@ public class EntityBabyDragon extends EntityDragon
 
 			if (f1 <= -0.3F && f >= -0.3F && !this.isSilent())
 			{
-				this.worldObj.playSound(this.posX, this.posY, this.posZ, SoundEvents.entity_enderdragon_flap, this.getSoundCategory(), this.getSoundVolume(), 0.8F + this.rand.nextFloat() * 0.3F, false);
+				this.worldObj.playSound(this.posX, this.posY, this.posZ, SoundEvents.ENTITY_ENDERDRAGON_FLAP, this.getSoundCategory(), this.getSoundVolume(), 0.8F + this.rand.nextFloat() * 0.3F, false);
 			}
 		}
 
@@ -181,7 +181,7 @@ public class EntityBabyDragon extends EntityDragon
 				this.animTime += f;
 			}
 
-			this.rotationYaw = MathHelper.wrapAngleTo180_float(this.rotationYaw);
+			this.rotationYaw = MathHelper.wrapDegrees(this.rotationYaw);
 
 			if (this.ringBufferIndex < 0)
 			{
@@ -212,9 +212,9 @@ public class EntityBabyDragon extends EntityDragon
 					d10 = this.posX + (this.interpTargetX - this.posX) / this.newPosRotationIncrements;
 					d0 = this.posY + (this.interpTargetY - this.posY) / this.newPosRotationIncrements;
 					d1 = this.posZ + (this.interpTargetZ - this.posZ) / this.newPosRotationIncrements;
-					d2 = MathHelper.wrapAngleTo180_double(this.interpTargetYaw - this.rotationYaw);
+					d2 = MathHelper.wrapDegrees(this.interpTargetYaw - this.rotationYaw);
 					this.rotationYaw = (float)(this.rotationYaw + d2 / this.newPosRotationIncrements);
-					this.rotationPitch = (float)(this.rotationPitch + (this.newPosX - this.rotationPitch) / this.newPosRotationIncrements);
+					this.rotationPitch = (float)(this.rotationPitch + (this.interpTargetPitch - this.rotationPitch) / this.newPosRotationIncrements);
 					--this.newPosRotationIncrements;
 					this.setPosition(d10, d0, d1);
 					this.setRotation(this.rotationYaw, this.rotationPitch);
@@ -259,9 +259,9 @@ public class EntityBabyDragon extends EntityDragon
 				f12 = 0.6F;
 				d0 = MathHelper.clamp_double(d0, (-f12), f12);
 				this.motionY += d0 * 0.10000000149011612D;
-				this.rotationYaw = MathHelper.wrapAngleTo180_float(this.rotationYaw);
+				this.rotationYaw = MathHelper.wrapDegrees(this.rotationYaw);
 				double d4 = 180.0D - Math.atan2(d10, d1) * 180.0D / Math.PI;
-				double d6 = MathHelper.wrapAngleTo180_double(d4 - this.rotationYaw);
+				double d6 = MathHelper.wrapDegrees(d4 - this.rotationYaw);//?! was double d6 = MathHelper.wrapAngleTo180_double(d4 - this.rotationYaw);
 
 				if (d6 > 50.0D)
 				{
@@ -296,7 +296,7 @@ public class EntityBabyDragon extends EntityDragon
 				this.rotationYaw += this.randomYawVelocity * 0.1F;
 				float f7 = (float)(2.0D / (d9 + 1.0D));
 				float f8 = 0.06F;
-				this.moveFlying(0.0F, -1.0F, f8 * (f5 * f7 + (1.0F - f7)));
+				this.moveRelative(0.0F, -1.0F, f8 * (f5 * f7 + (1.0F - f7)));
 
 				this.moveEntity(this.motionX * 0.2D, this.motionY * 0.2D, this.motionZ * 0.2D); //TODO slow
 
@@ -359,7 +359,7 @@ public class EntityBabyDragon extends EntityDragon
 				}
 
 				double[] adouble2 = this.getMovementOffsets(12 + j * 2, 1.0F);
-				float f14 = this.rotationYaw * (float)Math.PI / 180.0F + (float)MathHelper.wrapAngleTo180_double(adouble2[0] - adouble1[0]) * (float)Math.PI / 180.0F * 1.0F;
+				float f14 = this.rotationYaw * (float)Math.PI / 180.0F + (float)MathHelper.wrapDegrees(adouble2[0] - adouble1[0]) * (float)Math.PI / 180.0F * 1.0F;
 				float f15 = MathHelper.sin(f14);
 				float f16 = MathHelper.cos(f14);
 				float f17 = 1.5F;

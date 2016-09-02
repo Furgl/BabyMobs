@@ -103,15 +103,15 @@ public class EntityBabySkeleton extends EntitySkeleton
 			if (!this.worldObj.isRemote && this.potionEffect != null && source.getEntity() instanceof EntityPlayer && !(source.getEntity() instanceof FakePlayer) && !(source.getEntity() instanceof EntityPlayer && ((EntityPlayer)source.getEntity()).capabilities.isCreativeMode))
 			{
 				if (this.effectType == 1)
-					this.potionEffect = new PotionEffect(MobEffects.poison, 50, 0);
+					this.potionEffect = new PotionEffect(MobEffects.POISON, 50, 0);
 				else if (this.effectType == 2)
-					this.potionEffect = new PotionEffect(MobEffects.blindness, 50, 0);
+					this.potionEffect = new PotionEffect(MobEffects.BLINDNESS, 50, 0);
 				else if (this.effectType == 3)
-					this.potionEffect = new PotionEffect(MobEffects.wither, 50, 0);
+					this.potionEffect = new PotionEffect(MobEffects.WITHER, 50, 0);
 				else if (this.effectType == 4)
-					this.potionEffect = new PotionEffect(MobEffects.confusion, 100, 1);
+					this.potionEffect = new PotionEffect(MobEffects.NAUSEA, 100, 1);
 				else if (this.effectType == 5)
-					this.potionEffect = new PotionEffect(MobEffects.moveSlowdown, 50, 0);
+					this.potionEffect = new PotionEffect(MobEffects.SLOWNESS, 50, 0);
 				((EntityPlayer)source.getEntity()).addPotionEffect(this.potionEffect);
 			}
 		}
@@ -123,7 +123,7 @@ public class EntityBabySkeleton extends EntitySkeleton
 	protected void entityInit()
 	{
 		super.entityInit();
-		this.dataWatcher.register(POTION_EFFECT, Integer.valueOf(0));//potionEffect
+		this.dataManager.register(POTION_EFFECT, Integer.valueOf(0));//potionEffect
 	}
 
 	@Override
@@ -142,17 +142,17 @@ public class EntityBabySkeleton extends EntitySkeleton
 	}
 
 	public void setPotionEffect() {
-		this.effectType = this.dataWatcher.get(POTION_EFFECT);
+		this.effectType = this.dataManager.get(POTION_EFFECT);
 		if (this.effectType == 1)
-			this.potionEffect = new PotionEffect(MobEffects.poison, 50, 0);
+			this.potionEffect = new PotionEffect(MobEffects.POISON, 50, 0);
 		else if (this.effectType == 2)
-			this.potionEffect = new PotionEffect(MobEffects.blindness, 50, 0);
+			this.potionEffect = new PotionEffect(MobEffects.BLINDNESS, 50, 0);
 		else if (this.effectType == 3)
-			this.potionEffect = new PotionEffect(MobEffects.wither, 50, 0);
+			this.potionEffect = new PotionEffect(MobEffects.WITHER, 50, 0);
 		else if (this.effectType == 4)
-			this.potionEffect = new PotionEffect(MobEffects.confusion, 100, 1);
+			this.potionEffect = new PotionEffect(MobEffects.NAUSEA, 100, 1);
 		else if (this.effectType == 5)
-			this.potionEffect = new PotionEffect(MobEffects.moveSlowdown, 50, 0);
+			this.potionEffect = new PotionEffect(MobEffects.SLOWNESS, 50, 0);
 	}
 
 	@Override
@@ -167,12 +167,12 @@ public class EntityBabySkeleton extends EntitySkeleton
 				{
 					this.getEntityData().setInteger("effectType", this.rand.nextInt(5)+1);
 					this.effectType = this.getEntityData().getInteger("effectType");
-					this.dataWatcher.set(POTION_EFFECT, effectType);
+					this.dataManager.set(POTION_EFFECT, effectType);
 				}
 				else
 				{
 					this.effectType = this.getEntityData().getInteger("effectType");
-					this.dataWatcher.set(POTION_EFFECT, effectType);
+					this.dataManager.set(POTION_EFFECT, effectType);
 				}
 			}
 			if (this.potionEffect == null)
@@ -220,16 +220,16 @@ public class EntityBabySkeleton extends EntitySkeleton
 		double d2 = target.posZ - this.posZ;
 		double d3 = (double)MathHelper.sqrt_double(d0 * d0 + d2 * d2);
 		entityarrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, (float)(14 - this.worldObj.getDifficulty().getDifficultyId() * 4));
-		int i = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.power, this);
-		int j = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.punch, this);
+		int i = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.POWER, this);
+		int j = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.PUNCH, this);
 		entityarrow.setDamage((double)(p_82196_2_ * 2.0F) + this.rand.nextGaussian() * 0.25D + (double)((float)this.worldObj.getDifficulty().getDifficultyId() * 0.11F));
 		if (i > 0)
 			entityarrow.setDamage(entityarrow.getDamage() + (double)i * 0.5D + 0.5D);
 		if (j > 0)
 			entityarrow.setKnockbackStrength(j);
-		if (EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.flame, this) > 0 || this.getSkeletonType() == 1)
+		if (EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FLAME, this) > 0 || this.getSkeletonType() == 1)
 			entityarrow.setFire(100);
-		this.playSound(SoundEvents.entity_skeleton_shoot, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
+		this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 		this.worldObj.spawnEntityInWorld(entityarrow);
 		//end
 	}

@@ -6,7 +6,7 @@ import java.util.Random;
 import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.event.OnUpdateEvent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -19,7 +19,7 @@ public class EntitySpawner
 	private int totalDelay;
 	private Class entityClass;
 	private Entity entity;
-	private EntityFX entityFX;
+	private Particle entityFX;
 	//Essential variables - always specified via constructor
 	protected World world;
 	protected Vec3d origin;
@@ -51,7 +51,7 @@ public class EntitySpawner
 	protected int consecRuns = 1;
 	protected int updateTime = 10;
 
-	/**Spawns custom Entity's or EntityFX's with custom shape/movement*/
+	/**Spawns custom Entity's or Particle's with custom shape/movement*/
 	public EntitySpawner(Class entityClass, World world, Vec3d origin, int numEntities)
 	{
 		this.entityClass = entityClass;
@@ -151,9 +151,9 @@ public class EntitySpawner
 	/**Starts particle action after all parameters are specified*/
 	public void run()
 	{	
-		if (this.entityClass.getSuperclass() == BabyMobs.proxy.getEntityFXClass() && this.world.isRemote)
+		if (this.entityClass.getSuperclass() == BabyMobs.proxy.getParticleClass() && this.world.isRemote)
 			OnUpdateEvent.addOnClientUpdate(this);
-		else if (this.entityClass.getSuperclass() != BabyMobs.proxy.getEntityFXClass() && !this.world.isRemote)
+		else if (this.entityClass.getSuperclass() != BabyMobs.proxy.getParticleClass() && !this.world.isRemote)
 			OnUpdateEvent.addOnServerUpdate(this);
 		this.isRunning = true;
 		this.totalDelay = this.delay * this.numEntities * this.consecRuns;
@@ -211,9 +211,9 @@ public class EntitySpawner
 			if (totalDelay < 0)
 			{
 				isRunning = false;
-				if (this.entityClass.getSuperclass() == BabyMobs.proxy.getEntityFXClass() && this.world.isRemote)
+				if (this.entityClass.getSuperclass() == BabyMobs.proxy.getParticleClass() && this.world.isRemote)
 					OnUpdateEvent.removeOnClientUpdate(this);
-				else if (this.entityClass.getSuperclass() != BabyMobs.proxy.getEntityFXClass() && !this.world.isRemote)
+				else if (this.entityClass.getSuperclass() != BabyMobs.proxy.getParticleClass() && !this.world.isRemote)
 					OnUpdateEvent.removeOnServerUpdate(this);
 			}
 		}
@@ -223,11 +223,11 @@ public class EntitySpawner
 	{
 		this.heightIterator = heightIterator;
 		this.entityIterator = entityIterator;
-		if (this.entityClass.getSuperclass() == BabyMobs.proxy.getEntityFXClass() && this.world.isRemote)
+		if (this.entityClass.getSuperclass() == BabyMobs.proxy.getParticleClass() && this.world.isRemote)
 		{
 			BabyMobs.proxy.spawnEntitySpawner(this.entityClass, this.world, this.x, this.y, this.z, this, this.heightIterator, this.entityIterator);
 		}
-		else if (this.entityClass.getSuperclass() != BabyMobs.proxy.getEntityFXClass() && !this.world.isRemote)
+		else if (this.entityClass.getSuperclass() != BabyMobs.proxy.getParticleClass() && !this.world.isRemote)
 		{
 			try 
 			{
@@ -238,7 +238,7 @@ public class EntitySpawner
 				world.spawnEntityInWorld(entity);
 				}
 				else {
-					entityFX = (EntityFX) object;
+					entityFX = (Particle) object;
 					entityFX.setPosition(x, y, z);
 					Minecraft.getMinecraft().effectRenderer.addEffect(entityFX);
 				}

@@ -5,7 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.ai.EntityAISkeletonRiders;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.passive.EntityHorse;
-import net.minecraft.entity.passive.HorseArmorType;
+import net.minecraft.entity.passive.HorseType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
@@ -34,7 +34,7 @@ public class ZombieTrapEvent
 			{
 				BlockPos blockpos = bolt.getPosition();
 				EntityHorse entityhorse = new EntityHorse(event.world);
-				entityhorse.setType(HorseArmorType.ZOMBIE);
+				entityhorse.setType(HorseType.ZOMBIE);
 				entityhorse.setSkeletonTrap(true);
 				EntityAISkeletonRiders skeletonTrapAI = (EntityAISkeletonRiders) ReflectionHelper.getPrivateValue(EntityHorse.class, entityhorse, 12);
 				entityhorse.tasks.removeTask(skeletonTrapAI);
@@ -44,8 +44,8 @@ public class ZombieTrapEvent
 				event.world.spawnEntityInWorld(entityhorse);
 				//System.out.println(blockpos);
 				//extinguish fire because can't turn on effectonly (done in constructor)
-				if (event.world.getBlockState(blockpos).getMaterial() == Material.fire)
-	                event.world.setBlockState(blockpos, Blocks.air.getDefaultState());
+				if (event.world.getBlockState(blockpos).getMaterial() == Material.FIRE)
+	                event.world.setBlockState(blockpos, Blocks.AIR.getDefaultState());
 			}
 			bolt = null;
 		}

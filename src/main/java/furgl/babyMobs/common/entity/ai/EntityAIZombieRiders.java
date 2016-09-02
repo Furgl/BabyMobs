@@ -6,7 +6,7 @@ import net.minecraft.entity.ai.EntityAISkeletonRiders;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityHorse;
-import net.minecraft.entity.passive.HorseArmorType;
+import net.minecraft.entity.passive.HorseType;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -29,7 +29,7 @@ public class EntityAIZombieRiders extends EntityAISkeletonRiders
 		DifficultyInstance difficultyinstance = this.horse.worldObj.getDifficultyForLocation(new BlockPos(this.horse));
 		this.horse.setSkeletonTrap(false);
 		this.horse.tasks.removeTask(this);
-		this.horse.setType(HorseArmorType.ZOMBIE);
+		this.horse.setType(HorseType.ZOMBIE);
 		this.horse.setHorseTamed(true);
 		//this.horse.setGrowingAge(0);
 		this.horse.worldObj.addWeatherEffect(new EntityLightningBolt(this.horse.worldObj, this.horse.posX, this.horse.posY, this.horse.posZ, true));
@@ -52,7 +52,7 @@ public class EntityAIZombieRiders extends EntityAISkeletonRiders
 		entityhorse.setPosition(this.horse.posX, this.horse.posY, this.horse.posZ);
 		entityhorse.hurtResistantTime = 60;
 		entityhorse.enablePersistence();
-		entityhorse.setType(HorseArmorType.ZOMBIE);
+		entityhorse.setType(HorseType.ZOMBIE);
 		entityhorse.setSkeletonTrap(false);
 		entityhorse.setHorseTamed(true);
 		entityhorse.setGrowingAge(0);
@@ -69,7 +69,7 @@ public class EntityAIZombieRiders extends EntityAISkeletonRiders
 		entityzombie.enablePersistence();
 
 		if (entityzombie.getItemStackFromSlot(EntityEquipmentSlot.HEAD) == null)
-			entityzombie.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(Items.iron_helmet));
+			entityzombie.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
 
 		if (entityzombie.getHeldItemMainhand() != null)
 			EnchantmentHelper.addRandomEnchantment(entityzombie.getRNG(), entityzombie.getHeldItemMainhand(), (int)(5.0F + difficultyinstance.getClampedAdditionalDifficulty() * (float)entityzombie.getRNG().nextInt(18)), false);

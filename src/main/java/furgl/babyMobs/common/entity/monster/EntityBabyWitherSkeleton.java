@@ -77,7 +77,7 @@ public class EntityBabyWitherSkeleton extends EntitySkeleton
 			int chance = 60 + 10*EnchantmentHelper.getLootingModifier((EntityLivingBase) cause.getEntity());
 			if (this.rand.nextInt(100) <= chance)
 			{
-				this.entityDropItem(new ItemStack(Items.skull, 1, 1), 0.0F);
+				this.entityDropItem(new ItemStack(Items.SKULL, 1, 1), 0.0F);
 			}
 		}
 		//end
@@ -131,9 +131,9 @@ public class EntityBabyWitherSkeleton extends EntitySkeleton
 				player.addStat(Achievements.achievementItsMine);
 				if (!this.worldObj.isRemote && !player.capabilities.isCreativeMode)
 				{
-					player.addPotionEffect(new PotionEffect(MobEffects.wither, 100));
-					player.addPotionEffect(new PotionEffect(MobEffects.confusion, 140, 3));
-					player.addPotionEffect(new PotionEffect(MobEffects.blindness, 20, 3));
+					player.addPotionEffect(new PotionEffect(MobEffects.WITHER, 100));
+					player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 140, 3));
+					player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 20, 3));
 					player.knockBack(player, 0.0F, this.posX-player.posX, this.posZ-player.posZ);
 					Vec3d vec = new Vec3d(this.posX, this.posY+0.5D, this.posZ);
 					EntitySpawner entitySpawner = new EntitySpawner(EntityWitherSkeletonSmoke.class, this.worldObj, vec, 5);
@@ -144,7 +144,7 @@ public class EntityBabyWitherSkeleton extends EntitySkeleton
 				}
 				else
 				{
-					player.playSound(SoundEvents.entity_wither_hurt, 1.0F, rand.nextFloat()*0.2F + 1.8F);
+					player.playSound(SoundEvents.ENTITY_WITHER_HURT, 1.0F, rand.nextFloat()*0.2F + 1.8F);
 					for (int i=0; i<100; i++)
 					{
 						BabyMobs.proxy.spawnEntitySquidInkFX(worldObj,this.posX+(rand.nextDouble()-0.5D), this.posY+rand.nextDouble()*1.1D, this.posZ+(rand.nextDouble()-0.5D), 0, 0, 0);
@@ -152,7 +152,7 @@ public class EntityBabyWitherSkeleton extends EntitySkeleton
 					}
 				}
 				if (!this.worldObj.isRemote)
-					this.addPotionEffect(new PotionEffect(MobEffects.invisibility, 50));
+					this.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 50));
 
 				PathNavigate entityPathNavigate = this.getNavigator();
 				Vec3d vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this, 16, 7, new Vec3d(player.posX, player.posY, player.posZ));

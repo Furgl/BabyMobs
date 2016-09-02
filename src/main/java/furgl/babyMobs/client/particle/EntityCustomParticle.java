@@ -2,10 +2,10 @@ package furgl.babyMobs.client.particle;
 
 import furgl.babyMobs.util.EntityMover;
 import furgl.babyMobs.util.EntitySpawner;
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.world.World;
 
-public class EntityCustomFX extends EntityFX
+public class EntityCustomParticle extends Particle
 {
 	protected boolean spawnedBySpawner;
 	protected EntitySpawner spawner;
@@ -14,7 +14,7 @@ public class EntityCustomFX extends EntityFX
 	protected int maxAge;
 	public int ticksExisted;
 
-	protected EntityCustomFX(World world, double posX, double posY, double posZ, double motionX, double motionY, double motionZ) {
+	protected EntityCustomParticle(World world, double posX, double posY, double posZ, double motionX, double motionY, double motionZ) {
 		super(world, posX, posY, posZ, motionX, motionY, motionZ);
 		
 		this.ticksExisted = 0;
@@ -32,31 +32,31 @@ public class EntityCustomFX extends EntityFX
 		if (this.spawnedBySpawner)
 			this.entityIterator = EntityMover.updateMovement(this, this.spawner, this.heightIterator, this.entityIterator);
 		else
-			this.moveEntity(this.xSpeed, this.ySpeed, this.zSpeed);
+			this.moveEntity(this.motionX, this.motionY, this.motionZ);
 	}
 	
-	public void setXSpeed(double speed) {
-		xSpeed = speed;
+	public void setMotionX(double speed) {
+		motionX = speed;
 	}
 	
-	public void setYSpeed(double speed) {
-		ySpeed = speed;
+	public void setMotionY(double speed) {
+		motionY = speed;
 	}
 	
-	public void setZSpeed(double speed) {
-		zSpeed = speed;
+	public void setMotionZ(double speed) {
+		motionZ = speed;
 	}
 	
-	public double getXSpeed() {
-		return xSpeed;
+	public double getMotionX() {
+		return motionX;
 	}
 	
-	public double getYSpeed() {
-		return ySpeed;
+	public double getMotionY() {
+		return motionY;
 	}
 	
-	public double getZSpeed() {
-		return zSpeed;
+	public double getMotionZ() {
+		return motionZ;
 	}
 	
 	public double getX() {

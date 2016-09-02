@@ -16,7 +16,7 @@ public class CommonProxy
 	
 	public void registerAchievements() { }
 	
-	public Class getEntityFXClass() {return null;}
+	public Class getParticleClass() {return null;}
 	
 	public void spawnEntitySpawner(Class entityClass, World world, double x, double y, double z, EntitySpawner spawner, int heightIterator, int entityIterator) { }
 

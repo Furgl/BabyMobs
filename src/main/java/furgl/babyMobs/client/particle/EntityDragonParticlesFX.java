@@ -6,21 +6,21 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class EntityDragonParticlesFX extends EntityCustomFX
+public class EntityDragonParticlesFX extends EntityCustomParticle
 {
-	public EntityDragonParticlesFX(World world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+	public EntityDragonParticlesFX(World world, double x, double y, double z, double motionX, double motionY, double motionZ)
 	{
-		super(world, x, y, z, xSpeed, ySpeed, zSpeed);
+		super(world, x, y, z, motionX, motionY, motionZ);
 		float f = this.rand.nextFloat() * 0.6F + 0.4F;
 		this.particleRed = this.particleGreen = this.particleBlue = 1.0F * f;
         this.particleGreen *= 0.3F;
         this.particleRed *= 0.9F;
-		this.xSpeed *= 0.10000000149011612D;
-		this.ySpeed *= 0.10000000149011612D;
-		this.zSpeed *= 0.10000000149011612D;
-		this.xSpeed += xSpeed;
-		this.ySpeed += ySpeed;
-		this.zSpeed += zSpeed;
+		this.motionX *= 0.10000000149011612D;
+		this.motionY *= 0.10000000149011612D;
+		this.motionZ *= 0.10000000149011612D;
+		this.motionX += motionX;
+		this.motionY += motionY;
+		this.motionZ += motionZ;
 		this.particleScale *= 0.75F;
 		//this.noClip = true;
 		this.maxAge = 40;
@@ -44,6 +44,6 @@ public class EntityDragonParticlesFX extends EntityCustomFX
 
 		this.setParticleTextureIndex(7 - this.ticksExisted * 8 / this.maxAge);
 
-		this.ySpeed = 0.05D;
+		this.motionY = 0.05D;
 	}
 }

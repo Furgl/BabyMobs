@@ -85,7 +85,7 @@ public class RenderBabyEnderman extends RenderEnderman
             int l = 200;
             int i = 1;
             float f2 = 0;//(float)entity.worldObj.getTotalWorldTime() + partialTicks;
-            float f3 = f2 * 0.5F % 1.0F+partialTicks;
+            float f3 = f2 * 0.5F % 1.0F;
             double d1 = (double)f2 * 0.05D * (1.0D - (double)(i & 1) * 2.5D);
             double d2 = (double)i * 0.2D;
             double d3 = d2 * 1.41D;

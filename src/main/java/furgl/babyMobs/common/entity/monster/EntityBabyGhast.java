@@ -112,7 +112,7 @@ public class EntityBabyGhast extends EntityGhast
 
 				if (this.attackTimer == 10)
 				{
-					world.playAuxSFXAtEntity((EntityPlayer)null, 1015, new BlockPos(this.parentEntity), 0);
+					world.playEvent((EntityPlayer)null, 1015, new BlockPos(this.parentEntity), 0);
 				}
 
 				if (this.attackTimer == 20)
@@ -122,7 +122,7 @@ public class EntityBabyGhast extends EntityGhast
 					double d2 = entitylivingbase.posX - (this.parentEntity.posX + vec3d.xCoord * d1);
 					double d3 = entitylivingbase.getEntityBoundingBox().minY + (double)(entitylivingbase.height / 2.0F) - (0.5D + this.parentEntity.posY + (double)(this.parentEntity.height / 2.0F));
 					double d4 = entitylivingbase.posZ - (this.parentEntity.posZ + vec3d.zCoord * d1);
-					world.playAuxSFXAtEntity((EntityPlayer)null, 1016, new BlockPos(this.parentEntity), 0);
+					world.playEvent((EntityPlayer)null, 1016, new BlockPos(this.parentEntity), 0);
 					//TODO EntityGhastFireball (only entity is replaced from orig)
 					if (Config.useSpecialAbilities)
 					{

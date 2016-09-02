@@ -85,13 +85,13 @@ public class EntityBabyShulker extends EntityShulker
 	{
 		super.onUpdate();
 
-		float f1 = (float)this.func_184684_db() * 0.01F;
+		float f1 = (float)this.getPeekTick() * 0.01F;
 		if (this.f > f1)
 			this.f = MathHelper.clamp_float(this.f - 0.05F, f1, 1.0F);
 		else if (this.f < f1)
 			this.f = MathHelper.clamp_float(this.f + 0.05F, 0.0F, f1);
 		double d3 = 0.25D - (double)MathHelper.sin((0.5F + this.f) * (float)Math.PI) * 0.25D;
-		EnumFacing enumfacing2 = this.func_184696_cZ();
+		EnumFacing enumfacing2 = this.getAttachmentFacing();
 		switch (enumfacing2)
 		{
 		case DOWN:
@@ -139,7 +139,7 @@ public class EntityBabyShulker extends EntityShulker
         public void startExecuting()
         {
             this.field_188520_b = 20;
-            EntityBabyShulker.this.func_184691_a(100);
+            EntityBabyShulker.this.updateArmorModifier(100);
         }
 
         /**
@@ -147,7 +147,7 @@ public class EntityBabyShulker extends EntityShulker
          */
         public void resetTask()
         {
-            EntityBabyShulker.this.func_184691_a(0);
+            EntityBabyShulker.this.updateArmorModifier(0);
         }
 
         /**
@@ -167,9 +167,9 @@ public class EntityBabyShulker extends EntityShulker
                     if (this.field_188520_b <= 0)
                     {
                         this.field_188520_b = 20 + EntityBabyShulker.this.rand.nextInt(10) * 20 / 2;
-                        EntityBabyShulkerBullet entityshulkerbullet = new EntityBabyShulkerBullet(EntityBabyShulker.this.worldObj, EntityBabyShulker.this, entitylivingbase, EntityBabyShulker.this.func_184696_cZ().getAxis());
+                        EntityBabyShulkerBullet entityshulkerbullet = new EntityBabyShulkerBullet(EntityBabyShulker.this.worldObj, EntityBabyShulker.this, entitylivingbase, EntityBabyShulker.this.getAttachmentFacing().getAxis());
                         EntityBabyShulker.this.worldObj.spawnEntityInWorld(entityshulkerbullet);
-                        EntityBabyShulker.this.playSound(SoundEvents.entity_shulker_shoot, 2.0F, (EntityBabyShulker.this.rand.nextFloat() - EntityBabyShulker.this.rand.nextFloat()) * 0.2F + 1.0F);
+                        EntityBabyShulker.this.playSound(SoundEvents.ENTITY_SHULKER_SHOOT, 2.0F, (EntityBabyShulker.this.rand.nextFloat() - EntityBabyShulker.this.rand.nextFloat()) * 0.2F + 1.0F);
                     }
                 }
                 else

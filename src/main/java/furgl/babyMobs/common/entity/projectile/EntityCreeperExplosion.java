@@ -60,7 +60,7 @@ public class EntityCreeperExplosion extends EntityThrowable
 			if (!player.isImmuneToFire() && !player.isBurning() && player.attackEntityFrom(DamageSource.onFire, 1.0F))
 			{
 				player.setFire(3);
-				this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.item_flintandsteel_use, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 0.8F, false);
+				this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 0.8F, false);
 				this.setDead();
 			}
 		}

@@ -85,9 +85,9 @@ public class EntityBabyIronGolem extends EntityIronGolem
 		}
 		if (Config.useSpecialAbilities)
 		{
-			if (!this.worldObj.isRemote && this.rand.nextInt(10000) == 0 && this.worldObj.isAirBlock(new BlockPos(this)) && this.worldObj.getBlockState(new BlockPos(this).down()) == Blocks.grass.getDefaultState())
+			if (!this.worldObj.isRemote && this.rand.nextInt(10000) == 0 && this.worldObj.isAirBlock(new BlockPos(this)) && this.worldObj.getBlockState(new BlockPos(this).down()) == Blocks.GRASS.getDefaultState())
 			{
-				this.worldObj.setBlockState(new BlockPos(this), Blocks.red_flower.getDefaultState());
+				this.worldObj.setBlockState(new BlockPos(this), Blocks.RED_FLOWER.getDefaultState());
 			}
 		}
 		//end    

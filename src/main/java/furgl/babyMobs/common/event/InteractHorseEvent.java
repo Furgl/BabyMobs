@@ -24,30 +24,30 @@ public class InteractHorseEvent
 			int i = 0;
 			int j = 0;
 
-			if (stack.getItem() == Items.wheat)
+			if (stack.getItem() == Items.WHEAT)
 			{
 				f = 2.0F;
 				i = 20;
 				j = 3;
 			}
-			else if (stack.getItem() == Items.sugar)
+			else if (stack.getItem() == Items.SUGAR)
 			{
 				f = 1.0F;
 				i = 30;
 				j = 3;
 			}
-			else if (Block.getBlockFromItem(stack.getItem()) == Blocks.hay_block)
+			else if (Block.getBlockFromItem(stack.getItem()) == Blocks.HAY_BLOCK)
 			{
 				f = 20.0F;
 				i = 180;
 			}
-			else if (stack.getItem() == Items.apple)
+			else if (stack.getItem() == Items.APPLE)
 			{
 				f = 3.0F;
 				i = 60;
 				j = 3;
 			}
-			else if (stack.getItem() == Items.golden_carrot)
+			else if (stack.getItem() == Items.GOLDEN_CARROT)
 			{
 				f = 4.0F;
 				i = 60;
@@ -59,7 +59,7 @@ public class InteractHorseEvent
 					horse.setInLove(event.getEntityPlayer());
 				}
 			}
-			else if (stack.getItem() == Items.golden_apple)
+			else if (stack.getItem() == Items.GOLDEN_APPLE)
 			{
 				f = 10.0F;
 				i = 240;

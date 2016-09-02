@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class EntitySkeletonEffectFX extends EntityCustomFX
+public class EntitySkeletonEffectFX extends EntityCustomParticle
 {
 	private Entity entity;
 
@@ -21,9 +21,9 @@ public class EntitySkeletonEffectFX extends EntityCustomFX
 	public EntitySkeletonEffectFX(World world, double x, double y, double z, double motionX, double motionY, double motionZ, float red, float green, float blue)
 	{
 		super(world, x, y, z, motionX, motionY, motionZ);
-		this.xSpeed = motionX;
-		this.ySpeed = motionY;
-		this.zSpeed = motionZ;
+		this.motionX = motionX;
+		this.motionY = motionY;
+		this.motionZ = motionZ;
 		this.particleRed = red;
 		this.particleGreen = green;
 		this.particleBlue = blue;

@@ -46,7 +46,7 @@ public class EntityBabyGuardian extends EntityGuardian
 	public boolean hasTargetedEntity()
     {
 		DataParameter<Integer> dataParam = (DataParameter<Integer>) ReflectionHelper.getPrivateValue(EntityGuardian.class, this, 1);
-        return this.dataWatcher.get(dataParam) != 0;
+        return this.dataManager.get(dataParam) != 0;
     }
 
 	@Override
@@ -74,9 +74,9 @@ public class EntityBabyGuardian extends EntityGuardian
 	protected SoundEvent getHurtSound()
 	{
 		if (this.longerSpikes)//TODO spike sound
-			return SoundEvents.entity_blaze_hurt;
+			return SoundEvents.ENTITY_BLAZE_HURT;
 		else
-	        return this.isInWater() ? SoundEvents.entity_guardian_hurt : SoundEvents.entity_guardian_hurt_land;
+	        return this.isInWater() ? SoundEvents.ENTITY_GUARDIAN_HURT : SoundEvents.ENTITY_GUARDIAN_HURT_LAND;
 	}
 
 	//TODO longer spikes getter
@@ -91,7 +91,7 @@ public class EntityBabyGuardian extends EntityGuardian
 		if (this.longerSpikes)
 		{
 			if (entityIn.attackEntityFrom(DamageSource.causeThornsDamage(this), 2.0F))
-				this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.entity_blaze_hurt, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 8F, false);
+				this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ENTITY_BLAZE_HURT, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 8F, false);
 		}
 	}
 	//end
@@ -107,7 +107,7 @@ public class EntityBabyGuardian extends EntityGuardian
 			if (this.spikesCounter == 0)
 			{
 				this.longerSpikes = false;
-				this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.entity_blaze_hurt, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 8F, false);
+				this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ENTITY_BLAZE_HURT, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 8F, false);
 			}
 			if (this.attackingPlayer instanceof EntityPlayer && !(this.attackingPlayer instanceof FakePlayer))
 			{
@@ -136,7 +136,7 @@ public class EntityBabyGuardian extends EntityGuardian
 			if (source.getSourceOfDamage() instanceof EntityLivingBase)
 			{
 				if (!this.longerSpikes)
-					this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.entity_blaze_hurt, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 8F, false);
+					this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ENTITY_BLAZE_HURT, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 8F, false);
 				this.longerSpikes = true;
 				this.spikesCounter = 50;
 			}

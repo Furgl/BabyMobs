@@ -46,7 +46,7 @@ public class EntitySnowmanSnowball extends EntityThrowable
 				if (mop.entityHit instanceof EntityBlaze || mop.entityHit instanceof EntityBabyBlaze)
 					b0 = 3;
 				mop.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), b0);
-				((EntityLiving) mop.entityHit).addPotionEffect(new PotionEffect(MobEffects.moveSlowdown, 60, 0));
+				((EntityLiving) mop.entityHit).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 60, 0));
 			}
 			this.setDead();
 		}

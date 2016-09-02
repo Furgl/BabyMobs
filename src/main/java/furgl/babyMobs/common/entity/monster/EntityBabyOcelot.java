@@ -83,7 +83,7 @@ public class EntityBabyOcelot extends EntityOcelot
 	@Override
 	public boolean isPotionApplicable(PotionEffect effect)
 	{   	
-		if (effect.getPotion() == MobEffects.poison || effect.getPotion() == MobEffects.moveSlowdown)
+		if (effect.getPotion() == MobEffects.POISON || effect.getPotion() == MobEffects.SLOWNESS)
 			return false;
 		return true;	
 	}

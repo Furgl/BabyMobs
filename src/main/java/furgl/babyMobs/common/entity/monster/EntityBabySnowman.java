@@ -75,10 +75,15 @@ public class EntityBabySnowman extends EntitySnowman
 				//TODO ice
 				if (Config.useSpecialAbilities)
 				{
-					if (this.worldObj.getBlockState(new BlockPos(i, j-1, k)).getMaterial() == Material.water && this.getHealth() > 0)
-						this.worldObj.setBlockState(new BlockPos(i,j-1,k), Blocks.frosted_ice.getDefaultState());
+					if (this.worldObj.getBlockState(new BlockPos(i, j-1, k)).getMaterial() == Material.WATER && this.getHealth() > 0)
+						this.worldObj.setBlockState(new BlockPos(i,j-1,k), Blocks.FROSTED_ICE.getDefaultState());
 				}
 				//end
+				
+				if (this.worldObj.getBlockState(new BlockPos(i, j, k)).getMaterial() == Material.AIR/* && this.worldObj.getBiomeGenForCoords(new BlockPos(i, 0, k)).getFloatTemperature(new BlockPos(i, j, k)) < 0.8F */&& Blocks.SNOW_LAYER.canPlaceBlockAt(this.worldObj, new BlockPos(i, j, k)) && this.getHealth() > 0)
+				{
+					this.worldObj.setBlockState(new BlockPos(i, j, k), Blocks.SNOW_LAYER.getDefaultState());
+				}
 			}
 		}
 		
@@ -98,7 +103,7 @@ public class EntityBabySnowman extends EntitySnowman
 			double d3 = p_82196_1_.posZ - this.posZ;
 			float f1 = MathHelper.sqrt_double(d1 * d1 + d3 * d3) * 0.2F;
 			entitysnowmansnowball.setThrowableHeading(d1, d2 + f1, d3, 1.6F, 12.0F);
-			this.playSound(SoundEvents.entity_snowman_shoot, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
+			this.playSound(SoundEvents.ENTITY_SNOWMAN_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 			this.worldObj.spawnEntityInWorld(entitysnowmansnowball);
 		}
 		else
@@ -110,7 +115,7 @@ public class EntityBabySnowman extends EntitySnowman
 			double d3 = p_82196_1_.posZ - this.posZ;
 			float f1 = MathHelper.sqrt_double(d1 * d1 + d3 * d3) * 0.2F;
 			entitysnowball.setThrowableHeading(d1, d2 + f1, d3, 1.6F, 12.0F);
-			this.playSound(SoundEvents.entity_snowman_shoot, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
+			this.playSound(SoundEvents.ENTITY_SNOWMAN_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 			this.worldObj.spawnEntityInWorld(entitysnowball);
 		}
 		//end

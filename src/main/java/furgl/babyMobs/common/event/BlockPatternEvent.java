@@ -31,7 +31,7 @@ public class BlockPatternEvent
 		{
 			public boolean apply(BlockWorldState state)
 			{
-				return state.getBlockState().getBlock() == Blocks.skull && state.getTileEntity() instanceof TileEntitySkull && ((TileEntitySkull)state.getTileEntity()).getSkullType() == 1;
+				return state.getBlockState().getBlock() == Blocks.SKULL && state.getTileEntity() instanceof TileEntitySkull && ((TileEntitySkull)state.getTileEntity()).getSkullType() == 1;
 			}
 			@Override
 			public boolean apply(Object p_apply_1_)
@@ -41,13 +41,13 @@ public class BlockPatternEvent
 		};
 
 		BlockPattern.PatternHelper patternhelper;
-		BlockPattern babySnowmanPattern = FactoryBlockPattern.start().aisle(new String[] {"^", "#"}).where('^', BlockWorldState.hasState(BlockStateMatcher.forBlock(Blocks.pumpkin))).where('#', BlockWorldState.hasState(BlockStateMatcher.forBlock(Blocks.snow))).build();
-		BlockPattern babyIronGolemPattern = FactoryBlockPattern.start().aisle(new String[] {"^", "#"}).where('^', BlockWorldState.hasState(BlockStateMatcher.forBlock(Blocks.pumpkin))).where('#', BlockWorldState.hasState(BlockStateMatcher.forBlock(Blocks.iron_block))).build();
-		BlockPattern babyWitherPattern = FactoryBlockPattern.start().aisle(new String[] {"^", "#"}).where('^', IS_WITHER_SKELETON).where('#', BlockWorldState.hasState(BlockStateMatcher.forBlock(Blocks.soul_sand))).build();
+		BlockPattern babySnowmanPattern = FactoryBlockPattern.start().aisle(new String[] {"^", "#"}).where('^', BlockWorldState.hasState(BlockStateMatcher.forBlock(Blocks.PUMPKIN))).where('#', BlockWorldState.hasState(BlockStateMatcher.forBlock(Blocks.SNOW))).build();
+		BlockPattern babyIronGolemPattern = FactoryBlockPattern.start().aisle(new String[] {"^", "#"}).where('^', BlockWorldState.hasState(BlockStateMatcher.forBlock(Blocks.PUMPKIN))).where('#', BlockWorldState.hasState(BlockStateMatcher.forBlock(Blocks.IRON_BLOCK))).build();
+		BlockPattern babyWitherPattern = FactoryBlockPattern.start().aisle(new String[] {"^", "#"}).where('^', IS_WITHER_SKELETON).where('#', BlockWorldState.hasState(BlockStateMatcher.forBlock(Blocks.SOUL_SAND))).build();
 
 		if (event.getPos().getY() >= 2 && event.getWorld().getDifficulty() != EnumDifficulty.PEACEFUL && !event.getWorld().isRemote)
 		{
-			if ((patternhelper = babyWitherPattern.match(event.getWorld(), event.getPos())) != null && event.getWorld().getBlockState(event.getPos().north().down()).getBlock() != Blocks.soul_sand && event.getWorld().getBlockState(event.getPos().south().down()).getBlock() != Blocks.soul_sand && event.getWorld().getBlockState(event.getPos().east().down()).getBlock() != Blocks.soul_sand && event.getWorld().getBlockState(event.getPos().west().down()).getBlock() != Blocks.soul_sand)
+			if ((patternhelper = babyWitherPattern.match(event.getWorld(), event.getPos())) != null && event.getWorld().getBlockState(event.getPos().north().down()).getBlock() != Blocks.SOUL_SAND && event.getWorld().getBlockState(event.getPos().south().down()).getBlock() != Blocks.SOUL_SAND && event.getWorld().getBlockState(event.getPos().east().down()).getBlock() != Blocks.SOUL_SAND && event.getWorld().getBlockState(event.getPos().west().down()).getBlock() != Blocks.SOUL_SAND)
 			{
 				for (int i = 0; i < 3; ++i)
 				{
@@ -59,22 +59,22 @@ public class BlockPatternEvent
 					for (int j = 0; j < babyWitherPattern.getThumbLength(); ++j)
 					{
 						BlockWorldState blockworldstate1 = patternhelper.translateOffset(i, j, 0);
-						event.getWorld().setBlockState(blockworldstate1.getPos(), Blocks.air.getDefaultState(), 2);
+						event.getWorld().setBlockState(blockworldstate1.getPos(), Blocks.AIR.getDefaultState(), 2);
 					}
 				}
 
 				BlockPos blockpos1 = patternhelper.translateOffset(1, 0, 0).getPos();
 				EntityBabyWither EntityBabyWither = new EntityBabyWither(event.getWorld());
 				BlockPos blockpos2 = patternhelper.translateOffset(1, 2, 0).getPos();
-				EntityBabyWither.setLocationAndAngles(blockpos2.getX() - 0.5D, blockpos2.getY() + 1.55D, blockpos2.getZ() + 0.5D, patternhelper.getFinger().getAxis() == EnumFacing.Axis.X ? 0.0F : 90.0F, 0.0F);
-				EntityBabyWither.renderYawOffset = patternhelper.getFinger().getAxis() == EnumFacing.Axis.X ? 0.0F : 90.0F;
-				EntityBabyWither.func_82206_m();
+				EntityBabyWither.setLocationAndAngles(blockpos2.getX() - 0.5D, blockpos2.getY() + 1.55D, blockpos2.getZ() + 0.5D, patternhelper.getForwards().getAxis() == EnumFacing.Axis.X ? 0.0F : 90.0F, 0.0F);
+				EntityBabyWither.renderYawOffset = patternhelper.getForwards().getAxis() == EnumFacing.Axis.X ? 0.0F : 90.0F;
+				EntityBabyWither.ignite();
 				Iterator iterator = event.getWorld().getEntitiesWithinAABB(EntityPlayer.class, EntityBabyWither.getEntityBoundingBox().expand(50.0D, 50.0D, 50.0D)).iterator();
 
 				while (iterator.hasNext())
 				{
 					EntityPlayer entityplayer = (EntityPlayer)iterator.next();
-					entityplayer.addStat(AchievementList.spawnWither);
+					entityplayer.addStat(AchievementList.SPAWN_WITHER);
 				}
 
 				event.getWorld().spawnEntityInWorld(EntityBabyWither);
@@ -88,17 +88,17 @@ public class BlockPatternEvent
 					for (int l = 0; l < babyWitherPattern.getThumbLength(); ++l)
 					{
 						BlockWorldState blockworldstate2 = patternhelper.translateOffset(k, l, 0);
-						event.getWorld().notifyNeighborsRespectDebug(blockworldstate2.getPos(), Blocks.air);
+						event.getWorld().notifyNeighborsRespectDebug(blockworldstate2.getPos(), Blocks.AIR);
 					}
 				}
 			}
 		}
-		if ((patternhelper = babySnowmanPattern.match(event.getWorld(), event.getPos())) != null && event.getWorld().getBlockState(event.getPos().down(2)).getBlock() != Blocks.snow)
+		if ((patternhelper = babySnowmanPattern.match(event.getWorld(), event.getPos())) != null && event.getWorld().getBlockState(event.getPos().down(2)).getBlock() != Blocks.SNOW)
 		{
 			for (int i = 0; i < babySnowmanPattern.getThumbLength(); ++i)
 			{
 				BlockWorldState blockworldstate = patternhelper.translateOffset(0, i, 0);
-				event.getWorld().setBlockState(blockworldstate.getPos(), Blocks.air.getDefaultState(), 2);
+				event.getWorld().setBlockState(blockworldstate.getPos(), Blocks.AIR.getDefaultState(), 2);
 			}
 
 			EntityBabySnowman EntityBabySnowman = new EntityBabySnowman(event.getWorld());
@@ -114,16 +114,16 @@ public class BlockPatternEvent
 			for (int j = 0; j < babySnowmanPattern.getThumbLength(); ++j)
 			{
 				BlockWorldState blockworldstate1 = patternhelper.translateOffset(0, j, 0);
-				event.getWorld().notifyNeighborsRespectDebug(blockworldstate1.getPos(), Blocks.air);
+				event.getWorld().notifyNeighborsRespectDebug(blockworldstate1.getPos(), Blocks.AIR);
 			}
 		}
-		else if ((patternhelper = babyIronGolemPattern.match(event.getWorld(), event.getPos())) != null && event.getWorld().getBlockState(event.getPos().north().down()).getBlock() != Blocks.iron_block && event.getWorld().getBlockState(event.getPos().south().down()).getBlock() != Blocks.iron_block && event.getWorld().getBlockState(event.getPos().east().down()).getBlock() != Blocks.iron_block && event.getWorld().getBlockState(event.getPos().west().down()).getBlock() != Blocks.iron_block)
+		else if ((patternhelper = babyIronGolemPattern.match(event.getWorld(), event.getPos())) != null && event.getWorld().getBlockState(event.getPos().north().down()).getBlock() != Blocks.IRON_BLOCK && event.getWorld().getBlockState(event.getPos().south().down()).getBlock() != Blocks.IRON_BLOCK && event.getWorld().getBlockState(event.getPos().east().down()).getBlock() != Blocks.IRON_BLOCK && event.getWorld().getBlockState(event.getPos().west().down()).getBlock() != Blocks.IRON_BLOCK)
 		{
 			for (int i = 0; i < babyIronGolemPattern.getPalmLength(); ++i)
 			{
 				for (int k = 0; k < babyIronGolemPattern.getThumbLength(); ++k)
 				{
-					event.getWorld().setBlockState(patternhelper.translateOffset(i, k, 0).getPos(), Blocks.air.getDefaultState(), 2);
+					event.getWorld().setBlockState(patternhelper.translateOffset(i, k, 0).getPos(), Blocks.AIR.getDefaultState(), 2);
 				}
 			}
 
@@ -143,7 +143,7 @@ public class BlockPatternEvent
 				for (int l = 0; l < babyIronGolemPattern.getThumbLength(); ++l)
 				{
 					BlockWorldState blockworldstate2 = patternhelper.translateOffset(j, l, 0);
-					event.getWorld().notifyNeighborsRespectDebug(blockworldstate2.getPos(), Blocks.air);
+					event.getWorld().notifyNeighborsRespectDebug(blockworldstate2.getPos(), Blocks.AIR);
 				}
 			}
 		}

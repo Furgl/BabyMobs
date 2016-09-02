@@ -57,17 +57,17 @@ public class EntityWitherSkeletonSmoke extends EntityThrowable
 	public void entityInit()
 	{
 		super.entityInit();
-		this.dataWatcher.register(PARTICLES_PER_TICK, Integer.valueOf(0));		
+		this.dataManager.register(PARTICLES_PER_TICK, Integer.valueOf(0));		
 	}
 
 	private int getParticlesPerTick()
 	{
-		return this.dataWatcher.get(PARTICLES_PER_TICK);
+		return this.dataManager.get(PARTICLES_PER_TICK);
 	}
 
 	private void setParticlesPerTick(int particlesPerTick)
 	{
-		this.dataWatcher.set(PARTICLES_PER_TICK, particlesPerTick);;
+		this.dataManager.set(PARTICLES_PER_TICK, particlesPerTick);;
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class EntityWitherSkeletonSmoke extends EntityThrowable
 		{
 			if (!player.capabilities.isCreativeMode)
 			{
-				player.addPotionEffect(new PotionEffect(MobEffects.blindness, 60, 1));
+				player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 60, 1));
 			}
 		}
 	}

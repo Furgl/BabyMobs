@@ -67,17 +67,17 @@ public class EntityBabyEnderman extends EntityEnderman
 	//TODO used in beam
 	public EntityPlayer getTargetedEntity()
 	{
-		if (this.dataWatcher.get(EntityBabyEnderman.ENTITY_ID) == 0)
+		if (this.dataManager.get(EntityBabyEnderman.ENTITY_ID) == 0)
 			return null;
 		else if (this.worldObj.isRemote)
 		{
-			Entity entity = this.worldObj.getEntityByID(Math.round(this.dataWatcher.get(EntityBabyEnderman.ENTITY_ID)));
+			Entity entity = this.worldObj.getEntityByID(Math.round(this.dataManager.get(EntityBabyEnderman.ENTITY_ID)));
 			//if fake player or creative mode
 			if (entity instanceof FakePlayer || (entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode))
 				return null;
 			if (entity instanceof EntityPlayer)
 			{
-				//this.dataWatcher.set(SCREAMING, Boolean.valueOf(true));
+				//this.dataManager.set(SCREAMING, Boolean.valueOf(true));
 				return (EntityPlayer)entity;
 			}
 			else
@@ -88,7 +88,7 @@ public class EntityBabyEnderman extends EntityEnderman
 			//if fake player or creative mode
 			if (this.getAttackTarget() instanceof FakePlayer || (this.getAttackTarget() instanceof EntityPlayer && ((EntityPlayer) this.getAttackTarget()).capabilities.isCreativeMode))
 				return null;
-			//this.dataWatcher.set(SCREAMING, Boolean.valueOf(true));
+			//this.dataManager.set(SCREAMING, Boolean.valueOf(true));
 			return (this.getAttackTarget() instanceof EntityPlayer) ? (EntityPlayer) this.getAttackTarget() : null;
 		}
 	}
@@ -98,8 +98,8 @@ public class EntityBabyEnderman extends EntityEnderman
 	protected void entityInit()
 	{
 		super.entityInit();
-		this.dataWatcher.register(ENTITY_ID, Float.valueOf(0));//entityId (if 0, then no beam)
-		this.dataWatcher.register(LASER_DELAY, Float.valueOf(0));//laserDelay
+		this.dataManager.register(ENTITY_ID, Float.valueOf(0));//entityId (if 0, then no beam)
+		this.dataManager.register(LASER_DELAY, Float.valueOf(0));//laserDelay
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class EntityBabyEnderman extends EntityEnderman
     {
         ItemStack itemstack = player.inventory.armorInventory[3];
 
-        if (itemstack != null && itemstack.getItem() == Item.getItemFromBlock(Blocks.pumpkin))
+        if (itemstack != null && itemstack.getItem() == Item.getItemFromBlock(Blocks.PUMPKIN))
         {
             return false;
         }
@@ -142,21 +142,21 @@ public class EntityBabyEnderman extends EntityEnderman
 		{
 			if (!this.worldObj.isRemote)
 			{
-				if (this.dataWatcher.get(EntityBabyEnderman.LASER_DELAY) == 0 && laserDelay == 0)
+				if (this.dataManager.get(EntityBabyEnderman.LASER_DELAY) == 0 && laserDelay == 0)
 				{
-					if (this.getAttackTarget() instanceof EntityPlayer && this.dataWatcher.get(EntityBabyEnderman.ENTITY_ID) != 0) 
+					if (this.getAttackTarget() instanceof EntityPlayer && this.dataManager.get(EntityBabyEnderman.ENTITY_ID) != 0) 
 					{
 						this.getAttackTarget().attackEntityFrom(DamageSource.magic, 1F);
 					}
 					if (this.getAttackTarget() instanceof EntityPlayer && this.shouldAttackPlayer((EntityPlayer) this.getAttackTarget()) == true && this.canEntityBeSeen(this.getAttackTarget()) && this.getHealth() > 0)
 					{
-						this.dataWatcher.set(EntityBabyEnderman.ENTITY_ID, Float.valueOf(this.getAttackTarget().getEntityId()));
+						this.dataManager.set(EntityBabyEnderman.ENTITY_ID, Float.valueOf(this.getAttackTarget().getEntityId()));
 						laserDelay = 40;
-						this.dataWatcher.set(EntityBabyEnderman.LASER_DELAY, Float.valueOf(laserDelay));
+						this.dataManager.set(EntityBabyEnderman.LASER_DELAY, Float.valueOf(laserDelay));
 					}
 					else
 					{
-						this.dataWatcher.set(EntityBabyEnderman.ENTITY_ID, Float.valueOf(0));					
+						this.dataManager.set(EntityBabyEnderman.ENTITY_ID, Float.valueOf(0));					
 					}		
 				}
 				else
@@ -168,7 +168,7 @@ public class EntityBabyEnderman extends EntityEnderman
 						this.getAttackTarget().attackEntityFrom(DamageSource.magic, 1F);
 					}
 					laserDelay--;
-					this.dataWatcher.set(EntityBabyEnderman.LASER_DELAY, Float.valueOf(laserDelay));
+					this.dataManager.set(EntityBabyEnderman.LASER_DELAY, Float.valueOf(laserDelay));
 				}
 			}
 		}
@@ -177,11 +177,11 @@ public class EntityBabyEnderman extends EntityEnderman
 		//TODO stop moving,look, and make sound when shooting beam
 		if (Config.useSpecialAbilities)
 		{
-			if (this.dataWatcher.get(EntityBabyEnderman.ENTITY_ID) != 0)
+			if (this.dataManager.get(EntityBabyEnderman.ENTITY_ID) != 0)
 			{
 				if (this.getHealth() == 0 || (!this.worldObj.isRemote && this.getAttackTarget() instanceof EntityPlayer && !(this.getAttackTarget() instanceof FakePlayer) && !this.canEntityBeSeen(this.getAttackTarget())))
 				{
-					this.dataWatcher.set(EntityBabyEnderman.LASER_DELAY, 0f);
+					this.dataManager.set(EntityBabyEnderman.LASER_DELAY, 0f);
 					laserDelay = 0;
 				}
 				this.motionX = 0;
@@ -192,8 +192,8 @@ public class EntityBabyEnderman extends EntityEnderman
 				{
 					this.getLookHelper().setLookPositionWithEntity(this.getTargetedEntity(), 90.0F, 90.0F);
 					this.getLookHelper().onUpdateLook();
-					if (this.rand.nextInt(41) >= this.dataWatcher.get(EntityBabyEnderman.LASER_DELAY))
-						this.getTargetedEntity().playSound(SoundEvents.entity_spider_death, 1F, 0.0F);
+					if (this.rand.nextInt(41) >= this.dataManager.get(EntityBabyEnderman.LASER_DELAY))
+						this.getTargetedEntity().playSound(SoundEvents.ENTITY_SPIDER_DEATH, 1F, 0.0F);
 				}
 			}
 		}

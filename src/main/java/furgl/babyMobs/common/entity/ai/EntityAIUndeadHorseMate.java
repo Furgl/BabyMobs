@@ -8,7 +8,7 @@ import net.minecraft.entity.ai.EntityAIMate;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityHorse;
-import net.minecraft.entity.passive.HorseArmorType;
+import net.minecraft.entity.passive.HorseType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumParticleTypes;
@@ -106,9 +106,9 @@ public class EntityAIUndeadHorseMate extends EntityAIMate
 
 			if (this./*theAnimal.*/canMate(theAnimal) && this/*entityhorse*/.canMate(entityhorse))
 			{
-				HorseArmorType horsearmortype = this.theAnimal.getType();
-				HorseArmorType horsearmortype1 = entityhorse.getType();
-				return horsearmortype == horsearmortype1 || horsearmortype == HorseArmorType.HORSE && horsearmortype1 == HorseArmorType.DONKEY || horsearmortype == HorseArmorType.DONKEY && horsearmortype1 == HorseArmorType.HORSE;
+				HorseType horsearmortype = this.theAnimal.getType();
+				HorseType horsearmortype1 = entityhorse.getType();
+				return horsearmortype == horsearmortype1 || horsearmortype == HorseType.HORSE && horsearmortype1 == HorseType.DONKEY || horsearmortype == HorseType.DONKEY && horsearmortype1 == HorseType.HORSE;
 			}
 			else
 			{
@@ -140,7 +140,7 @@ public class EntityAIUndeadHorseMate extends EntityAIMate
 
             if (entityplayer != null)
             {
-                entityplayer.addStat(StatList.animalsBred);
+                entityplayer.addStat(StatList.ANIMALS_BRED);
 
                 /*if (this.theAnimal instanceof EntityCow)
                 {

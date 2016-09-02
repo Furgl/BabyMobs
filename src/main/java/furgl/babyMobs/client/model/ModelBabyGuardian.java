@@ -59,7 +59,7 @@ public class ModelBabyGuardian extends ModelGuardian
         float[] afloat4 = new float[] { -8.0F, -8.0F, -8.0F, -8.0F, 0.0F, 0.0F, 0.0F, 0.0F, 8.0F, 8.0F, 8.0F, 8.0F};
         float[] afloat5 = new float[] {8.0F, -8.0F, 0.0F, 0.0F, -8.0F, -8.0F, 8.0F, 8.0F, 8.0F, -8.0F, 0.0F, 0.0F};
 		float f6 = ageInTicks - entityIn.ticksExisted;
-		float f7 = (1.0F - ((EntityGuardian) entityIn).func_175469_o(f6)) * 0.55F;
+		float f7 = (1.0F - ((EntityGuardian) entityIn).getSpikesAnimation(f6)) * 0.55F;
 
 		//TODO render spikes longer
 		if (((EntityBabyGuardian) entityIn).longerSpikes())

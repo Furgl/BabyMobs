@@ -34,7 +34,7 @@ public class EntitySquidInk extends EntityWitherSkeletonSmoke
 			if (!player.capabilities.isCreativeMode)
 			{
 				player.addStat(Achievements.achievementICantSee);
-				player.addPotionEffect(new PotionEffect(MobEffects.blindness, 60, 1));
+				player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 60, 1));
 			}
 		}
 	}

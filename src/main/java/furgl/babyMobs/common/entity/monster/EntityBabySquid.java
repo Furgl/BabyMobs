@@ -75,7 +75,7 @@ public class EntityBabySquid extends EntitySquid
 				ReflectionHelper.setPrivateValue(EntitySquid.class, this, 2.0F, 8);
 
 				this.squidRotation = (float) (Math.PI-1);
-				this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.entity_slime_attack, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 8F, false);
+				this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ENTITY_SLIME_ATTACK, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 8F, false);
 			}
 		}
 		return super.attackEntityFrom(source, amount);
