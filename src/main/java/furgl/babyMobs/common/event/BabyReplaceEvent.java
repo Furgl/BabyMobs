@@ -45,6 +45,7 @@ import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.SkeletonType;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.HorseType;
@@ -206,7 +207,7 @@ public class BabyReplaceEvent
 					event.getEntity().setDead();
 				}
 			}
-			else if (event.getEntity().getClass() == EntitySkeleton.class && ((EntitySkeleton) event.getEntity()).getSkeletonType() == 0)
+			else if (event.getEntity().getClass() == EntitySkeleton.class && ((EntitySkeleton) event.getEntity()).func_189771_df() == SkeletonType.NORMAL)
 			{
 				if (rand.nextInt(100) < Config.babySkeletonRate || event.getEntity().getRidingEntity() instanceof EntityHorse && ((EntityHorse)event.getEntity().getRidingEntity()).isChild())
 				{
@@ -224,7 +225,7 @@ public class BabyReplaceEvent
 					event.getEntity().setDead();
 				}
 			}
-			else if (event.getEntity().getClass() == EntitySkeleton.class && ((EntitySkeleton) event.getEntity()).getSkeletonType() == 1)
+			else if (event.getEntity().getClass() == EntitySkeleton.class && ((EntitySkeleton) event.getEntity()).func_189771_df() == SkeletonType.WITHER)
 			{
 				if (rand.nextInt(100) < Config.babyWitherSkeletonRate)
 				{

@@ -19,6 +19,7 @@ import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.monster.SkeletonType;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -44,7 +45,7 @@ public class EntityBabyWitherSkeleton extends EntitySkeleton
 		super(worldIn);
 		this.setSize(0.6F, 1.2F);
 		this.experienceValue = (int)(this.experienceValue * 2.5F);
-		this.setSkeletonType(1);
+		this.func_189768_a(SkeletonType.WITHER);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
 		this.maxHurtResistantTime = 50;
 		this.targetTasks.addTask(1, new EntityAIBabyHurtByTarget(this, true, new Class[0]));

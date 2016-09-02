@@ -115,6 +115,7 @@ public class BabyMobs
 		GameRegistry.addRecipe(new ItemStack(ModItems.golden_bread), "NNN", "NBN", "NNN", 'N', Items.GOLD_NUGGET, 'B', Items.BREAD);
 	}
 
+	//copied from bootstrap
 	public void registerDispenserBehaviors()
 	{
 		Field[] fields = ModItems.class.getDeclaredFields();
@@ -131,7 +132,7 @@ public class BabyMobs
 						 */
 						public ItemStack dispenseStack(IBlockSource source, ItemStack stack)
 						{
-							EnumFacing enumfacing = BlockDispenser.getFacing(source.getBlockMetadata());
+							EnumFacing enumfacing = (EnumFacing)source.func_189992_e().getValue(BlockDispenser.FACING);
 							double d0 = source.getX() + (double)enumfacing.getFrontOffsetX();
 							double d1 = (double)((float)source.getBlockPos().getY() + 0.2F);
 							double d2 = source.getZ() + (double)enumfacing.getFrontOffsetZ();
