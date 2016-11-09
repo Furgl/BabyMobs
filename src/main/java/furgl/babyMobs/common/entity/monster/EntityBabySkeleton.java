@@ -64,14 +64,17 @@ public class EntityBabySkeleton extends EntitySkeleton
 			EntityTippedArrow entityarrow = new EntityTippedArrow(this.worldObj, this);
 			if (this.potionEffect == null)
 				this.setPotionEffect();
-			entityarrow.addEffect(this.potionEffect);
-			try {
-				Method method = EntityTippedArrow.class.getDeclaredMethod("getArrowStack");
-				method.setAccessible(true);
-				this.entityDropItem((ItemStack) method.invoke(entityarrow), 0);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
+			if (this.potionEffect != null)
+			{
+				try {
+					entityarrow.addEffect(this.potionEffect);
+					Method method = EntityTippedArrow.class.getDeclaredMethod("getArrowStack");
+					method.setAccessible(true);
+					this.entityDropItem((ItemStack) method.invoke(entityarrow), 0);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		super.onDeath(cause);
