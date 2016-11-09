@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 
 public class Achievements 
-{
+{   
 	public static Achievement achievementWhyAreTheySoStrong;
 	public static Achievement achievementItsGettingHotInHere;
 	public static Achievement achievementLaserTag;
