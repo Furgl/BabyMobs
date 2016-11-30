@@ -1,5 +1,7 @@
 package furgl.babyMobs.common.item;
 
+import java.util.ArrayList;
+
 import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.item.projectile.ItemCaveSpiderVenom;
 import furgl.babyMobs.common.item.projectile.ItemCreeperExplosion;
@@ -35,9 +37,15 @@ public class ModItems
 	public static Item creeper_explosion;
 	
 	public static Item golden_bread;
+	
+	public static ArrayList<Item> allItems;
+	public static ArrayList<ItemBabySpawnEgg> eggs;
 
 	public static void init() 
 	{
+		allItems = new ArrayList<Item>();
+		eggs = new ArrayList<ItemBabySpawnEgg>();
+		
 		baby_spider_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babySpider"), "baby_spider_egg");
 		baby_skeleton_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babySkeleton"), "baby_skeleton_egg");
 		baby_creeper_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyCreeper"), "baby_creeper_egg");
@@ -65,49 +73,32 @@ public class ModItems
 
 	public static void registerRenders()
 	{
-		registerRender(baby_spider_egg);
-		registerRender(baby_skeleton_egg);
-		registerRender(baby_creeper_egg);
-		registerRender(baby_wither_skeleton_egg);
-		registerRender(baby_enderman_egg);
-		registerRender(baby_blaze_egg);
-		registerRender(baby_witch_egg);
-		registerRender(baby_guardian_egg);
-		registerRender(baby_squid_egg);
-		registerRender(baby_cave_spider_egg);
-		registerRender(baby_zombie_egg);
-		registerRender(baby_pig_zombie_egg);
-		registerRender(baby_ghast_egg);
-		registerRender(baby_snowman_egg);
-		registerRender(baby_iron_golem_egg);
-		registerRender(baby_wither_egg);
-		registerRender(baby_shulker_egg);
-
-		registerRender(invisible);
-		registerRender(cave_spider_venom);
-		registerRender(creeper_explosion);
-		
-		registerRender(golden_bread);
+		for (Item item : allItems)
+			registerRender(item);
 	}
 
-	@SuppressWarnings("deprecation")
 	public static Item registerItemWithTab(final Item item, final String unlocalizedName) {
+		allItems.add(item);
+		if (item instanceof ItemBabySpawnEgg)
+			eggs.add((ItemBabySpawnEgg) item);
 		item.setUnlocalizedName(unlocalizedName);
 		item.setCreativeTab(BabyMobs.tab);
-		GameRegistry.registerItem(item, unlocalizedName);
+		GameRegistry.register(item.setRegistryName(unlocalizedName));
 		return item;
 	}
 
-	@SuppressWarnings("deprecation")
 	public static Item registerItemWithoutTab(final Item item, final String unlocalizedName) {
+		allItems.add(item);
+		if (item instanceof ItemBabySpawnEgg)
+			eggs.add((ItemBabySpawnEgg) item);
 		item.setUnlocalizedName(unlocalizedName);
-		GameRegistry.registerItem(item, unlocalizedName);
+		GameRegistry.register(item.setRegistryName(unlocalizedName));
 		return item;
 	}
 
 	public static void registerRender(Item item)
 	{	
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, new ModelResourceLocation("babymobs:" + item.getUnlocalizedName().substring(5), "inventory"));
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, new ModelResourceLocation(BabyMobs.MODID+":" + item.getUnlocalizedName().substring(5), "inventory"));
 	}
 }
 

@@ -4,9 +4,7 @@ import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
-import furgl.babyMobs.common.entity.projectile.EntityWitherSkeletonSmoke;
 import furgl.babyMobs.common.item.ModItems;
-import furgl.babyMobs.util.EntitySpawner;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -136,12 +134,6 @@ public class EntityBabyWitherSkeleton extends EntitySkeleton
 					player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 140, 3));
 					player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 20, 3));
 					player.knockBack(player, 0.0F, this.posX-player.posX, this.posZ-player.posZ);
-					Vec3d vec = new Vec3d(this.posX, this.posY+0.5D, this.posZ);
-					EntitySpawner entitySpawner = new EntitySpawner(EntityWitherSkeletonSmoke.class, this.worldObj, vec, 5);
-					entitySpawner.setShapeSphere(0);
-					entitySpawner.setMovementInOut(-1D);
-					entitySpawner.setRandVar(0.3D);
-					entitySpawner.run();
 				}
 				else
 				{

@@ -100,14 +100,13 @@ public class InteractHorseEvent
 
 			if (flag)
 			{
-				try {
+				try {//not sure what use this whole method has, so w/e
 					Method method = horse.getClass().getDeclaredMethod("func_110266_cB");
 					method.setAccessible(true);
 					method.invoke(horse);
 				}
 				catch (Exception e)
 				{
-					e.printStackTrace();
 				}
 				event.setCanceled(true);
 				horse.setHorseTamed(false);

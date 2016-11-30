@@ -1,7 +1,5 @@
 package furgl.babyMobs.common;
 
-import java.lang.reflect.Field;
-
 import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.client.gui.creativeTab.BabyMobsCreativeTab;
 import furgl.babyMobs.common.block.ModBlocks;
@@ -30,7 +28,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
@@ -50,7 +47,7 @@ public class BabyMobs
 {
 	public static final String MODID = "babymobs";
 	public static final String MODNAME = "Baby Mobs";
-	public static final String VERSION = "1.5.1";
+	public static final String VERSION = "1.5.2";
 	@Mod.Instance("babymobs")
 	public static BabyMobs instance;
 	@SidedProxy(clientSide = "furgl.babyMobs.client.ClientProxy", serverSide = "furgl.babyMobs.common.CommonProxy")
@@ -102,57 +99,45 @@ public class BabyMobs
 		MinecraftForge.EVENT_BUS.register(new ZombieTrapEvent());
 		MinecraftForge.EVENT_BUS.register(new InteractHorseEvent());
 	}
-	
+
 	private void registerPackets()
 	{
 		int id = 0;
 		network.registerMessage(PacketVolatileLevitation.Handler.class, PacketVolatileLevitation.class, id++, Side.CLIENT);
 		network.registerMessage(PacketMotionY.Handler.class, PacketMotionY.class, id++, Side.CLIENT);
 	}
-	
+
 	private void registerCraftingRecipes()
 	{
 		GameRegistry.addRecipe(new ItemStack(ModItems.golden_bread), "NNN", "NBN", "NNN", 'N', Items.GOLD_NUGGET, 'B', Items.BREAD);
 	}
 
-	//copied from bootstrap
+	//copied from Bootstrap
 	public void registerDispenserBehaviors()
 	{
-		Field[] fields = ModItems.class.getDeclaredFields();
-		for (int i=0; i<fields.length; i++)
-		{
-			try 
+		for (ItemBabySpawnEgg egg : ModItems.eggs) {
+			BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(egg, new BehaviorDefaultDispenseItem()
 			{
-				if (fields[i].get(new Object()) instanceof ItemBabySpawnEgg)
+				/**
+				 * Dispense the specified stack, play the dispense sound and spawn particles.
+				 */
+				public ItemStack dispenseStack(IBlockSource source, ItemStack stack)
 				{
-					BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject((Item) fields[i].get(ModItems.class), new BehaviorDefaultDispenseItem()
+					EnumFacing enumfacing = (EnumFacing)source.func_189992_e().getValue(BlockDispenser.FACING);
+					double d0 = source.getX() + (double)enumfacing.getFrontOffsetX();
+					double d1 = (double)((float)source.getBlockPos().getY() + 0.2F);
+					double d2 = source.getZ() + (double)enumfacing.getFrontOffsetZ();
+					Entity entity = ItemBabySpawnEgg.spawnCreature(source.getWorld(), ((ItemBabySpawnEgg) stack.getItem()).entityName, d0, d1, d2);
+
+					if (entity instanceof EntityLivingBase && stack.hasDisplayName())
 					{
-						/**
-						 * Dispense the specified stack, play the dispense sound and spawn particles.
-						 */
-						public ItemStack dispenseStack(IBlockSource source, ItemStack stack)
-						{
-							EnumFacing enumfacing = (EnumFacing)source.func_189992_e().getValue(BlockDispenser.FACING);
-							double d0 = source.getX() + (double)enumfacing.getFrontOffsetX();
-							double d1 = (double)((float)source.getBlockPos().getY() + 0.2F);
-							double d2 = source.getZ() + (double)enumfacing.getFrontOffsetZ();
-							Entity entity = ItemBabySpawnEgg.spawnCreature(source.getWorld(), ((ItemBabySpawnEgg) stack.getItem()).entityName, d0, d1, d2);
+						((EntityLiving)entity).setCustomNameTag(stack.getDisplayName());
+					}
 
-							if (entity instanceof EntityLivingBase && stack.hasDisplayName())
-							{
-								((EntityLiving)entity).setCustomNameTag(stack.getDisplayName());
-							}
-
-							stack.splitStack(1);
-							return stack;
-						}
-					});
+					stack.splitStack(1);
+					return stack;
 				}
-			} 
-			catch (Exception e) 
-			{
-				e.printStackTrace();
-			}
+			});
 		}
 	}
 }

@@ -21,6 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class AttackEvent 
 {
@@ -39,9 +40,9 @@ public class AttackEvent
 			if (Config.useSpecialAbilities && zombie.isVillager() && !zombie.isConverting()) {
 				zombie.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 100, 0));
 				try {
-					Method method = EntityZombie.class.getDeclaredMethod("startConversion", int.class);
+					Method method = ReflectionHelper.findMethod(EntityZombie.class, zombie, new String[] {"startConversion", "func_82228_a"}, int.class);//EntityZombie.class.getDeclaredMethod("startConversion", int.class);
 					method.setAccessible(true);
-					method.invoke(zombie, 2000);
+					method.invoke(zombie, 200);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -54,7 +55,7 @@ public class AttackEvent
 			EntityZombiePig pig = (EntityZombiePig) event.getEntityLiving();
 			if (Config.useSpecialAbilities && !pig.isConverting()) {
 				pig.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 100, 0));
-				pig.startConversion(1000);
+				pig.startConversion(200);
 				pig.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 9999, 9, false, false));
 				pig.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Item.getItemFromBlock(Blocks.RED_FLOWER)));
 				event.setCanceled(true);
@@ -64,7 +65,7 @@ public class AttackEvent
 			EntityZombieChicken chicken = (EntityZombieChicken) event.getEntityLiving();
 			if (Config.useSpecialAbilities && !chicken.isConverting()) {
 				chicken.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 100, 0));
-				chicken.startConversion(1000);
+				chicken.startConversion(200);
 				chicken.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 9999, 9, false, false));
 				chicken.setHeldItem(EnumHand.MAIN_HAND, new ItemStack(Item.getItemFromBlock(Blocks.RED_FLOWER)));
 				event.setCanceled(true);

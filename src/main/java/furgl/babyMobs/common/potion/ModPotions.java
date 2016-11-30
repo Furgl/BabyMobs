@@ -1,8 +1,5 @@
 package furgl.babyMobs.common.potion;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
 import net.minecraft.potion.Potion;
 
 public class ModPotions 
@@ -10,8 +7,8 @@ public class ModPotions
 	public static Potion volatileLevitationPotion;
 
 	public static void preInit() 
-	{
-		Potion[] potionTypes = null;
+	{//not needed?
+/*		Potion[] potionTypes = null;
 
 		for (Field f : Potion.class.getDeclaredFields()) {
 			f.setAccessible(true);
@@ -31,7 +28,7 @@ public class ModPotions
 				System.err.println("Severe error, please report this to the mod author:");
 				System.err.println(e);
 			}
-		}
+		}*/
 	}
 
 	public static void init() 

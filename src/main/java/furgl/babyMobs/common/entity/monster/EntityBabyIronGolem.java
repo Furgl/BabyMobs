@@ -4,6 +4,8 @@ import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.item.ModItems;
+import net.minecraft.block.BlockDirt;
+import net.minecraft.block.BlockGrass;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -84,12 +86,8 @@ public class EntityBabyIronGolem extends EntityIronGolem
 				player.addStat(Achievements.achievementAFlowerForMe);
 		}
 		if (Config.useSpecialAbilities)
-		{
-			if (!this.worldObj.isRemote && this.rand.nextInt(10000) == 0 && this.worldObj.isAirBlock(new BlockPos(this)) && this.worldObj.getBlockState(new BlockPos(this).down()) == Blocks.GRASS.getDefaultState())
-			{
+			if (!this.worldObj.isRemote && this.rand.nextInt(1000) == 0 && this.worldObj.isAirBlock(new BlockPos(this)) && (this.worldObj.getBlockState(new BlockPos(this).down()).getBlock() instanceof BlockGrass || this.worldObj.getBlockState(new BlockPos(this).down()).getBlock() instanceof BlockDirt))
 				this.worldObj.setBlockState(new BlockPos(this), Blocks.RED_FLOWER.getDefaultState());
-			}
-		}
 		//end    
 	}
 }

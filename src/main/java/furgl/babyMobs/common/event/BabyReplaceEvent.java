@@ -342,6 +342,7 @@ public class BabyReplaceEvent
 		} 
 		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException| NoSuchMethodException | SecurityException e) 
 		{
+			System.out.println("Baby Mobs has encountered an error. Please report this to the mod creator:");
 			e.printStackTrace();
 		}
 

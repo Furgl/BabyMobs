@@ -1,8 +1,10 @@
 package furgl.babyMobs.common.entity.monster;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
+
+import com.google.common.collect.Sets;
 
 import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.BabyMobs;
@@ -20,7 +22,9 @@ import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.init.Enchantments;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.PotionTypes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
@@ -37,11 +41,11 @@ import net.minecraftforge.common.util.FakePlayer;
 
 public class EntityBabySkeleton extends EntitySkeleton
 {
-	public int effectType;
-	public PotionEffect potionEffect;
-	public double red;
-	public double green;
-	public double blue;
+	private int effectType;
+	private PotionEffect potionEffect;
+	private double red = -1;
+	private double green = -1;
+	private double blue = -1;
 	private static final DataParameter<Integer> POTION_EFFECT = EntityDataManager.<Integer>createKey(EntityBabySkeleton.class, DataSerializers.VARINT);
 
 	public EntityBabySkeleton(World worldIn)
@@ -61,29 +65,17 @@ public class EntityBabySkeleton extends EntitySkeleton
 			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
 		if (!this.worldObj.isRemote)
 		{
-			EntityTippedArrow entityarrow = new EntityTippedArrow(this.worldObj, this);
-			if (this.potionEffect == null)
-				this.setPotionEffect();
-			if (this.potionEffect != null)
-			{
-				try {
-					entityarrow.addEffect(this.potionEffect);
-					Method method = EntityTippedArrow.class.getDeclaredMethod("getArrowStack");
-					method.setAccessible(true);
-					this.entityDropItem((ItemStack) method.invoke(entityarrow), 0);
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+			EntityTippedArrow arrow = new EntityTippedArrow(worldObj);
+			arrow.addEffect(this.getPotionEffect());
+			ItemStack stack = new ItemStack(Items.TIPPED_ARROW, this.worldObj.rand.nextInt(3)+1);
+			Set<PotionEffect> customPotionEffects = Sets.<PotionEffect>newHashSet();
+			PotionEffect effect = this.getPotionEffect();
+			customPotionEffects.add(new PotionEffect(effect.getPotion(), effect.getDuration()*3, effect.getAmplifier()));
+			PotionUtils.addPotionToItemStack(stack, PotionTypes.EMPTY);
+			PotionUtils.appendEffects(stack, customPotionEffects);
+			this.entityDropItem(stack, 0);
 		}
 		super.onDeath(cause);
-	}
-
-	@Override
-	protected boolean canDropLoot()
-	{
-		return true;
 	}
 
 	@Override
@@ -104,20 +96,8 @@ public class EntityBabySkeleton extends EntitySkeleton
 	{
 		if (Config.useSpecialAbilities) 
 		{
-			if (!this.worldObj.isRemote && this.potionEffect != null && source.getEntity() instanceof EntityPlayer && !(source.getEntity() instanceof FakePlayer) && !(source.getEntity() instanceof EntityPlayer && ((EntityPlayer)source.getEntity()).capabilities.isCreativeMode))
-			{
-				if (this.effectType == 1)
-					this.potionEffect = new PotionEffect(MobEffects.POISON, 50, 0);
-				else if (this.effectType == 2)
-					this.potionEffect = new PotionEffect(MobEffects.BLINDNESS, 50, 0);
-				else if (this.effectType == 3)
-					this.potionEffect = new PotionEffect(MobEffects.WITHER, 50, 0);
-				else if (this.effectType == 4)
-					this.potionEffect = new PotionEffect(MobEffects.NAUSEA, 100, 1);
-				else if (this.effectType == 5)
-					this.potionEffect = new PotionEffect(MobEffects.SLOWNESS, 50, 0);
-				((EntityPlayer)source.getEntity()).addPotionEffect(this.potionEffect);
-			}
+			if (!this.worldObj.isRemote && source.getEntity() instanceof EntityPlayer && !(source.getEntity() instanceof FakePlayer) && !(source.getEntity() instanceof EntityPlayer && ((EntityPlayer)source.getEntity()).capabilities.isCreativeMode))
+				((EntityPlayer)source.getEntity()).addPotionEffect(this.getPotionEffect());
 		}
 		return super.attackEntityFrom(source, amount);
 	}
@@ -135,28 +115,50 @@ public class EntityBabySkeleton extends EntitySkeleton
 	{
 		if (super.attackEntityAsMob(entity))
 		{
-			if (this.potionEffect == null)
-				this.setPotionEffect();
 			if (!this.worldObj.isRemote && entity instanceof EntityLivingBase && !(entity instanceof EntityPlayer && ((EntityPlayer)entity).capabilities.isCreativeMode))
-				((EntityLivingBase)entity).addPotionEffect(this.potionEffect);
+				((EntityLivingBase)entity).addPotionEffect(this.getPotionEffect());
 			return true;
 		}
 		else
 			return false;
 	}
 
-	public void setPotionEffect() {
+	public PotionEffect getPotionEffect() {
 		this.effectType = this.dataManager.get(POTION_EFFECT);
-		if (this.effectType == 1)
-			this.potionEffect = new PotionEffect(MobEffects.POISON, 50, 0);
-		else if (this.effectType == 2)
-			this.potionEffect = new PotionEffect(MobEffects.BLINDNESS, 50, 0);
-		else if (this.effectType == 3)
-			this.potionEffect = new PotionEffect(MobEffects.WITHER, 50, 0);
-		else if (this.effectType == 4)
-			this.potionEffect = new PotionEffect(MobEffects.NAUSEA, 100, 1);
-		else if (this.effectType == 5)
-			this.potionEffect = new PotionEffect(MobEffects.SLOWNESS, 50, 0);
+		if (this.effectType == 0) 
+			this.setEffectType();
+		if (this.potionEffect == null) {
+			if (this.effectType == 1)
+				this.potionEffect = new PotionEffect(MobEffects.POISON, 50, 0);
+			else if (this.effectType == 2)
+				this.potionEffect = new PotionEffect(MobEffects.BLINDNESS, 50, 0);
+			else if (this.effectType == 3)
+				this.potionEffect = new PotionEffect(MobEffects.WITHER, 50, 0);
+			else if (this.effectType == 4)
+				this.potionEffect = new PotionEffect(MobEffects.NAUSEA, 100, 1);
+			else if (this.effectType == 5)
+				this.potionEffect = new PotionEffect(MobEffects.SLOWNESS, 50, 0);
+		}
+		return this.potionEffect;
+	}
+
+	public void setEffectType() { 
+		if (this.dataManager.get(POTION_EFFECT).intValue() == 0 && !this.worldObj.isRemote)
+		{
+			this.effectType = this.rand.nextInt(5)+1;
+			this.dataManager.set(POTION_EFFECT, effectType);
+		}
+		else if (this.dataManager.get(POTION_EFFECT).intValue() != 0)
+			this.effectType = this.dataManager.get(POTION_EFFECT).intValue();
+	}
+
+	public void setColors() {
+		Collection<PotionEffect> map = new ArrayList<PotionEffect>();
+		map.add(this.getPotionEffect());
+		int i = PotionUtils.getPotionColorFromEffectList(map);
+		this.red = (i >> 16 & 255) / 255.0D;
+		this.green = (i >> 8 & 255) / 255.0D;
+		this.blue = (i >> 0 & 255) / 255.0D;
 	}
 
 	@Override
@@ -165,38 +167,14 @@ public class EntityBabySkeleton extends EntitySkeleton
 		//TODO effects
 		if (Config.useSpecialAbilities)
 		{
-			if (!this.worldObj.isRemote && this.ticksExisted == 1)
-			{
-				if (!this.getEntityData().hasKey("effectType"))
-				{
-					this.getEntityData().setInteger("effectType", this.rand.nextInt(5)+1);
-					this.effectType = this.getEntityData().getInteger("effectType");
-					this.dataManager.set(POTION_EFFECT, effectType);
-				}
-				else
-				{
-					this.effectType = this.getEntityData().getInteger("effectType");
-					this.dataManager.set(POTION_EFFECT, effectType);
-				}
-			}
-			if (this.potionEffect == null)
-			{
-				this.setPotionEffect();
-				if (this.effectType != 0) {
-					Collection<PotionEffect> map = new ArrayList<PotionEffect>();
-					map.add(this.potionEffect);
-					int i = PotionUtils.getPotionColorFromEffectList(map);
-					this.red = (i >> 16 & 255) / 255.0D;
-					this.green = (i >> 8 & 255) / 255.0D;
-					this.blue = (i >> 0 & 255) / 255.0D;
-				}
-			}
-			if (this.worldObj.isRemote)
+			if (this.effectType == 0)
+				this.setEffectType();
+			if (this.worldObj.isRemote && this.effectType != 0 && this.red == -1)
+				this.setColors();
+			if (this.worldObj.isRemote && this.red != -1)
 			{
 				if (this.ticksExisted == 3)
-				{
 					BabyMobs.proxy.spawnEntitySkeletonEffectFX(this.worldObj, this, (float) this.red, (float) this.green, (float) this.blue);
-				}
 				this.worldObj.spawnParticle(EnumParticleTypes.SPELL_MOB, this.posX + (this.rand.nextDouble() - 0.5D) * this.width, this.posY + this.rand.nextDouble() * this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * this.width, this.red, this.green, this.blue, new int[0]);
 			}
 		}
@@ -213,12 +191,8 @@ public class EntityBabySkeleton extends EntitySkeleton
 	{
 		//TODO changed to EntitySkeletonArrow from EntityArrow
 		EntityTippedArrow entityarrow = new EntityTippedArrow(this.worldObj, this);
-		if (Config.useSpecialAbilities)
-		{
-			if (this.potionEffect == null)
-				this.setPotionEffect();
-			entityarrow.addEffect(this.potionEffect);
-		}
+		if (Config.useSpecialAbilities && !this.worldObj.isRemote)
+			entityarrow.addEffect(this.getPotionEffect());
 		double d0 = target.posX - this.posX;
 		double d1 = target.getEntityBoundingBox().minY + (double)(target.height / 3.0F) - entityarrow.posY;
 		double d2 = target.posZ - this.posZ;
