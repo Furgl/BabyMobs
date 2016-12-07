@@ -1,6 +1,5 @@
 package furgl.babyMobs.client;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.client.model.ModelBabyShulker;
 import furgl.babyMobs.client.model.ModelBabySquid;
 import furgl.babyMobs.client.particle.EntityBlazeFlamethrowerFX;
@@ -73,10 +72,8 @@ import net.minecraft.client.renderer.entity.RenderSquid;
 import net.minecraft.client.renderer.entity.RenderZombie;
 import net.minecraft.client.renderer.tileentity.RenderWitherSkull;
 import net.minecraft.init.Items;
-import net.minecraft.stats.Achievement;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy extends CommonProxy
@@ -87,15 +84,6 @@ public class ClientProxy extends CommonProxy
 		registerEntityRenders();
 		ModItems.registerRenders();
 		ModBlocks.registerRenders();
-	}
-	
-	@Override
-	public void registerAchievements()
-	{
-		AchievementPage.registerAchievementPage(new AchievementPage("Baby Mobs", (Achievement[]) Achievements.achievements.toArray(new Achievement[Achievements.achievements.size()])));
-		
-		for (int i=0; i<Achievements.achievements.size(); i++)
-			Achievements.achievements.get(i).registerStat();
 	}
 	
 	@Override

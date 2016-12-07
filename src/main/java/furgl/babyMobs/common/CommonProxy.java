@@ -1,20 +1,28 @@
 package furgl.babyMobs.common;
 
 
+import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.entity.monster.EntityBabyBlaze;
 import furgl.babyMobs.common.entity.monster.EntityBabyDragon;
 import furgl.babyMobs.common.entity.monster.EntityBabySkeleton;
 import furgl.babyMobs.common.entity.projectile.EntityGhastFireball;
 import furgl.babyMobs.common.entity.projectile.EntityWitherSkeletonSmoke;
 import furgl.babyMobs.util.EntitySpawner;
+import net.minecraft.stats.Achievement;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.AchievementPage;
 
 public class CommonProxy 
 {	
 	public void registerRenders() { }
 	
-	public void registerAchievements() { }
+	public void registerAchievements() {
+		AchievementPage.registerAchievementPage(new AchievementPage("Baby Mobs", (Achievement[]) Achievements.achievements.toArray(new Achievement[Achievements.achievements.size()])));
+		
+		for (int i=0; i<Achievements.achievements.size(); i++)
+			Achievements.achievements.get(i).registerStat();
+	}
 	
 	public Class getParticleClass() {return null;}
 	
