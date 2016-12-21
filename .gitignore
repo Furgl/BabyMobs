@@ -18,9 +18,9 @@ build
 .gradle
 
 # other
+update.json
 eclipse
 run
-screenshots/
 saves/
 config/
 world/
