@@ -1,6 +1,5 @@
 package furgl.babyMobs.util;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 
 import furgl.babyMobs.common.BabyMobs;
@@ -243,7 +242,7 @@ public class EntitySpawner
 					Minecraft.getMinecraft().effectRenderer.addEffect(entityFX);
 				}
 			} 
-			catch (InstantiationException | IllegalAccessException | IllegalArgumentException| InvocationTargetException | NoSuchMethodException | SecurityException e) 
+			catch (Exception e) 
 			{
 				System.out.println("ERROR: ENTITY " + this.entityClass + " MISSING SPAWNER CONSTRUCTOR");
 				e.printStackTrace();
