@@ -32,7 +32,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = BabyMobs.MODID, name = BabyMobs.MODNAME, version = BabyMobs.VERSION, guiFactory = "furgl.babyMobs.client.gui.config.BabyMobsGuiFactory", updateJSON = "")
+@Mod(modid = BabyMobs.MODID, name = BabyMobs.MODNAME, version = BabyMobs.VERSION, guiFactory = "furgl.babyMobs.client.gui.config.BabyMobsGuiFactory", updateJSON = "https://raw.githubusercontent.com/Furgl/BabyMobs/1.11/update.json")
 public class BabyMobs
 {
 	public static final String MODID = "babymobs";
