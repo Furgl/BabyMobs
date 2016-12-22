@@ -1,6 +1,5 @@
 package furgl.babyMobs.client.renderer.entity.mob;
 
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderChicken;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.passive.EntityChicken;
@@ -13,9 +12,9 @@ public class RenderZombieChicken extends RenderChicken
 {
     private static final ResourceLocation chickenTextures = new ResourceLocation("babymobs:textures/entity/zombie_chicken.png");
 
-    public RenderZombieChicken(RenderManager renderManagerIn, ModelBase modelBaseIn, float shadowSizeIn)
+    public RenderZombieChicken(RenderManager renderManagerIn)
     {
-        super(renderManagerIn, modelBaseIn, shadowSizeIn);
+        super(renderManagerIn);
     }
 
     @Override

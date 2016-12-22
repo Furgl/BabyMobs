@@ -1,14 +1,10 @@
 package furgl.babyMobs.common.event;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.UUID;
 
 import furgl.babyMobs.common.config.Config;
-import furgl.babyMobs.common.entity.ai.EntityAIUndeadHorseMate;
-import furgl.babyMobs.common.entity.ai.EntityAIZombieRiders;
 import furgl.babyMobs.common.entity.monster.EntityBabyBlaze;
 import furgl.babyMobs.common.entity.monster.EntityBabyCaveSpider;
 import furgl.babyMobs.common.entity.monster.EntityBabyCreeper;
@@ -16,6 +12,7 @@ import furgl.babyMobs.common.entity.monster.EntityBabyEnderman;
 import furgl.babyMobs.common.entity.monster.EntityBabyGhast;
 import furgl.babyMobs.common.entity.monster.EntityBabyGuardian;
 import furgl.babyMobs.common.entity.monster.EntityBabyIronGolem;
+import furgl.babyMobs.common.entity.monster.EntityBabyOcelot;
 import furgl.babyMobs.common.entity.monster.EntityBabyPigZombie;
 import furgl.babyMobs.common.entity.monster.EntityBabyShulker;
 import furgl.babyMobs.common.entity.monster.EntityBabySkeleton;
@@ -25,13 +22,10 @@ import furgl.babyMobs.common.entity.monster.EntityBabyWitch;
 import furgl.babyMobs.common.entity.monster.EntityBabyWitherSkeleton;
 import furgl.babyMobs.common.entity.monster.EntityBabyZombie;
 import furgl.babyMobs.common.entity.monster.EntityZombieChicken;
+import furgl.babyMobs.common.entity.monster.EntityZombiePig;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAISkeletonRiders;
-import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.monster.EntityCaveSpider;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -44,26 +38,24 @@ import net.minecraft.entity.monster.EntityShulker;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.monster.EntityWitch;
+import net.minecraft.entity.monster.EntityWitherSkeleton;
 import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.monster.SkeletonType;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntitySquid;
-import net.minecraft.entity.passive.HorseType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeEnd;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class BabyReplaceEvent 
 {
 	@SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
 	public void onEvent(LivingEvent.LivingUpdateEvent event)
 	{
-		if (event.getEntity() instanceof EntityHorse && !((EntityHorse)event.getEntity()).isTame() && (((EntityHorse)event.getEntity()).getType() == HorseType.ZOMBIE || ((EntityHorse)event.getEntity()).getType() == HorseType.SKELETON))
+		/*if (event.getEntity() instanceof EntityHorse && !((EntityHorse)event.getEntity()).isTame() && (((EntityHorse)event.getEntity()).getType() == HorseType.ZOMBIE || ((EntityHorse)event.getEntity()).getType() == HorseType.SKELETON))
 			((EntityHorse)event.getEntity()).setHorseTamed(true);
 		if (!event.getEntity().worldObj.isRemote && event.getEntity().ticksExisted == 1 && event.getEntity() instanceof EntityHorse && (((EntityHorse)event.getEntity()).getType() == HorseType.ZOMBIE || ((EntityHorse)event.getEntity()).getType() == HorseType.SKELETON))
 		{
@@ -72,7 +64,7 @@ public class BabyReplaceEvent
 			boolean hasUndeadHorseMateAI = false;
 			ArrayList<EntityAIBase> list = new ArrayList<EntityAIBase>();
 			for (EntityAITaskEntry task : horse.tasks.taskEntries) {
-				if (horse.isSkeletonTrap() && ((EntityHorse)event.getEntity()).getType() == HorseType.ZOMBIE)
+				if (horse.isSkeletonTrap() && ((EntityHorse)event.getEntity()).getHorseVariant()getType() == HorseType.ZOMBIE)
 				{
 					if (task.action.getClass().getSimpleName().equals("EntityAISkeletonRiders"))
 					{
@@ -98,7 +90,7 @@ public class BabyReplaceEvent
 				horse.tasks.addTask(1, new EntityAIZombieRiders(horse));
 			if (!hasUndeadHorseMateAI)
 				horse.tasks.addTask(1, new EntityAIUndeadHorseMate(horse, 1.0D));
-		}
+		}*/
 		if (!event.getEntity().worldObj.isRemote && event.getEntity().ticksExisted == 1 && !event.getEntity().getEntityData().hasKey("Baby Mobs: Checked")) //if server side & newly spawned
 		{
 			event.getEntity().getEntityData().setBoolean("Baby Mobs: Checked", true);
@@ -142,7 +134,7 @@ public class BabyReplaceEvent
 				{
 					Entity entity = this.spawnEntity(EntityBabyPigZombie.class, event.getEntity());
 					event.getEntity().setDead();
-					EntityLiving entityToSpawn = (EntityLiving) EntityList.createEntityByName("babymobs.zombiePig", entity.worldObj);
+					EntityLiving entityToSpawn = new EntityZombiePig(entity.worldObj);//(EntityLiving) EntityList.createEntityByName("babymobs.zombiePig", entity.worldObj);
 					entityToSpawn.setLocationAndAngles(entity.posX, entity.posY, entity.posZ,  MathHelper.wrapDegrees(entity.worldObj.rand.nextFloat() * 360.0F), 0.5F);
 					entity.worldObj.spawnEntityInWorld(entityToSpawn);
 					entity.startRiding(entityToSpawn);
@@ -151,13 +143,13 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntityBabyPigZombie.class)
 			{
-				EntityLiving entityToSpawn = (EntityLiving) EntityList.createEntityByName("babymobs.zombiePig", event.getEntity().worldObj);
+				EntityLiving entityToSpawn = new EntityZombiePig(event.getEntity().worldObj);//(EntityLiving) EntityList.createEntityByName("babymobs.zombiePig", event.getEntity().worldObj);
 				entityToSpawn.setLocationAndAngles(event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ,  MathHelper.wrapDegrees(event.getEntity().worldObj.rand.nextFloat() * 360.0F), 0.5F);
 				event.getEntity().worldObj.spawnEntityInWorld(entityToSpawn);
 				event.getEntity().startRiding(entityToSpawn);
 				entityToSpawn.playLivingSound();
 			}
-			else if (event.getEntity().getClass() == EntityHorse.class && ((EntityHorse)event.getEntity()).getType() == HorseType.SKELETON)
+			/*else if (event.getEntity().getClass() == EntityHorse.class && ((EntityHorse)event.getEntity()).getType() == HorseType.SKELETON)
 			{
 				((EntityHorse)event.getEntity()).setHorseTamed(true);
 				Iterator it = event.getEntity().getRecursivePassengers().iterator();
@@ -190,7 +182,7 @@ public class BabyReplaceEvent
 					}
 					event.getEntity().setDead();
 				}
-			}
+			}*/
 			else if (event.getEntity().getClass() == EntitySpider.class)
 			{
 				if (rand.nextInt(100) < Config.babySpiderRate)
@@ -207,7 +199,7 @@ public class BabyReplaceEvent
 					event.getEntity().setDead();
 				}
 			}
-			else if (event.getEntity().getClass() == EntitySkeleton.class && ((EntitySkeleton) event.getEntity()).func_189771_df() == SkeletonType.NORMAL)
+			else if (event.getEntity().getClass() == EntitySkeleton.class/* && ((EntitySkeleton) event.getEntity()).func_189771_df() == SkeletonType.NORMAL*/)
 			{
 				if (rand.nextInt(100) < Config.babySkeletonRate || event.getEntity().getRidingEntity() instanceof EntityHorse && ((EntityHorse)event.getEntity().getRidingEntity()).isChild())
 				{
@@ -225,7 +217,7 @@ public class BabyReplaceEvent
 					event.getEntity().setDead();
 				}
 			}
-			else if (event.getEntity().getClass() == EntitySkeleton.class && ((EntitySkeleton) event.getEntity()).func_189771_df() == SkeletonType.WITHER)
+			else if (event.getEntity().getClass() == EntityWitherSkeleton.class/* && ((EntitySkeleton) event.getEntity()).func_189771_df() == SkeletonType.WITHER*/)
 			{
 				if (rand.nextInt(100) < Config.babyWitherSkeletonRate)
 				{
@@ -235,12 +227,12 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntityEnderman.class)
 			{
-				if (event.getEntity().worldObj.getBiomeGenForCoords(event.getEntity().getPosition()) instanceof BiomeEnd && rand.nextInt(100) < Config.babyEndermanEndRate)
+				if (event.getEntity().worldObj.provider.getDimensionType() == DimensionType.THE_END/*getBiomeGenForCoords(event.getEntity().getPosition()) instanceof BiomeEnd*/ && rand.nextInt(100) < Config.babyEndermanEndRate)
 				{
 					this.spawnEntity(EntityBabyEnderman.class, event.getEntity());
 					event.getEntity().setDead();
 				}
-				else if (!(event.getEntity().worldObj.getBiomeGenForCoords(event.getEntity().getPosition()) instanceof BiomeEnd) && rand.nextInt(100) < Config.babyEndermanRate)
+				else if (event.getEntity().worldObj.provider.getDimensionType() != DimensionType.THE_END && rand.nextInt(100) < Config.babyEndermanRate)
 				{
 					this.spawnEntity(EntityBabyEnderman.class, event.getEntity());
 					event.getEntity().setDead();
@@ -259,7 +251,7 @@ public class BabyReplaceEvent
 				if (rand.nextInt(100) < Config.babyWitchRate)
 				{
 					this.spawnEntity(EntityBabyWitch.class, event.getEntity());
-					EntityLiving entityToSpawn = (EntityLiving) EntityList.createEntityByName("babymobs.babyOcelot", event.getEntity().worldObj);
+					EntityLiving entityToSpawn = new EntityBabyOcelot(event.getEntity().worldObj);//(EntityLiving) EntityList.createEntityByName("babymobs.babyOcelot", event.getEntity().worldObj);
 					entityToSpawn.setLocationAndAngles(event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ,  MathHelper.wrapDegrees(event.getEntity().worldObj.rand.nextFloat() * 360.0F), 0.5F);
 					event.getEntity().worldObj.spawnEntityInWorld(entityToSpawn);
 					entityToSpawn.playLivingSound();
@@ -268,7 +260,7 @@ public class BabyReplaceEvent
 			}
 			else if (event.getEntity().getClass() == EntityBabyWitch.class)
 			{
-				EntityLiving entityToSpawn = (EntityLiving) EntityList.createEntityByName("babymobs.babyOcelot", event.getEntity().worldObj);
+				EntityLiving entityToSpawn = new EntityBabyOcelot(event.getEntity().worldObj);//(EntityLiving) EntityList.createEntityByName("babymobs.babyOcelot", event.getEntity().worldObj);
 				entityToSpawn.setLocationAndAngles(event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ,  MathHelper.wrapDegrees(event.getEntity().worldObj.rand.nextFloat() * 360.0F), 0.5F);
 				event.getEntity().worldObj.spawnEntityInWorld(entityToSpawn);
 				entityToSpawn.playLivingSound();
@@ -340,7 +332,7 @@ public class BabyReplaceEvent
 			entityToSpawn.setUniqueId(UUID.randomUUID());
 			world.spawnEntityInWorld(entityToSpawn);
 		} 
-		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException| NoSuchMethodException | SecurityException e) 
+		catch (Exception e) 
 		{
 			System.out.println("Baby Mobs has encountered an error. Please report this to the mod creator:");
 			e.printStackTrace();

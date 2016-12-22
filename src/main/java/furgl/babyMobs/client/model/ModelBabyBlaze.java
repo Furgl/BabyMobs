@@ -18,8 +18,8 @@ public class ModelBabyBlaze extends ModelBlaze
     public ModelBabyBlaze()
     {
     	super();
-    	this.blazeSticks = (ModelRenderer[]) ReflectionHelper.getPrivateValue(ModelBlaze.class, this, 0);
-    	this.blazeHead = (ModelRenderer) ReflectionHelper.getPrivateValue(ModelBlaze.class, this, 1);
+    	this.blazeSticks = (ModelRenderer[]) ReflectionHelper.getPrivateValue(ModelBlaze.class, this, 0); //blazeSticks
+    	this.blazeHead = (ModelRenderer) ReflectionHelper.getPrivateValue(ModelBlaze.class, this, 1); //blazeHead
     }
 
     /**

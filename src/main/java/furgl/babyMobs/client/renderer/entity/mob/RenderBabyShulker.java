@@ -7,18 +7,16 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderShulker;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderBabyShulker extends RenderShulker
 {
-	private static final ResourceLocation field_188342_a = new ResourceLocation("textures/entity/shulker/endergolem.png");
-
-	public RenderBabyShulker(RenderManager renderManager, ModelBabyShulker model)
+	public RenderBabyShulker(RenderManager renderManager)
 	{
-		super(renderManager, model);
+		super(renderManager);
+		this.mainModel = new ModelBabyShulker();
 		for (LayerRenderer layer : this.layerRenderers) {
 			if (layer.getClass().getSimpleName().equals("HeadLayer"))
 			{
@@ -74,7 +72,7 @@ public class RenderBabyShulker extends RenderShulker
 			ModelRenderer modelrenderer = ((ModelBabyShulker)RenderBabyShulker.this.getMainModel()).head;
 			modelrenderer.rotateAngleY = netHeadYaw * 0.017453292F;
 			modelrenderer.rotateAngleX = headPitch * 0.017453292F;
-			RenderBabyShulker.this.bindTexture(RenderBabyShulker.field_188342_a);
+            RenderBabyShulker.this.bindTexture(RenderShulker.SHULKER_ENDERGOLEM_TEXTURE[entitylivingbaseIn.func_190769_dn().getMetadata()]);
 
 			float f6 = 2F;
 			GlStateManager.scale(1.5F / f6, 1.5F / f6, 1.5F / f6);

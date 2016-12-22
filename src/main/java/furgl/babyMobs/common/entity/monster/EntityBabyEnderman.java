@@ -2,10 +2,11 @@ package furgl.babyMobs.common.entity.monster;
 
 import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.config.Config;
+import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
-import furgl.babyMobs.common.item.ModItems;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
@@ -61,7 +62,7 @@ public class EntityBabyEnderman extends EntityEnderman
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target)
 	{
-		return new ItemStack(ModItems.baby_enderman_egg);
+		return ModEntities.getSpawnEgg(this.getClass());
 	}
 
 	//TODO used in beam
@@ -113,7 +114,7 @@ public class EntityBabyEnderman extends EntityEnderman
      */
     private boolean shouldAttackPlayer(EntityPlayer player)
     {
-        ItemStack itemstack = player.inventory.armorInventory[3];
+    	ItemStack itemstack = (ItemStack)player.inventory.armorInventory.get(3);
 
         if (itemstack != null && itemstack.getItem() == Item.getItemFromBlock(Blocks.PUMPKIN))
         {
@@ -187,7 +188,7 @@ public class EntityBabyEnderman extends EntityEnderman
 				this.motionX = 0;
 				this.motionZ = 0;
 				this.setAIMoveSpeed(0);
-				this.moveEntity(0, 0, 0);
+				this.moveEntity(MoverType.SELF, 0, 0, 0);
 				if (this.getTargetedEntity() instanceof EntityPlayer && !(this.getTargetedEntity() instanceof FakePlayer))
 				{
 					this.getLookHelper().setLookPositionWithEntity(this.getTargetedEntity(), 90.0F, 90.0F);

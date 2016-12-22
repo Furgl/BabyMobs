@@ -1,4 +1,4 @@
-package furgl.babyMobs.common.event;
+/*package furgl.babyMobs.common.event;
 
 import java.lang.reflect.Method;
 
@@ -15,7 +15,7 @@ public class InteractHorseEvent
 {
 	@SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
 	public void onEvent(EntityInteract event) {
-		if (/*!event.getTarget().worldObj.isRemote && */event.getTarget() instanceof EntityHorse && ((EntityHorse)event.getTarget()).getType().isUndead() && event.getItemStack() != null) 
+		if (!event.getTarget().worldObj.isRemote && event.getTarget() instanceof EntityHorse && ((EntityHorse)event.getTarget()).getType().isUndead() && event.getItemStack() != null) 
 		{
 			ItemStack stack = event.getItemStack();
 			EntityHorse horse = (EntityHorse) event.getTarget();
@@ -116,3 +116,4 @@ public class InteractHorseEvent
 		}
 	}
 }
+*/

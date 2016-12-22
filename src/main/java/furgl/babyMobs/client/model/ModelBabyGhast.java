@@ -17,8 +17,8 @@ public class ModelBabyGhast extends ModelGhast
     public ModelBabyGhast()
     {
         super();
-        this.body = (ModelRenderer) ReflectionHelper.getPrivateValue(ModelGhast.class, this, 0);
-        this.tentacles = (ModelRenderer[]) ReflectionHelper.getPrivateValue(ModelGhast.class, this, 1);
+        this.body = (ModelRenderer) ReflectionHelper.getPrivateValue(ModelGhast.class, this, 0); //body
+        this.tentacles = (ModelRenderer[]) ReflectionHelper.getPrivateValue(ModelGhast.class, this, 1); //tentacles
     }
 
     @Override

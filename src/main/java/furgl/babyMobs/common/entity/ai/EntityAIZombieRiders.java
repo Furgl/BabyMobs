@@ -1,4 +1,4 @@
-package furgl.babyMobs.common.entity.ai;
+/*package furgl.babyMobs.common.entity.ai;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.IEntityLivingData;
@@ -78,3 +78,4 @@ public class EntityAIZombieRiders extends EntityAISkeletonRiders
 		return entityzombie;
 	}
 }
+*/

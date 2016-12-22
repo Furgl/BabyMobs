@@ -101,11 +101,12 @@ public class EntityZombieChicken extends EntityChicken
     }
 	
 	@Override
-	public boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack)
+	public boolean processInteract(EntityPlayer player, EnumHand hand)
 	{
+		ItemStack stack = player.getHeldItem(hand);
 		if (stack != null && stack.getItem() == ModItems.golden_bread && stack.getMetadata() == 0 && this.isPotionActive(MobEffects.WEAKNESS)) {
 			if (!player.capabilities.isCreativeMode)
-				--stack.stackSize;
+				stack.func_190918_g(1);
 			if (!this.worldObj.isRemote)
 				this.startConversion(this.rand.nextInt(1000) + 200);
 			return true;

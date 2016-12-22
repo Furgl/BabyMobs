@@ -1,4 +1,4 @@
-package furgl.babyMobs.common.entity.ai;
+/*package furgl.babyMobs.common.entity.ai;
 
 import java.util.List;
 import java.util.Random;
@@ -19,9 +19,9 @@ public class EntityAIUndeadHorseMate extends EntityAIMate
 	private EntityHorse theAnimal;
 	private World theWorld;
 	private EntityAnimal targetMate;
-	/** Delay preventing a baby from spawning immediately when two mate-able animals find each other. */
+	*//** Delay preventing a baby from spawning immediately when two mate-able animals find each other. *//*
 	int spawnBabyDelay;
-    /** The speed the creature moves at during mating behavior. */
+    *//** The speed the creature moves at during mating behavior. *//*
     double moveSpeed;
 
 	public EntityAIUndeadHorseMate(EntityAnimal animal, double speedIn) 
@@ -80,7 +80,7 @@ public class EntityAIUndeadHorseMate extends EntityAIMate
 
 		for (EntityAnimal entityanimal1 : list)
 		{
-			if (this./*theAnimal.*/canMateWith(entityanimal1) && this.theAnimal.getDistanceSqToEntity(entityanimal1) < d0)
+			if (this.theAnimal.canMateWith(entityanimal1) && this.theAnimal.getDistanceSqToEntity(entityanimal1) < d0)
 			{
 				entityanimal = entityanimal1;
 				d0 = this.theAnimal.getDistanceSqToEntity(entityanimal1);
@@ -104,7 +104,7 @@ public class EntityAIUndeadHorseMate extends EntityAIMate
 		{
 			EntityHorse entityhorse = (EntityHorse)otherAnimal;
 
-			if (this./*theAnimal.*/canMate(theAnimal) && this/*entityhorse*/.canMate(entityhorse))
+			if (this.theAnimal.canMate(theAnimal) && thisentityhorse.canMate(entityhorse))
 			{
 				HorseType horsearmortype = this.theAnimal.getType();
 				HorseType horsearmortype1 = entityhorse.getType();
@@ -119,12 +119,12 @@ public class EntityAIUndeadHorseMate extends EntityAIMate
 
 	private boolean canMate(EntityHorse horse)
 	{
-		return !horse.isBeingRidden() && !horse.isRiding() && horse.isTame() && horse.isAdultHorse()/* && horse.getType().canMate()*/ && horse.getHealth() >= horse.getMaxHealth() && horse.isInLove();
+		return !horse.isBeingRidden() && !horse.isRiding() && horse.isTame() && horse.isAdultHorse() && horse.getType().canMate() && horse.getHealth() >= horse.getMaxHealth() && horse.isInLove();
 	}
 	
-	/**
+	*//**
      * Spawns a baby animal of the same type.
-     */
+     *//*
     private void spawnBaby()
     {
         EntityAgeable entityageable = this.theAnimal.createChild(this.targetMate);
@@ -142,10 +142,10 @@ public class EntityAIUndeadHorseMate extends EntityAIMate
             {
                 entityplayer.addStat(StatList.ANIMALS_BRED);
 
-                /*if (this.theAnimal instanceof EntityCow)
+                if (this.theAnimal instanceof EntityCow)
                 {
                     entityplayer.addStat(AchievementList.breedCow);
-                }*/
+                }
             }
 
             this.theAnimal.setGrowingAge(6000);
@@ -175,3 +175,4 @@ public class EntityAIUndeadHorseMate extends EntityAIMate
         }
     }
 }
+*/

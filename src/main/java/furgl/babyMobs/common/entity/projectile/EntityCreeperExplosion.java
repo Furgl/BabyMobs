@@ -2,6 +2,7 @@ package furgl.babyMobs.common.entity.projectile;
 
 import furgl.babyMobs.common.BabyMobs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.SoundEvents;
@@ -32,7 +33,7 @@ public class EntityCreeperExplosion extends EntityThrowable
 			this.setDead();
 
 		this.motionY -= 0.03D;
-		this.moveEntity(this.motionX, this.motionY, this.motionZ);
+		this.moveEntity(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 		this.motionX *= 0.9990000128746033D;
 		this.motionY *= 0.9990000128746033D;
 		this.motionZ *= 0.9990000128746033D;

@@ -2,6 +2,7 @@ package furgl.babyMobs.common.entity.monster;
 
 import furgl.babyMobs.common.BabyMobs;
 import net.minecraft.block.BlockDragonEgg;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityDragonPart;
 import net.minecraft.init.Blocks;
@@ -298,7 +299,7 @@ public class EntityBabyDragon extends EntityDragon
 				float f8 = 0.06F;
 				this.moveRelative(0.0F, -1.0F, f8 * (f5 * f7 + (1.0F - f7)));
 
-				this.moveEntity(this.motionX * 0.2D, this.motionY * 0.2D, this.motionZ * 0.2D); //TODO slow
+				this.moveEntity(MoverType.SELF, this.motionX * 0.2D, this.motionY * 0.2D, this.motionZ * 0.2D); //TODO slow
 
 				Vec3d vec32 = (new Vec3d(this.motionX, this.motionY, this.motionZ)).normalize();
 				float f9 = ((float)vec32.dotProduct(vec31) + 1.0F) / 2.0F;

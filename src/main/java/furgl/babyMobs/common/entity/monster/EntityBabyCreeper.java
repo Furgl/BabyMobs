@@ -2,10 +2,10 @@ package furgl.babyMobs.common.entity.monster;
 
 import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.config.Config;
+import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
 import furgl.babyMobs.common.entity.projectile.EntityCreeperExplosion;
-import furgl.babyMobs.common.item.ModItems;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -50,7 +50,7 @@ public class EntityBabyCreeper extends EntityCreeper
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target)
 	{
-		return new ItemStack(ModItems.baby_creeper_egg);
+		return ModEntities.getSpawnEgg(this.getClass());
 	}
 
 	@Override
@@ -74,8 +74,8 @@ public class EntityBabyCreeper extends EntityCreeper
 		{
 			if (Config.useSpecialAbilities)
 			{
-				int ignitedTime = (int) ReflectionHelper.getPrivateValue(EntityCreeper.class, this, 4);
-				int fuse = (int) ReflectionHelper.getPrivateValue(EntityCreeper.class, this, 5);
+				int ignitedTime = ReflectionHelper.getPrivateValue(EntityCreeper.class, this, 4); //timeSinceIgnited
+				int fuse = ReflectionHelper.getPrivateValue(EntityCreeper.class, this, 5); //fuseTime
 				
 				if (rand.nextInt(20)==0 && this.worldObj.isRemote)
 				{
@@ -103,7 +103,7 @@ public class EntityBabyCreeper extends EntityCreeper
 	{
 		if (!this.worldObj.isRemote)
 		{
-			int ignitedTime = (int) ReflectionHelper.getPrivateValue(EntityCreeper.class, this, 4);
+			int ignitedTime = ReflectionHelper.getPrivateValue(EntityCreeper.class, this, 4); //timeSinceIgnited
 			boolean flag = this.worldObj.getGameRules().getBoolean("mobGriefing");
 			float f = this.getPowered() ? 2.0F : 1.0F;
 			this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, this.explosionRadius * f, flag);

@@ -19,8 +19,8 @@ public class ModelBabySquid extends ModelSquid
 	public ModelBabySquid()
 	{
 		super();
-		this.squidBody = (ModelRenderer) ReflectionHelper.getPrivateValue(ModelSquid.class, this, 0);
-		this.squidTentacles = (ModelRenderer[]) ReflectionHelper.getPrivateValue(ModelSquid.class, this, 1);
+		this.squidBody = (ModelRenderer) ReflectionHelper.getPrivateValue(ModelSquid.class, this, 0); //squidBody
+		this.squidTentacles = (ModelRenderer[]) ReflectionHelper.getPrivateValue(ModelSquid.class, this, 1); //squidTentacles
 	}
 
 	@Override

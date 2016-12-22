@@ -23,18 +23,16 @@ public class ModBlocks
 		registerRender(disappearingWeb);
 	}
 
-	@SuppressWarnings("deprecation")
 	public static Block registerBlockWithTab(final Block block, final String unlocalizedName) {
 		block.setUnlocalizedName(unlocalizedName);
 		block.setCreativeTab(BabyMobs.tab);
-		GameRegistry.registerBlock(block, unlocalizedName);
+		GameRegistry.register(block.setRegistryName(unlocalizedName));
 		return block;
 	}
 
-	@SuppressWarnings("deprecation")
 	public static Block registerBlockWithoutTab(final Block block, final String unlocalizedName) {
 		block.setUnlocalizedName(unlocalizedName);
-		GameRegistry.registerBlock(block, unlocalizedName);
+		GameRegistry.register(block.setRegistryName(unlocalizedName));
 		return block;
 	}
 

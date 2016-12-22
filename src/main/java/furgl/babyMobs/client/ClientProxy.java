@@ -1,7 +1,5 @@
 package furgl.babyMobs.client;
 
-import furgl.babyMobs.client.model.ModelBabyShulker;
-import furgl.babyMobs.client.model.ModelBabySquid;
 import furgl.babyMobs.client.particle.EntityBlazeFlamethrowerFX;
 import furgl.babyMobs.client.particle.EntityCustomParticle;
 import furgl.babyMobs.client.particle.EntityDragonParticlesFX;
@@ -20,6 +18,7 @@ import furgl.babyMobs.client.renderer.entity.mob.RenderBabyShulker;
 import furgl.babyMobs.client.renderer.entity.mob.RenderBabySkeleton;
 import furgl.babyMobs.client.renderer.entity.mob.RenderBabySnowMan;
 import furgl.babyMobs.client.renderer.entity.mob.RenderBabySpider;
+import furgl.babyMobs.client.renderer.entity.mob.RenderBabySquid;
 import furgl.babyMobs.client.renderer.entity.mob.RenderBabyWitch;
 import furgl.babyMobs.client.renderer.entity.mob.RenderBabyWither;
 import furgl.babyMobs.client.renderer.entity.mob.RenderBabyWitherSkeleton;
@@ -60,15 +59,11 @@ import furgl.babyMobs.common.entity.projectile.EntityWitherWitherSkull;
 import furgl.babyMobs.common.item.ModItems;
 import furgl.babyMobs.util.EntitySpawner;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelChicken;
-import net.minecraft.client.model.ModelOcelot;
-import net.minecraft.client.model.ModelPig;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.entity.RenderFireball;
 import net.minecraft.client.renderer.entity.RenderPigZombie;
 import net.minecraft.client.renderer.entity.RenderShulkerBullet;
 import net.minecraft.client.renderer.entity.RenderSnowball;
-import net.minecraft.client.renderer.entity.RenderSquid;
 import net.minecraft.client.renderer.entity.RenderZombie;
 import net.minecraft.client.renderer.tileentity.RenderWitherSkull;
 import net.minecraft.init.Items;
@@ -79,11 +74,21 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 public class ClientProxy extends CommonProxy
 {	
 	@Override
-	public void registerRenders()
-	{
+	public void preInit() {
+		super.preInit();
+	}
+	
+	@Override
+	public void init() {
+		super.init();
 		registerEntityRenders();
 		ModItems.registerRenders();
 		ModBlocks.registerRenders();
+	}
+	
+	@Override
+	public void postInit() {
+		super.postInit();
 	}
 	
 	@Override
@@ -155,6 +160,15 @@ public class ClientProxy extends CommonProxy
 	@SuppressWarnings("deprecation")
 	private void registerEntityRenders() 
 	{
+		//TODO figure out how to use IRenderFactory method (neither of these two work)
+		/*RenderingRegistry.registerEntityRenderingHandler(EntityBabySpider.class, new IRenderFactory() {
+			@Override
+			public Render createRenderFor(RenderManager manager) {
+				return new RenderBabySpider(manager);
+			}
+		});*/
+		//RenderingRegistry.registerEntityRenderingHandler(EntityBabySpider.class, (RenderBabySpider::new));
+		
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabySpider.class, new RenderBabySpider(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabySkeleton.class, new RenderBabySkeleton(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabyCreeper.class, new RenderBabyCreeper(Minecraft.getMinecraft().getRenderManager()));
@@ -163,7 +177,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabyBlaze.class, new RenderBabyBlaze(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabyWitch.class, new RenderBabyWitch(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabyGuardian.class, new RenderBabyGuardian(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabySquid.class, new RenderSquid(Minecraft.getMinecraft().getRenderManager(), new ModelBabySquid(), 0));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabySquid.class, new RenderBabySquid(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabyCaveSpider.class, new RenderBabyCaveSpider(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabyZombie.class, new RenderZombie(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabyPigZombie.class, new RenderPigZombie(Minecraft.getMinecraft().getRenderManager()));
@@ -172,10 +186,10 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabyIronGolem.class, new RenderBabyIronGolem(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabyWither.class, new RenderBabyWither(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityBabyDragon.class, new RenderBabyDragon(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyOcelot.class, new RenderBabyOcelot(Minecraft.getMinecraft().getRenderManager(), new ModelOcelot(), 0));
-		RenderingRegistry.registerEntityRenderingHandler(EntityZombieChicken.class, new RenderZombieChicken(Minecraft.getMinecraft().getRenderManager(), new ModelChicken(), 0));
-		RenderingRegistry.registerEntityRenderingHandler(EntityZombiePig.class, new RenderZombiePig(Minecraft.getMinecraft().getRenderManager(), new ModelPig(), 0));
-		RenderingRegistry.registerEntityRenderingHandler(EntityBabyShulker.class, new RenderBabyShulker(Minecraft.getMinecraft().getRenderManager(), new ModelBabyShulker()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyOcelot.class, new RenderBabyOcelot(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityZombieChicken.class, new RenderZombieChicken(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityZombiePig.class, new RenderZombiePig(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBabyShulker.class, new RenderBabyShulker(Minecraft.getMinecraft().getRenderManager()));
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityCaveSpiderVenom.class, new RenderSnowball(Minecraft.getMinecraft().getRenderManager(), ModItems.cave_spider_venom, Minecraft.getMinecraft().getRenderItem()));
 		RenderingRegistry.registerEntityRenderingHandler(EntitySnowmanSnowball.class, new RenderSnowball(Minecraft.getMinecraft().getRenderManager(), Items.SNOWBALL, Minecraft.getMinecraft().getRenderItem()));

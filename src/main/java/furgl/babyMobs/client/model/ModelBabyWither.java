@@ -18,7 +18,7 @@ public class ModelBabyWither extends ModelWither
     public ModelBabyWither(float p_i46302_1_)
     {
         super(p_i46302_1_);
-        this.field_82905_a = (ModelRenderer[]) ReflectionHelper.getPrivateValue(ModelWither.class, this, 0);
+        this.field_82905_a = (ModelRenderer[]) ReflectionHelper.getPrivateValue(ModelWither.class, this, 0); //upperBodyParts
         this.field_82905_a[0] = new ModelRenderer(this, 0, 16);
         this.field_82904_b = new ModelRenderer[1];
         this.field_82904_b[0] = new ModelRenderer(this, 0, 0);

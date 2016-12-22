@@ -2,8 +2,8 @@ package furgl.babyMobs.common.entity.monster;
 
 import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.config.Config;
+import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.projectile.EntityCaveSpiderVenom;
-import furgl.babyMobs.common.item.ModItems;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCaveSpider;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,7 +48,7 @@ public class EntityBabyCaveSpider extends EntityCaveSpider
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target)
 	{
-		return new ItemStack(ModItems.baby_cave_spider_egg);
+		return ModEntities.getSpawnEgg(this.getClass());
 	}
 
 	@Override

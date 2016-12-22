@@ -88,7 +88,7 @@ public class BlockPatternEvent
 					for (int l = 0; l < babyWitherPattern.getThumbLength(); ++l)
 					{
 						BlockWorldState blockworldstate2 = patternhelper.translateOffset(k, l, 0);
-						event.getWorld().notifyNeighborsRespectDebug(blockworldstate2.getPos(), Blocks.AIR);
+						event.getWorld().notifyNeighborsRespectDebug(blockworldstate2.getPos(), Blocks.AIR, false);
 					}
 				}
 			}
@@ -114,7 +114,7 @@ public class BlockPatternEvent
 			for (int j = 0; j < babySnowmanPattern.getThumbLength(); ++j)
 			{
 				BlockWorldState blockworldstate1 = patternhelper.translateOffset(0, j, 0);
-				event.getWorld().notifyNeighborsRespectDebug(blockworldstate1.getPos(), Blocks.AIR);
+				event.getWorld().notifyNeighborsRespectDebug(blockworldstate1.getPos(), Blocks.AIR, false);
 			}
 		}
 		else if ((patternhelper = babyIronGolemPattern.match(event.getWorld(), event.getPos())) != null && event.getWorld().getBlockState(event.getPos().north().down()).getBlock() != Blocks.IRON_BLOCK && event.getWorld().getBlockState(event.getPos().south().down()).getBlock() != Blocks.IRON_BLOCK && event.getWorld().getBlockState(event.getPos().east().down()).getBlock() != Blocks.IRON_BLOCK && event.getWorld().getBlockState(event.getPos().west().down()).getBlock() != Blocks.IRON_BLOCK)
@@ -143,7 +143,7 @@ public class BlockPatternEvent
 				for (int l = 0; l < babyIronGolemPattern.getThumbLength(); ++l)
 				{
 					BlockWorldState blockworldstate2 = patternhelper.translateOffset(j, l, 0);
-					event.getWorld().notifyNeighborsRespectDebug(blockworldstate2.getPos(), Blocks.AIR);
+					event.getWorld().notifyNeighborsRespectDebug(blockworldstate2.getPos(), Blocks.AIR, false);
 				}
 			}
 		}

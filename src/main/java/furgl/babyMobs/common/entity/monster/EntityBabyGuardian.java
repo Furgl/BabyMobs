@@ -2,9 +2,9 @@ package furgl.babyMobs.common.entity.monster;
 
 import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.config.Config;
+import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
-import furgl.babyMobs.common.item.ModItems;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityGuardian;
@@ -45,7 +45,7 @@ public class EntityBabyGuardian extends EntityGuardian
 	
 	public boolean hasTargetedEntity()
     {
-		DataParameter<Integer> dataParam = (DataParameter<Integer>) ReflectionHelper.getPrivateValue(EntityGuardian.class, this, 1);
+		DataParameter<Integer> dataParam = (DataParameter<Integer>) ReflectionHelper.getPrivateValue(EntityGuardian.class, this, 1); //TARGET_ENTITY
         return this.dataManager.get(dataParam) != 0;
     }
 
@@ -58,7 +58,7 @@ public class EntityBabyGuardian extends EntityGuardian
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target)
 	{
-		return new ItemStack(ModItems.baby_guardian_egg);
+		return ModEntities.getSpawnEgg(this.getClass());
 	}
 
 	@Override

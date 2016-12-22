@@ -10,6 +10,7 @@ import furgl.babyMobs.common.entity.monster.EntityZombieChicken;
 import furgl.babyMobs.common.entity.monster.EntityZombiePig;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
@@ -37,10 +38,10 @@ public class AttackEvent
 		}//convert Zombie
 		else if (!event.getEntity().worldObj.isRemote && event.getSource().getEntity() instanceof EntityIronGolem && event.getEntityLiving() instanceof EntityZombie) {
 			EntityZombie zombie = (EntityZombie) event.getEntityLiving();
-			if (Config.useSpecialAbilities && zombie.isVillager() && !zombie.isConverting()) {
+			if (Config.useSpecialAbilities && zombie instanceof EntityZombieVillager && !((EntityZombieVillager) zombie).isConverting()) {
 				zombie.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 100, 0));
 				try {
-					Method method = ReflectionHelper.findMethod(EntityZombie.class, zombie, new String[] {"startConversion", "func_82228_a"}, int.class);//EntityZombie.class.getDeclaredMethod("startConversion", int.class);
+					Method method = ReflectionHelper.findMethod(EntityZombieVillager.class, (EntityZombieVillager) zombie, new String[] {"startConverting", "func_190734_b"}, int.class);//EntityZombie.class.getDeclaredMethod("startConversion", int.class);
 					method.setAccessible(true);
 					method.invoke(zombie, 200);
 				} catch(Exception e) {
@@ -71,7 +72,7 @@ public class AttackEvent
 				event.setCanceled(true);
 			}
 		}
-		else if (!event.getEntity().worldObj.isRemote && event.getSource().getEntity() instanceof EntityZombie && ((EntityZombie)event.getSource().getEntity()).isConverting())
+		else if (!event.getEntity().worldObj.isRemote && event.getSource().getEntity() instanceof EntityZombieVillager && ((EntityZombieVillager)event.getSource().getEntity()).isConverting())
 			event.setCanceled(true);
 		else if (!event.getEntity().worldObj.isRemote && event.getSource().getEntity() instanceof EntityZombieChicken && ((EntityZombieChicken)event.getSource().getEntity()).isConverting())
 			event.setCanceled(true);

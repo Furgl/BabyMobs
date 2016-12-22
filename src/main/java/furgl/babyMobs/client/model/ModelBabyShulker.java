@@ -1,24 +1,22 @@
 package furgl.babyMobs.client.model;
 
-import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.ModelShulker;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelBabyShulker extends ModelShulker
 {
-	private ModelRenderer field_187067_b; //bottom
-	private ModelRenderer field_187068_c; //top
+	//private ModelRenderer base; //bottom
+	//private ModelRenderer lid; //top
 
 	public ModelBabyShulker()
 	{
 		super();
-		field_187067_b = ReflectionHelper.getPrivateValue(ModelShulker.class, this, 0);
-		field_187068_c = ReflectionHelper.getPrivateValue(ModelShulker.class, this, 1);
+		//base = ReflectionHelper.getPrivateValue(ModelShulker.class, this, 0);
+		//lid = ReflectionHelper.getPrivateValue(ModelShulker.class, this, 1);
 	}
 	
 	public void render(Entity entityIn, float par2, float limbSwing, float ageInTicks, float netHeadYaw, float headPitch, float scale)
@@ -36,8 +34,8 @@ public class ModelBabyShulker extends ModelShulker
 		GlStateManager.translate(0.0F, 24.0F * scale, 0.0F);
 
 		//this.field_187066_a.render(scale); //head - in RenderBabyShulker
-		this.field_187067_b.render(scale); //bottom
-		this.field_187068_c.render(scale); //top
+		this.base.render(scale); //bottom
+		this.lid.render(scale); //top
 
 		GlStateManager.popMatrix();
 	}

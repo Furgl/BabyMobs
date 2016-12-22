@@ -6,7 +6,6 @@ import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.item.projectile.ItemCaveSpiderVenom;
 import furgl.babyMobs.common.item.projectile.ItemCreeperExplosion;
 import furgl.babyMobs.common.item.projectile.ItemInvisible;
-import furgl.babyMobs.common.item.spawnEgg.ItemBabySpawnEgg;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -14,91 +13,39 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModItems 
 {
-	public static Item baby_spider_egg;
-	public static Item baby_skeleton_egg;
-	public static Item baby_creeper_egg;
-	public static Item baby_wither_skeleton_egg;
-	public static Item baby_enderman_egg;
-	public static Item baby_blaze_egg;
-	public static Item baby_witch_egg;
-	public static Item baby_guardian_egg;
-	public static Item baby_squid_egg;
-	public static Item baby_cave_spider_egg;
-	public static Item baby_zombie_egg;
-	public static Item baby_pig_zombie_egg;
-	public static Item baby_ghast_egg;
-	public static Item baby_snowman_egg;
-	public static Item baby_iron_golem_egg;
-	public static Item baby_wither_egg;
-	public static Item baby_shulker_egg;
-	
 	public static Item invisible;
 	public static Item cave_spider_venom;
 	public static Item creeper_explosion;
-	
+
 	public static Item golden_bread;
-	
+
 	public static ArrayList<Item> allItems;
-	public static ArrayList<ItemBabySpawnEgg> eggs;
 
-	public static void init() 
-	{
+	public static void init() {
 		allItems = new ArrayList<Item>();
-		eggs = new ArrayList<ItemBabySpawnEgg>();
 		
-		baby_spider_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babySpider"), "baby_spider_egg");
-		baby_skeleton_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babySkeleton"), "baby_skeleton_egg");
-		baby_creeper_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyCreeper"), "baby_creeper_egg");
-		baby_wither_skeleton_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyWitherSkeleton"), "baby_wither_skeleton_egg");
-		baby_enderman_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyEnderman"), "baby_enderman_egg");
-		baby_blaze_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyBlaze"), "baby_blaze_egg");
-		baby_witch_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyWitch"), "baby_witch_egg");
-		baby_guardian_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyGuardian"), "baby_guardian_egg");
-		baby_squid_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babySquid"), "baby_squid_egg");
-		baby_cave_spider_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyCaveSpider"), "baby_cave_spider_egg");
-		baby_zombie_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyZombie"), "baby_zombie_egg");
-		baby_pig_zombie_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyPigZombie"), "baby_pig_zombie_egg");
-		baby_ghast_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyGhast"), "baby_ghast_egg");
-		baby_snowman_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babySnowman"), "baby_snowman_egg");
-		baby_iron_golem_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyIronGolem"), "baby_iron_golem_egg");
-		baby_wither_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyWither"), "baby_wither_egg");
-		baby_shulker_egg = registerItemWithTab(new ItemBabySpawnEgg("babymobs.babyShulker"), "baby_shulker_egg");
+		invisible = registerItem(new ItemInvisible(), "invisible", false);
+		cave_spider_venom = registerItem(new ItemCaveSpiderVenom(), "cave_spider_venom", false);
+		creeper_explosion = registerItem(new ItemCreeperExplosion(), "creeper_explosion", false);
 
-		invisible = registerItemWithoutTab(new ItemInvisible(), "invisible");
-		cave_spider_venom = registerItemWithoutTab(new ItemCaveSpiderVenom(), "cave_spider_venom");
-		creeper_explosion = registerItemWithoutTab(new ItemCreeperExplosion(), "creeper_explosion");
-		
-		golden_bread = registerItemWithTab(new ItemGoldenBread(10, 1.2F, false), "golden_bread");
+		golden_bread = registerItem(new ItemGoldenBread(10, 1.2F, false), "golden_bread", true);
 	}
 
-	public static void registerRenders()
-	{
+	public static void registerRenders() {
 		for (Item item : allItems)
 			registerRender(item);
 	}
 
-	public static Item registerItemWithTab(final Item item, final String unlocalizedName) {
+	private static Item registerItem(final Item item, final String unlocalizedName, boolean addToTab) {
 		allItems.add(item);
-		if (item instanceof ItemBabySpawnEgg)
-			eggs.add((ItemBabySpawnEgg) item);
 		item.setUnlocalizedName(unlocalizedName);
-		item.setCreativeTab(BabyMobs.tab);
+		if (addToTab)
+			item.setCreativeTab(BabyMobs.tab);
 		GameRegistry.register(item.setRegistryName(unlocalizedName));
 		return item;
 	}
 
-	public static Item registerItemWithoutTab(final Item item, final String unlocalizedName) {
-		allItems.add(item);
-		if (item instanceof ItemBabySpawnEgg)
-			eggs.add((ItemBabySpawnEgg) item);
-		item.setUnlocalizedName(unlocalizedName);
-		GameRegistry.register(item.setRegistryName(unlocalizedName));
-		return item;
-	}
-
-	public static void registerRender(Item item)
-	{	
+	private static void registerRender(Item item) {
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, new ModelResourceLocation(BabyMobs.MODID+":" + item.getUnlocalizedName().substring(5), "inventory"));
 	}
 }
-

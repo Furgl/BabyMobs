@@ -20,7 +20,7 @@ public class ModelBabyGuardian extends ModelGuardian
 	public ModelBabyGuardian()
 	{
 		super();
-		this.guardianBody = (ModelRenderer) ReflectionHelper.getPrivateValue(ModelGuardian.class, this, 0);
+		this.guardianBody = (ModelRenderer) ReflectionHelper.getPrivateValue(ModelGuardian.class, this, 0); //guardianBody
 		this.guardianSpines = new ModelRenderer[12];
 		for (int i = 0; i < this.guardianSpines.length; ++i)
 		{

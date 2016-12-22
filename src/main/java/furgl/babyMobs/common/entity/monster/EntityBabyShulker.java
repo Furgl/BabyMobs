@@ -3,9 +3,9 @@ package furgl.babyMobs.common.entity.monster;
 import java.util.Iterator;
 
 import furgl.babyMobs.client.gui.achievements.Achievements;
+import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
 import furgl.babyMobs.common.entity.projectile.EntityBabyShulkerBullet;
-import furgl.babyMobs.common.item.ModItems;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -53,7 +53,7 @@ public class EntityBabyShulker extends EntityShulker
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target)
 	{
-		return new ItemStack(ModItems.baby_shulker_egg);
+		return ModEntities.getSpawnEgg(this.getClass());
 	}
 
 	@Override

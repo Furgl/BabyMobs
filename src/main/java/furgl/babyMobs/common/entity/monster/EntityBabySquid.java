@@ -2,8 +2,8 @@ package furgl.babyMobs.common.entity.monster;
 
 import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.config.Config;
+import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.projectile.EntitySquidInk;
-import furgl.babyMobs.common.item.ModItems;
 import furgl.babyMobs.util.EntitySpawner;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -45,7 +45,7 @@ public class EntityBabySquid extends EntitySquid
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target)
 	{
-		return new ItemStack(ModItems.baby_squid_egg);
+		return ModEntities.getSpawnEgg(this.getClass());
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class EntityBabySquid extends EntitySquid
 				entitySpawner.setRandVar(0.5D);
 				entitySpawner.run();
 				
-				ReflectionHelper.setPrivateValue(EntitySquid.class, this, 2.0F, 8);
+				ReflectionHelper.setPrivateValue(EntitySquid.class, this, 2.0F, 8); //randomMotionSpeed
 
 				this.squidRotation = (float) (Math.PI-1);
 				this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ENTITY_SLIME_ATTACK, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 8F, false);

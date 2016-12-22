@@ -3,8 +3,8 @@ package furgl.babyMobs.common.entity.monster;
 import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.config.Config;
+import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
-import furgl.babyMobs.common.item.ModItems;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -16,8 +16,7 @@ import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.SkeletonType;
+import net.minecraft.entity.monster.EntityWitherSkeleton;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -36,14 +35,13 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
-public class EntityBabyWitherSkeleton extends EntitySkeleton
+public class EntityBabyWitherSkeleton extends EntityWitherSkeleton
 {
 	public EntityBabyWitherSkeleton(World worldIn)
 	{
 		super(worldIn);
 		this.setSize(0.6F, 1.2F);
 		this.experienceValue = (int)(this.experienceValue * 2.5F);
-		this.func_189768_a(SkeletonType.WITHER);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
 		this.maxHurtResistantTime = 50;
 		this.targetTasks.addTask(1, new EntityAIBabyHurtByTarget(this, true, new Class[0]));
@@ -73,7 +71,7 @@ public class EntityBabyWitherSkeleton extends EntitySkeleton
 		//TODO skull drop
 		if (cause.getEntity() instanceof EntityPlayer)
 		{
-			int chance = 60 + 10*EnchantmentHelper.getLootingModifier((EntityLivingBase) cause.getEntity());
+			int chance = 30 + 10*EnchantmentHelper.getLootingModifier((EntityLivingBase) cause.getEntity());
 			if (this.rand.nextInt(100) <= chance)
 			{
 				this.entityDropItem(new ItemStack(Items.SKULL, 1, 1), 0.0F);
@@ -91,7 +89,7 @@ public class EntityBabyWitherSkeleton extends EntitySkeleton
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target)
 	{
-		return new ItemStack(ModItems.baby_wither_skeleton_egg);
+		return ModEntities.getSpawnEgg(this.getClass());
 	}
 
 	@Override
@@ -111,7 +109,7 @@ public class EntityBabyWitherSkeleton extends EntitySkeleton
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty)
     {
         super.setEquipmentBasedOnDifficulty(difficulty);
-        this.setHeldItem(EnumHand.MAIN_HAND, null);
+        this.setHeldItem(EnumHand.MAIN_HAND, ItemStack.field_190927_a);
     }
 	
 	//TODO on attack 
@@ -175,5 +173,3 @@ public class EntityBabyWitherSkeleton extends EntitySkeleton
 		return 0.9F;
 	}
 }
-
-

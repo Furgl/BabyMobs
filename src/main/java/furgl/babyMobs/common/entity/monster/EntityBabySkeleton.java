@@ -9,15 +9,14 @@ import com.google.common.collect.Sets;
 import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.config.Config;
+import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
-import furgl.babyMobs.common.item.ModItems;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.SkeletonType;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityTippedArrow;
@@ -81,7 +80,7 @@ public class EntityBabySkeleton extends EntitySkeleton
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target)
 	{
-		return new ItemStack(ModItems.baby_skeleton_egg);
+		return ModEntities.getSpawnEgg(this.getClass());
 	}
 
 	@Override
@@ -205,8 +204,8 @@ public class EntityBabySkeleton extends EntitySkeleton
 			entityarrow.setDamage(entityarrow.getDamage() + (double)i * 0.5D + 0.5D);
 		if (j > 0)
 			entityarrow.setKnockbackStrength(j);
-		if (EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FLAME, this) > 0 || this.func_189771_df() == SkeletonType.WITHER)
-			entityarrow.setFire(100);
+		//if (EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FLAME, this) > 0 || this.func_189771_df() == SkeletonType.WITHER)
+			//entityarrow.setFire(100);
 		this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 		this.worldObj.spawnEntityInWorld(entityarrow);
 		//end

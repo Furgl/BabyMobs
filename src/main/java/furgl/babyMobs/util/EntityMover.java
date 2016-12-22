@@ -2,6 +2,7 @@ package furgl.babyMobs.util;
 
 import furgl.babyMobs.client.particle.EntityCustomParticle;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MoverType;
 
 /**Moves Entity's or Particle's with custom movement.
  * Requires the Entity or Particle to have been spawned with EntitySpawner*/
@@ -74,7 +75,7 @@ public class EntityMover
 			}
 			break;
 		}
-		entity.moveEntity(entity.motionX, entity.motionY, entity.motionZ);	
+		entity.moveEntity(MoverType.SELF, entity.motionX, entity.motionY, entity.motionZ);	
 		return entityIterator;
 	}
 	

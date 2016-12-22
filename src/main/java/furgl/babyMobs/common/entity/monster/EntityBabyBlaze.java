@@ -3,10 +3,10 @@ package furgl.babyMobs.common.entity.monster;
 import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.config.Config;
+import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
 import furgl.babyMobs.common.entity.projectile.EntityBlazeFlamethrower;
-import furgl.babyMobs.common.item.ModItems;
 import furgl.babyMobs.util.EntitySpawner;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -54,7 +54,7 @@ public class EntityBabyBlaze extends EntityBlaze
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target)
 	{
-		return new ItemStack(ModItems.baby_blaze_egg);
+		return ModEntities.getSpawnEgg(this.getClass());
 	}
 
 	@Override

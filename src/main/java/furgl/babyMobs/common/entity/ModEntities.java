@@ -26,49 +26,81 @@ import furgl.babyMobs.common.entity.projectile.EntityBabyShulkerBullet;
 import furgl.babyMobs.common.entity.projectile.EntityBlazeFlamethrower;
 import furgl.babyMobs.common.entity.projectile.EntityCaveSpiderVenom;
 import furgl.babyMobs.common.entity.projectile.EntityCreeperExplosion;
-import furgl.babyMobs.common.entity.projectile.EntityGhastFireball;
 import furgl.babyMobs.common.entity.projectile.EntitySnowmanSnowball;
 import furgl.babyMobs.common.entity.projectile.EntitySquidInk;
 import furgl.babyMobs.common.entity.projectile.EntityWitherExplosion;
 import furgl.babyMobs.common.entity.projectile.EntityWitherSkeletonSmoke;
 import furgl.babyMobs.common.entity.projectile.EntityWitherWitherSkull;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 public class ModEntities 
 {
+	private static int id;
+	
     public static void registerEntities() 
-    {
-        int ID = 0;
-        EntityRegistry.registerModEntity(EntityBabySpider.class, "babySpider", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabySkeleton.class, "babySkeleton", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyCreeper.class, "babyCreeper", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyWitherSkeleton.class, "babyWitherSkeleton", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyEnderman.class, "babyEnderman", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyBlaze.class, "babyBlaze", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyWitch.class, "babyWitch", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyGuardian.class, "babyGuardian", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabySquid.class, "babySquid", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyCaveSpider.class, "babyCaveSpider", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyZombie.class, "babyZombie", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyPigZombie.class, "babyPigZombie", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyGhast.class, "babyGhast", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabySnowman.class, "babySnowman", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyIronGolem.class, "babyIronGolem", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyWither.class, "babyWither", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyDragon.class, "babyDragon", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyOcelot.class, "babyOcelot", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityZombieChicken.class, "zombieChicken", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityZombiePig.class, "zombiePig", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyShulker.class, "babyShulker", ID++, BabyMobs.instance, 64, 3, true);
-
-		EntityRegistry.registerModEntity(EntityCaveSpiderVenom.class, "caveSpiderVenom", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntitySnowmanSnowball.class, "snowmanSnowball", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBlazeFlamethrower.class, "blazeFlamethrower", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityCreeperExplosion.class, "creeperExplosion", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityWitherSkeletonSmoke.class, "witherSkeletonSmoke", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntitySquidInk.class, "squidInk", ID++, BabyMobs.instance, 64, 3, true);		EntityRegistry.registerModEntity(EntityGhastFireball.class, "ghastFireball", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityWitherWitherSkull.class, "witherWitherSkull", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityWitherExplosion.class, "witherExplosion", ID++, BabyMobs.instance, 64, 3, true);
-		EntityRegistry.registerModEntity(EntityBabyShulkerBullet.class, "babyShulkerBullet", ID++, BabyMobs.instance, 64, 3, true);
+    {	//primary and secondary colors copied from EntityList
+    	registerEntityWithSpawnEgg(EntityBabySpider.class, 3419431, 11013646);
+    	registerEntityWithSpawnEgg(EntityBabySkeleton.class, 12698049, 4802889);
+    	registerEntityWithSpawnEgg(EntityBabyCreeper.class, 894731, 0);
+    	registerEntityWithSpawnEgg(EntityBabyWitherSkeleton.class, 1315860, 4672845);
+    	registerEntityWithSpawnEgg(EntityBabyEnderman.class, 1447446, 0);
+    	registerEntityWithSpawnEgg(EntityBabyBlaze.class, 16167425, 16775294);
+    	registerEntityWithSpawnEgg(EntityBabyWitch.class, 3407872, 5349438);
+    	registerEntityWithSpawnEgg(EntityBabyGuardian.class, 5931634, 15826224);
+    	registerEntityWithSpawnEgg(EntityBabySquid.class, 2243405, 7375001);
+    	registerEntityWithSpawnEgg(EntityBabyCaveSpider.class, 803406, 11013646);
+    	registerEntityWithSpawnEgg(EntityBabyZombie.class, 44975, 7969893);
+    	registerEntityWithSpawnEgg(EntityBabyPigZombie.class, 15373203, 5009705);
+    	registerEntityWithSpawnEgg(EntityBabyGhast.class, 16382457, 12369084);
+    	registerEntityWithSpawnEgg(EntityBabySnowman.class, 16382457, 15826224);
+    	registerEntityWithSpawnEgg(EntityBabyIronGolem.class, 16382457, 7969893);
+    	registerEntityWithSpawnEgg(EntityBabyWither.class, 0, 12369084);
+    	registerEntityWithSpawnEgg(EntityBabyShulker.class, 9725844, 5060690);
+    	
+    	registerEntity(EntityBabyDragon.class);
+    	registerEntity(EntityBabyOcelot.class);
+    	registerEntity(EntityZombieChicken.class);
+    	registerEntity(EntityZombiePig.class);
+    	
+    	registerEntity(EntityCaveSpiderVenom.class);
+    	registerEntity(EntitySnowmanSnowball.class);
+    	registerEntity(EntityBlazeFlamethrower.class);
+    	registerEntity(EntityCreeperExplosion.class);
+    	registerEntity(EntityWitherSkeletonSmoke.class);
+    	registerEntity(EntitySquidInk.class);
+    	registerEntity(EntityWitherWitherSkull.class);
+    	registerEntity(EntityWitherExplosion.class);
+    	registerEntity(EntityBabyShulkerBullet.class);
     }
+    
+    /**Registers entity to unlocalizedName based on entity class (i.e. EntityBabySpider = babySpider)*/
+    private static void registerEntity(Class clazz) {
+    	String unlocalizedName = clazz.getSimpleName().replace("Entity", "").toLowerCase();   	
+    	ResourceLocation registryName = new ResourceLocation(BabyMobs.MODID, unlocalizedName);
+        EntityRegistry.registerModEntity(registryName, clazz, unlocalizedName, id++, BabyMobs.instance, 64, 3, true);
+    }
+    
+    /**Registers entity to unlocalizedName based on entity class (i.e. EntityBabySpider = babySpider) and gives it a spawn egg*/
+    private static void registerEntityWithSpawnEgg(Class clazz, int primary, int secondary) {
+    	String unlocalizedName = clazz.getSimpleName().replace("Entity", "").toLowerCase();   	
+    	ResourceLocation registryName = new ResourceLocation(BabyMobs.MODID, unlocalizedName);
+    	EntityRegistry.registerModEntity(registryName, clazz, unlocalizedName, id++, BabyMobs.instance, 64, 3, true, primary, secondary);
+    	BabyMobs.tab.eggs.add(getSpawnEgg(clazz));
+    }
+
+    /**Get spawn egg for given baby mob entity class*/
+	public static ItemStack getSpawnEgg(Class clazz) {
+		ItemStack stack = new ItemStack(Items.SPAWN_EGG);
+		NBTTagCompound nbt = new NBTTagCompound();    	
+		String unlocalizedName = clazz.getSimpleName().replace("Entity", "").toLowerCase();   	
+		nbt.setString("id", BabyMobs.MODID+":"+unlocalizedName);
+		NBTTagCompound nbt2 = new NBTTagCompound();
+		nbt2.setTag("EntityTag", nbt);
+		stack.setTagCompound(nbt2);
+		return stack;
+	}
 }

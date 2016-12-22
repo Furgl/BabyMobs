@@ -2,8 +2,8 @@ package furgl.babyMobs.common.entity.monster;
 
 import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.config.Config;
+import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
-import furgl.babyMobs.common.item.ModItems;
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockGrass;
 import net.minecraft.entity.Entity;
@@ -49,7 +49,7 @@ public class EntityBabyIronGolem extends EntityIronGolem
 	@Override
 	public ItemStack getPickedResult(RayTraceResult target)
 	{
-		return new ItemStack(ModItems.baby_iron_golem_egg);
+		return ModEntities.getSpawnEgg(this.getClass());
 	}
 
 	@Override

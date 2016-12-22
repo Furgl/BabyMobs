@@ -1,4 +1,4 @@
-package furgl.babyMobs.common.event;
+/*package furgl.babyMobs.common.event;
 
 import furgl.babyMobs.common.entity.ai.EntityAIZombieRiders;
 import net.minecraft.block.material.Material;
@@ -51,3 +51,4 @@ public class ZombieTrapEvent
 		}
 	}
 }
+*/

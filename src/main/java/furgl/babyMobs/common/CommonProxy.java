@@ -15,9 +15,15 @@ import net.minecraftforge.common.AchievementPage;
 
 public class CommonProxy 
 {	
-	public void registerRenders() { }
-	
-	public void registerAchievements() {
+	public void preInit() {}
+
+	public void init() {
+		registerAchievements();
+	}
+
+	public void postInit() {}
+		
+	private void registerAchievements() {
 		AchievementPage.registerAchievementPage(new AchievementPage("Baby Mobs", (Achievement[]) Achievements.achievements.toArray(new Achievement[Achievements.achievements.size()])));
 		
 		for (int i=0; i<Achievements.achievements.size(); i++)
