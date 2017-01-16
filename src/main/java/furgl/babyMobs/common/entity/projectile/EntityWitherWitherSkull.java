@@ -21,7 +21,7 @@ public class EntityWitherWitherSkull extends EntityWitherSkull
 	protected void onImpact(RayTraceResult mop)
 	{
 		super.onImpact(mop);
-		if (!this.worldObj.isRemote)
+		if (!this.worldObj.isRemote && this.shootingEntity != null)
 		{
 			for (int i=0; i<7; i++)
 			{
