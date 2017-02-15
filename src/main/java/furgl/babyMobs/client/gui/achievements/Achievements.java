@@ -14,7 +14,7 @@ public class Achievements
 	public static Achievement achievementWhyAreTheySoStrong;
 	public static Achievement achievementItsGettingHotInHere;
 	public static Achievement achievementLaserTag;
-	public static Achievement achievementItsMine;
+	public static Achievement achievementItsMine;  
 	public static Achievement achievementICantSee;
 	public static Achievement achievementBoomBaby;
 	public static Achievement achievementAFlowerForMe;
