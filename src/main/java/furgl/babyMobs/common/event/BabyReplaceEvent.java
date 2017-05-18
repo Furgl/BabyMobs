@@ -330,7 +330,7 @@ public class BabyReplaceEvent
 			entityToSpawn.readFromNBT(nbt);
 			entityToSpawn.setCustomNameTag(originalEntity.getCustomNameTag());
 			entityToSpawn.setUniqueId(UUID.randomUUID());
-			world.spawnEntity(entityToSpawn);
+			world.spawnEntity(entityToSpawn); // XXX
 		} 
 		catch (Exception e) 
 		{
@@ -339,19 +339,20 @@ public class BabyReplaceEvent
 		}
 
 		//Copy data from riders/ridden
+		// TODO change to just re-set riders, rather than kill and respawn
 		if (originalEntity.isBeingRidden() && !originalEntity.getRecursivePassengers().isEmpty())
 		{
 			Iterator it = originalEntity.getRecursivePassengers().iterator();
 			Entity entity = (Entity) it.next();
 			if (entity != riderToIgnore) {
-				Entity riddenByEntity = this.spawnEntity(entity.getClass(), entity, originalEntity);
+				Entity riddenByEntity = this.spawnEntity(entity.getClass(), entity, originalEntity); // XXX
 				riddenByEntity.startRiding(entityToSpawn);
 				entity.setDead();
 			}
 		}
 		if (originalEntity.getRidingEntity() != null && originalEntity.getRidingEntity() != riderToIgnore)
 		{
-			Entity ridingEntity = this.spawnEntity(originalEntity.getRidingEntity().getClass(), originalEntity.getRidingEntity(), originalEntity);
+			Entity ridingEntity = this.spawnEntity(originalEntity.getRidingEntity().getClass(), originalEntity.getRidingEntity(), originalEntity); // XXX
 			entityToSpawn.startRiding(ridingEntity);
 			originalEntity.getRidingEntity().setDead();
 		}
