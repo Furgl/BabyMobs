@@ -1,6 +1,5 @@
 package furgl.babyMobs.common.entity.monster;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
@@ -17,7 +16,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 
 public class EntityBabyIronGolem extends EntityIronGolem
 {
@@ -34,8 +32,8 @@ public class EntityBabyIronGolem extends EntityIronGolem
 	@Override
 	public void onDeath(DamageSource cause) //first achievement
     {
-		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
+//		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
+//			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
 
 		super.onDeath(cause);
     }
@@ -82,8 +80,8 @@ public class EntityBabyIronGolem extends EntityIronGolem
 		if (this.ticksExisted % 50 == 0)
 		{
 			EntityPlayer player = this.world.getClosestPlayerToEntity(this, 10D);
-			if (player != null)
-				player.addStat(Achievements.achievementAFlowerForMe);
+			//if (player != null)
+				//player.addStat(Achievements.achievementAFlowerForMe);
 		}
 		if (Config.useSpecialAbilities)
 			if (!this.world.isRemote && this.rand.nextInt(1000) == 0 && this.world.isAirBlock(new BlockPos(this)) && (this.world.getBlockState(new BlockPos(this).down()).getBlock() instanceof BlockGrass || this.world.getBlockState(new BlockPos(this).down()).getBlock() instanceof BlockDirt))

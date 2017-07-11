@@ -2,7 +2,6 @@ package furgl.babyMobs.common.entity.monster;
 
 import com.google.common.base.Predicate;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.ai.EntityAILeapAtTarget;
@@ -22,7 +21,6 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 
 public class EntityBabyOcelot extends EntityOcelot
 {
@@ -50,8 +48,8 @@ public class EntityBabyOcelot extends EntityOcelot
 	@Override
 	public void onDeath(DamageSource cause) //first achievement
 	{
-		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
+//		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
+//			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
 		super.onDeath(cause);
 	}
 

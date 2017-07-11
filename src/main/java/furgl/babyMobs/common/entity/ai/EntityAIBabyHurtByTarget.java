@@ -50,7 +50,6 @@ public class EntityAIBabyHurtByTarget extends EntityAITarget {
 	private boolean entityCallsForHelp;
 	/** Store the previous revengeTimer value */
 	private int revengeTimerOld;
-	@SuppressWarnings("rawtypes")
 	private final Class[] field_179447_c;
 	private EntityLivingBase target;
 	public EntityAIBabyHurtByTarget(EntityCreature entityCreature, boolean bool, Class<?> ... className)
@@ -68,7 +67,7 @@ public class EntityAIBabyHurtByTarget extends EntityAITarget {
 	public boolean shouldExecute()
 	{
 		int i = this.taskOwner.getRevengeTimer();
-		return i != this.revengeTimerOld && this.isSuitableTarget(this.taskOwner.getAITarget(), false);
+		return i != this.revengeTimerOld && this.isSuitableTarget(this.taskOwner.getAttackTarget(), false);
 	}
 
 	/**
@@ -79,7 +78,7 @@ public class EntityAIBabyHurtByTarget extends EntityAITarget {
 	{
 		if (!(this.taskOwner instanceof EntityBabyWitherSkeleton))
 		{
-			target = this.taskOwner.getAITarget();
+			target = this.taskOwner.getAttackTarget();
 			this.taskOwner.setAttackTarget(target);
 		}
 		this.revengeTimerOld = this.taskOwner.getRevengeTimer();
@@ -96,7 +95,7 @@ public class EntityAIBabyHurtByTarget extends EntityAITarget {
 			{
 				EntityCreature entitycreature = (EntityCreature)iterator.next();
 
-				if (this.taskOwner != entitycreature && entitycreature.getClass() == this.getParent(this.taskOwner) && !entitycreature.isOnSameTeam(this.taskOwner.getAITarget()))
+				if (this.taskOwner != entitycreature && entitycreature.getClass() == this.getParent(this.taskOwner) && !entitycreature.isOnSameTeam(this.taskOwner.getAttackTarget()))
 				{
 					boolean flag = false;
 					Class[] aclass = this.field_179447_c;
@@ -115,7 +114,7 @@ public class EntityAIBabyHurtByTarget extends EntityAITarget {
 
 					if (!flag)
 					{
-						this.func_179446_a(entitycreature, this.taskOwner.getAITarget());
+						this.func_179446_a(entitycreature, this.taskOwner.getAttackTarget());
 					}
 				}
 			}
