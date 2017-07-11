@@ -9,7 +9,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityIronGolem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -79,7 +78,7 @@ public class EntityBabyIronGolem extends EntityIronGolem
 		//TODO plant roses
 		if (this.ticksExisted % 50 == 0)
 		{
-			EntityPlayer player = this.world.getClosestPlayerToEntity(this, 10D);
+			//EntityPlayer player = this.world.getClosestPlayerToEntity(this, 10D);
 			//if (player != null)
 				//player.addStat(Achievements.achievementAFlowerForMe);
 		}

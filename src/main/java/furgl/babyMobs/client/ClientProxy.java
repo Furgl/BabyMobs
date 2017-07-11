@@ -76,12 +76,12 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void preInit() {
 		super.preInit();
+		registerEntityRenders();
 	}
 	
 	@Override
 	public void init() {
 		super.init();
-		registerEntityRenders();
 		ModItems.registerRenders();
 		ModBlocks.registerRenders();
 	}

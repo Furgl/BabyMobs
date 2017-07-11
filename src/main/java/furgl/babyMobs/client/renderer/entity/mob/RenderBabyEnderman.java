@@ -4,13 +4,13 @@ import org.lwjgl.opengl.GL11;
 
 import furgl.babyMobs.client.model.ModelBabyEnderman;
 import furgl.babyMobs.common.entity.monster.EntityBabyEnderman;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderEnderman;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.util.ResourceLocation;
@@ -38,11 +38,11 @@ public class RenderBabyEnderman extends RenderEnderman
 		//TODO beam
 		EntityLivingBase entitylivingbase = ((EntityBabyEnderman) entity).getTargetedEntity();
 
-		/*if (entitylivingbase != null && !entity.isDead) FIXME
+		if (entitylivingbase != null && !entity.isDead)
 		{
 			//entity.setScreaming(true);
 			Tessellator tessellator = Tessellator.getInstance();
-            VertexBuffer worldrenderer = tessellator.getBuffer();
+            BufferBuilder worldrenderer = tessellator.getBuffer();
             this.bindTexture(beam);
             GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, 10497.0F);
             GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, 10497.0F);
@@ -71,12 +71,12 @@ public class RenderBabyEnderman extends RenderEnderman
             //double d4 = (f4 * 0.05D * (1.0D - (1 & 1) * 2.5D));
             //worldrenderer.startDrawingQuads();
             //worldrenderer.setColorRGBA(200, 0, 200, 255);
-            double d15 = Math.cos(d4*0D + Math.PI) * 0.2D;
+           /* double d15 = Math.cos(d4*0D + Math.PI) * 0.2D;
             double d16 = Math.sin(d4*0D + Math.PI) * 0.2D;
             double d17 = Math.cos(d4*0D + 0.0D) * 0.2D;
             double d18 = Math.sin(d4*0D + 0.0D) * 0.2D;
             double d25 = -1.0F + f5;
-            double d26 = d3 * 2.5D + d25;
+            double d26 = d3 * 2.5D + d25;*/
             worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
             int j = 200;
             int k = 0;
@@ -130,7 +130,7 @@ public class RenderBabyEnderman extends RenderEnderman
             //worldrenderer.addVertexWithUV(d17, d3, d18,0, d26);
             tessellator.draw();
             GlStateManager.popMatrix();
-		}*/
+		}
 	}
 
 	private Vec3d func_177110_a(EntityLivingBase entityLivingBaseIn, double p_177110_2_, float p_177110_4_)
