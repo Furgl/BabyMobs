@@ -88,7 +88,7 @@ public class EntityAIBabyHurtByTarget extends EntityAITarget {
 			double d0 = this.getTargetDistance();
 			if (this.taskOwner.getClass() == EntityBabyEnderman.class)
 				d0 = 10.0D;
-			List<?> list = this.taskOwner.world.getEntitiesWithinAABB(EntityCreature.class, (new AxisAlignedBB(this.taskOwner.posX, this.taskOwner.posY, this.taskOwner.posZ, this.taskOwner.posX + 1.0D, this.taskOwner.posY + 1.0D, this.taskOwner.posZ + 1.0D)).expand(d0, 10.0D, d0));
+			List<?> list = this.taskOwner.world.getEntitiesWithinAABB(EntityCreature.class, (new AxisAlignedBB(this.taskOwner.posX, this.taskOwner.posY, this.taskOwner.posZ, this.taskOwner.posX + 1.0D, this.taskOwner.posY + 1.0D, this.taskOwner.posZ + 1.0D)).grow(d0, 10.0D, d0));
 			Iterator<?> iterator = list.iterator();
 
 			while (iterator.hasNext())

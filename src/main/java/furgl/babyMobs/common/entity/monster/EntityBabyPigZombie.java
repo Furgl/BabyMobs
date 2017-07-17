@@ -75,7 +75,7 @@ public class EntityBabyPigZombie extends EntityPigZombie
 		if (Config.useSpecialAbilities && this.ticksExisted % 50 == 0 && !this.isRiding())
 		{
 			double d0 = 35.0D;
-			List list = this.world.getEntitiesWithinAABB(EntityPig.class, this.getEntityBoundingBox().expand(d0, 4.0D, d0), null);
+			List list = this.world.getEntitiesWithinAABB(EntityPig.class, this.getEntityBoundingBox().grow(d0, 4.0D, d0), null);
 			Collections.sort(list, this.theNearestAttackableTargetSorter);
 			if (!list.isEmpty())
 			{
