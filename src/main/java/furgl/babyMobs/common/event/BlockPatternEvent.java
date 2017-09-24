@@ -1,7 +1,5 @@
 package furgl.babyMobs.common.event;
 
-import java.util.Iterator;
-
 import com.google.common.base.Predicate;
 
 import furgl.babyMobs.common.entity.monster.EntityBabyIronGolem;
@@ -11,9 +9,7 @@ import net.minecraft.block.state.BlockWorldState;
 import net.minecraft.block.state.pattern.BlockPattern;
 import net.minecraft.block.state.pattern.BlockStateMatcher;
 import net.minecraft.block.state.pattern.FactoryBlockPattern;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.stats.AchievementList;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
@@ -69,13 +65,13 @@ public class BlockPatternEvent
 				EntityBabyWither.setLocationAndAngles(blockpos2.getX() - 0.5D, blockpos2.getY() + 1.55D, blockpos2.getZ() + 0.5D, patternhelper.getForwards().getAxis() == EnumFacing.Axis.X ? 0.0F : 90.0F, 0.0F);
 				EntityBabyWither.renderYawOffset = patternhelper.getForwards().getAxis() == EnumFacing.Axis.X ? 0.0F : 90.0F;
 				EntityBabyWither.ignite();
-				Iterator iterator = event.getWorld().getEntitiesWithinAABB(EntityPlayer.class, EntityBabyWither.getEntityBoundingBox().expand(50.0D, 50.0D, 50.0D)).iterator();
+				/*Iterator iterator = event.getWorld().getEntitiesWithinAABB(EntityPlayer.class, EntityBabyWither.getEntityBoundingBox().expand(50.0D, 50.0D, 50.0D)).iterator();
 
 				while (iterator.hasNext())
 				{
 					EntityPlayer entityplayer = (EntityPlayer)iterator.next();
-					entityplayer.addStat(AchievementList.SPAWN_WITHER);
-				}
+					entity//player.addStat(AchievementList.SPAWN_WITHER);
+				}*/
 
 				event.getWorld().spawnEntity(EntityBabyWither);
 				for (int k = 0; k < 120; ++k)

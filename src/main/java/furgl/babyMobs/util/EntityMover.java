@@ -20,9 +20,9 @@ public class EntityMover
 				if (entity.ticksExisted % spawner.updateTime == 0 || entity.ticksExisted == 1)
 				{
 					entityIterator++;
-					entity.motionX = (spawner.radius * Math.cos(2*Math.PI*(entityIterator)/Math.max(spawner.numEntities, 10)) + spawner.origin.xCoord - entity.posX) * 0.3D;
+					entity.motionX = (spawner.radius * Math.cos(2*Math.PI*(entityIterator)/Math.max(spawner.numEntities, 10)) + spawner.origin.x - entity.posX) * 0.3D;
 					entity.motionY = 0.0D;  
-					entity.motionZ = (spawner.radius * Math.sin(2*Math.PI*(entityIterator)/Math.max(spawner.numEntities, 10)) + spawner.origin.zCoord - entity.posZ) * 0.3D;
+					entity.motionZ = (spawner.radius * Math.sin(2*Math.PI*(entityIterator)/Math.max(spawner.numEntities, 10)) + spawner.origin.z - entity.posZ) * 0.3D;
 					EntityMover.updateEntity(entity, spawner, heightIterator, entityIterator);
 				}
 				break;
@@ -30,9 +30,9 @@ public class EntityMover
 				if (entity.ticksExisted % spawner.updateTime == 0 || entity.ticksExisted == 1)
 				{
 					entityIterator++;
-					entity.motionX = ((Math.cos((float) (2*Math.PI*heightIterator/Math.max(spawner.numEntities, 10))) * spawner.radius * Math.cos(2*Math.PI*(entityIterator)/spawner.numEntities) + spawner.origin.xCoord) - entity.posX) * 0.3D;
+					entity.motionX = ((Math.cos((float) (2*Math.PI*heightIterator/Math.max(spawner.numEntities, 10))) * spawner.radius * Math.cos(2*Math.PI*(entityIterator)/spawner.numEntities) + spawner.origin.x) - entity.posX) * 0.3D;
 					entity.motionY = 0.0F;
-					entity.motionZ = ((Math.cos((float) (2*Math.PI*heightIterator/Math.max(spawner.numEntities, 10))) * spawner.radius * Math.sin(2*Math.PI*(entityIterator)/spawner.numEntities) + spawner.origin.zCoord) - entity.posZ) * 0.3D;
+					entity.motionZ = ((Math.cos((float) (2*Math.PI*heightIterator/Math.max(spawner.numEntities, 10))) * spawner.radius * Math.sin(2*Math.PI*(entityIterator)/spawner.numEntities) + spawner.origin.z) - entity.posZ) * 0.3D;
 					EntityMover.updateEntity(entity, spawner, heightIterator, entityIterator);
 				}
 				break;
@@ -50,9 +50,9 @@ public class EntityMover
 		case "in/out":
 			if (entity.ticksExisted == 1)
 			{
-				entity.motionX = (spawner.origin.xCoord - entity.posX) / 20;
-				entity.motionY = (spawner.origin.yCoord - entity.posY) / 20;
-				entity.motionZ = (spawner.origin.zCoord - entity.posZ) / 20;
+				entity.motionX = (spawner.origin.x - entity.posX) / 20;
+				entity.motionY = (spawner.origin.y - entity.posY) / 20;
+				entity.motionZ = (spawner.origin.z - entity.posZ) / 20;
 				EntityMover.updateEntity(entity, spawner, heightIterator, entityIterator);
 			}
 			break;
@@ -109,9 +109,9 @@ public class EntityMover
 				if (entity.ticksExisted % spawner.updateTime == 0 || entity.ticksExisted == 1)
 				{
 					entityIterator++;
-					entity.setMotionX((spawner.radius * Math.cos(2*Math.PI*(entityIterator)/Math.max(spawner.numEntities, 10)) + spawner.origin.xCoord - entity.getX()) * 0.3D);
+					entity.setMotionX((spawner.radius * Math.cos(2*Math.PI*(entityIterator)/Math.max(spawner.numEntities, 10)) + spawner.origin.x - entity.getX()) * 0.3D);
 					entity.setMotionY(0.0D);  
-					entity.setMotionZ((spawner.radius * Math.sin(2*Math.PI*(entityIterator)/Math.max(spawner.numEntities, 10)) + spawner.origin.zCoord - entity.getZ()) * 0.3D);
+					entity.setMotionZ((spawner.radius * Math.sin(2*Math.PI*(entityIterator)/Math.max(spawner.numEntities, 10)) + spawner.origin.z - entity.getZ()) * 0.3D);
 					EntityMover.updateEntity(entity, spawner, heightIterator, entityIterator);
 				}
 				break;
@@ -119,9 +119,9 @@ public class EntityMover
 				if (entity.ticksExisted % spawner.updateTime == 0 || entity.ticksExisted == 1)
 				{
 					entityIterator++;
-					entity.setMotionX(((Math.cos((float) (2*Math.PI*heightIterator/Math.max(spawner.numEntities, 10))) * spawner.radius * Math.cos(2*Math.PI*(entityIterator)/spawner.numEntities) + spawner.origin.xCoord) - entity.getX()) * 0.3D);
+					entity.setMotionX(((Math.cos((float) (2*Math.PI*heightIterator/Math.max(spawner.numEntities, 10))) * spawner.radius * Math.cos(2*Math.PI*(entityIterator)/spawner.numEntities) + spawner.origin.x) - entity.getX()) * 0.3D);
 					entity.setMotionY(0.0F);
-					entity.setMotionZ(((Math.cos((float) (2*Math.PI*heightIterator/Math.max(spawner.numEntities, 10))) * spawner.radius * Math.sin(2*Math.PI*(entityIterator)/spawner.numEntities) + spawner.origin.zCoord) - entity.getZ()) * 0.3D);
+					entity.setMotionZ(((Math.cos((float) (2*Math.PI*heightIterator/Math.max(spawner.numEntities, 10))) * spawner.radius * Math.sin(2*Math.PI*(entityIterator)/spawner.numEntities) + spawner.origin.z) - entity.getZ()) * 0.3D);
 					EntityMover.updateEntity(entity, spawner, heightIterator, entityIterator);
 				}
 				break;
@@ -139,9 +139,9 @@ public class EntityMover
 		case "in/out":
 			if (entity.ticksExisted == 1)
 			{
-				entity.setMotionX((spawner.origin.xCoord - entity.getX()) / 20);
-				entity.setMotionY((spawner.origin.yCoord - entity.getY()) / 20);
-				entity.setMotionZ((spawner.origin.zCoord - entity.getZ()) / 20);
+				entity.setMotionX((spawner.origin.x - entity.getX()) / 20);
+				entity.setMotionY((spawner.origin.y - entity.getY()) / 20);
+				entity.setMotionZ((spawner.origin.z - entity.getZ()) / 20);
 				EntityMover.updateEntity(entity, spawner, heightIterator, entityIterator);
 			}
 			break;

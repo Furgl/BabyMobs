@@ -33,13 +33,13 @@ public class EntityBabyShulkerBullet extends EntityShulkerBullet
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getBrightnessForRender(float partialTicks)
+	public int getBrightnessForRender()
 	{
 		return 5000;
 	}
 
 	@Override
-	public float getBrightness(float partialTicks)
+	public float getBrightness()
 	{
 		return 0.0F;
 	}

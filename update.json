@@ -1,7 +1,12 @@
 {
 	"homepage": "http://minecraft.curseforge.com/projects/baby-mobs/files",
 	"promos": {
+<<<<<<< HEAD
 		"1.11.2-latest": "1.5.5",
 		"1.11.2-recommended": "1.5.5"
+=======
+		"1.12-latest": "1.5.4",
+		"1.12-recommended": "1.5.4"
+>>>>>>> branch '1.11.2' of https://github.com/Furgl/BabyMobs.git
 	}
 }
