@@ -37,9 +37,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityZombieChicken extends EntityChicken
 {
-    private static final DataParameter<Boolean> CONVERTING = EntityDataManager.<Boolean>createKey(EntityZombieChicken.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Boolean> CONVERTING = EntityDataManager.<Boolean>createKey(EntityZombieChicken.class, DataSerializers.BOOLEAN);
 	private int conversionTime;
-	
+
 	public EntityZombieChicken(World world)
 	{
 		super(world);
@@ -48,29 +48,29 @@ public class EntityZombieChicken extends EntityChicken
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityIronGolem.class, true));
 	}
-	
+
 	@Override
 	protected void initEntityAI()
-    {
+	{
 		this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
-        this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
-        this.tasks.addTask(7, new EntityAILookIdle(this));
-    }
-	
+		this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
+		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
+		this.tasks.addTask(7, new EntityAILookIdle(this));
+	}
+
 	//TODO convert
 	@Override
 	protected void entityInit()
-    {
-        super.entityInit();
-        this.getDataManager().register(CONVERTING, Boolean.valueOf(false));
-    }
-	
+	{
+		super.entityInit();
+		this.getDataManager().register(CONVERTING, Boolean.valueOf(false));
+	}
+
 	public boolean isConverting()
-    {
-        return ((Boolean)this.getDataManager().get(CONVERTING)).booleanValue();
-    }
-	
+	{
+		return ((Boolean)this.getDataManager().get(CONVERTING)).booleanValue();
+	}
+
 	public void startConversion(int ticks)
 	{
 		this.conversionTime = ticks;
@@ -79,27 +79,27 @@ public class EntityZombieChicken extends EntityChicken
 		this.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, ticks, Math.min(this.world.getDifficulty().getDifficultyId() - 1, 0)));
 		this.world.setEntityState(this, (byte)16);
 	}
-	
+
 	protected void convert()
-    {
-        EntityChicken entitychicken = new EntityChicken(this.world);
-        entitychicken.copyLocationAndAnglesFrom(this);
-        entitychicken.onInitialSpawn(this.world.getDifficultyForLocation(new BlockPos(entitychicken)), (IEntityLivingData)null);
+	{
+		EntityChicken entitychicken = new EntityChicken(this.world);
+		entitychicken.copyLocationAndAnglesFrom(this);
+		entitychicken.onInitialSpawn(this.world.getDifficultyForLocation(new BlockPos(entitychicken)), (IEntityLivingData)null);
 
-        this.world.removeEntity(this);
-        entitychicken.setNoAI(this.isAIDisabled());
+		this.world.removeEntity(this);
+		entitychicken.setNoAI(this.isAIDisabled());
 
-        if (this.hasCustomName())
-        {
-            entitychicken.setCustomNameTag(this.getCustomNameTag());
-            entitychicken.setAlwaysRenderNameTag(this.getAlwaysRenderNameTag());
-        }
+		if (this.hasCustomName())
+		{
+			entitychicken.setCustomNameTag(this.getCustomNameTag());
+			entitychicken.setAlwaysRenderNameTag(this.getAlwaysRenderNameTag());
+		}
 
-        this.world.spawnEntity(entitychicken);
-        entitychicken.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 200, 0));
-        this.world.playEvent((EntityPlayer)null, 1027, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 0);
-    }
-	
+		this.world.spawnEntity(entitychicken);
+		entitychicken.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 200, 0));
+		this.world.playEvent((EntityPlayer)null, 1027, new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ), 0);
+	}
+
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand hand)
 	{
@@ -114,38 +114,40 @@ public class EntityZombieChicken extends EntityChicken
 		else
 			return false;
 	}
-	
+
 	@Override
 	protected boolean canDespawn()
-    {
+	{
 		return !this.isConverting();
-    }
-	
+	}
+
 	@Override
 	public void writeEntityToNBT(NBTTagCompound tagCompound)
 	{
 		super.writeEntityToNBT(tagCompound);
 		tagCompound.setInteger("ConversionTime", this.isConverting() ? this.conversionTime : -1);
 	}
-	
+
 	@Override
 	public void readEntityFromNBT(NBTTagCompound tagCompund)
-    {
-        super.readEntityFromNBT(tagCompund);
-        if (tagCompund.hasKey("ConversionTime", 99) && tagCompund.getInteger("ConversionTime") > -1)
-            this.startConversion(tagCompund.getInteger("ConversionTime"));
-    }
-	
+	{
+		super.readEntityFromNBT(tagCompund);
+		if (tagCompund.hasKey("ConversionTime", 99) && tagCompund.getInteger("ConversionTime") > -1)
+			this.startConversion(tagCompund.getInteger("ConversionTime"));
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
-    public void handleStatusUpdate(byte id)
-    {
-        if (id == 16)
-            if (!this.isSilent())
-                this.world.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
-        else
-            super.handleStatusUpdate(id);
-    }
+	public void handleStatusUpdate(byte id)
+	{
+		if (id == 16)
+			if (!this.isSilent())
+				this.world.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+			else
+				super.handleStatusUpdate(id);
+		else
+			super.handleStatusUpdate(id);
+	}
 	//end
 
 	@Override
@@ -157,18 +159,20 @@ public class EntityZombieChicken extends EntityChicken
 	@Override
 	public void onUpdate()
 	{
+		if (this.hurtTime != 0)
+			System.out.println(this.world.isRemote+": "+this.hurtTime);
 		if (!this.world.isRemote && this.getDataManager().get(CONVERTING).booleanValue())
-        {
-            this.conversionTime -= 1;
-            if (this.conversionTime <= 0)
-                this.convert();
-        }
-		
+		{
+			this.conversionTime -= 1;
+			if (this.conversionTime <= 0)
+				this.convert();
+		}
+
 		if (this.isBeingRidden())
 			this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
 		else
 			this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
-		
+
 		if (!this.world.isRemote && this.world.getDifficulty() == EnumDifficulty.PEACEFUL)
 		{
 			this.setDead();

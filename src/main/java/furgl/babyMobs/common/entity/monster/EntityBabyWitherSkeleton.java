@@ -17,6 +17,7 @@ import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.monster.EntityWitherSkeleton;
+import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -164,7 +165,7 @@ public class EntityBabyWitherSkeleton extends EntityWitherSkeleton
 	@Override
 	public double getYOffset()
 	{
-		return super.getYOffset() - 0.5D;
+		return super.getYOffset() + (this.getRidingEntity() instanceof EntityHorse ? 0.4D : 0.3D);
 	}
 
 	@Override
