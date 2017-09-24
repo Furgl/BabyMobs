@@ -68,11 +68,11 @@ public class EntityZombiePig extends EntityPig
 		super.entityInit();
 		this.getDataManager().register(CONVERTING, Boolean.valueOf(false));
 	}
-	
+
 	public boolean isConverting()
-    {
-        return ((Boolean)this.getDataManager().get(CONVERTING)).booleanValue();
-    }
+	{
+		return ((Boolean)this.getDataManager().get(CONVERTING)).booleanValue();
+	}
 
 	public void startConversion(int ticks)
 	{
@@ -91,8 +91,8 @@ public class EntityZombiePig extends EntityPig
 
 		this.worldObj.removeEntity(this);
 		entitypig.setNoAI(this.isAIDisabled());
-		
-        entitypig.setGrowingAge(-24000);
+
+		entitypig.setGrowingAge(-24000);
 
 		if (this.hasCustomName())
 		{
@@ -131,25 +131,26 @@ public class EntityZombiePig extends EntityPig
 		super.writeEntityToNBT(tagCompound);
 		tagCompound.setInteger("ConversionTime", this.isConverting() ? this.conversionTime : -1);
 	}
-	
+
 	@Override
 	public void readEntityFromNBT(NBTTagCompound tagCompund)
-    {
-        super.readEntityFromNBT(tagCompund);
-        if (tagCompund.hasKey("ConversionTime", 99) && tagCompund.getInteger("ConversionTime") > -1)
-            this.startConversion(tagCompund.getInteger("ConversionTime"));
-    }
-	
+	{
+		super.readEntityFromNBT(tagCompund);
+		if (tagCompund.hasKey("ConversionTime", 99) && tagCompund.getInteger("ConversionTime") > -1)
+			this.startConversion(tagCompund.getInteger("ConversionTime"));
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
-    public void handleStatusUpdate(byte id)
-    {
-        if (id == 16)
-            if (!this.isSilent())
-                this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
-        else
-            super.handleStatusUpdate(id);
-    }
+	public void handleStatusUpdate(byte id)
+	{
+		if (id == 16) {
+			if (!this.isSilent())
+				this.worldObj.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+		} 
+		else
+			super.handleStatusUpdate(id);
+	}
 	//end
 
 	@Override
