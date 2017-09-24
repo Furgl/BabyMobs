@@ -145,9 +145,10 @@ public class EntityZombiePig extends EntityPig
 	@SideOnly(Side.CLIENT)
     public void handleStatusUpdate(byte id)
     {
-        if (id == 16)
+        if (id == 16) {
             if (!this.isSilent())
                 this.world.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+        } 
         else
             super.handleStatusUpdate(id);
     }
@@ -162,9 +163,9 @@ public class EntityZombiePig extends EntityPig
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
-		if (source.getEntity() instanceof EntityPlayer && !(source.getEntity() instanceof FakePlayer) && !this.isAngry)
+		if (source.getTrueSource() instanceof EntityPlayer && !(source.getTrueSource() instanceof FakePlayer) && !this.isAngry)
 		{
-			EntityPlayer entityplayer = (EntityPlayer) source.getEntity();
+			EntityPlayer entityplayer = (EntityPlayer) source.getTrueSource();
 			this.setRevengeTarget(entityplayer);
 			this.attackingPlayer = entityplayer;
 			this.recentlyHit = this.getRevengeTimer();

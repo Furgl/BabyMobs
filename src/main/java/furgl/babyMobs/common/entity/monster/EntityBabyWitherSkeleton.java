@@ -1,6 +1,5 @@
 package furgl.babyMobs.common.entity.monster;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ModEntities;
@@ -64,14 +63,14 @@ public class EntityBabyWitherSkeleton extends EntityWitherSkeleton
 	@Override
 	public void onDeath(DamageSource cause) //first achievement
 	{
-		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
+//		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
+//			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
 		super.onDeath(cause);
 
 		//TODO skull drop
-		if (cause.getEntity() instanceof EntityPlayer)
+		if (cause.getTrueSource() instanceof EntityPlayer)
 		{
-			int chance = 30 + 10*EnchantmentHelper.getLootingModifier((EntityLivingBase) cause.getEntity());
+			int chance = 30 + 10*EnchantmentHelper.getLootingModifier((EntityLivingBase) cause.getTrueSource());
 			if (this.rand.nextInt(100) <= chance)
 			{
 				this.entityDropItem(new ItemStack(Items.SKULL, 1, 1), 0.0F);
@@ -119,13 +118,13 @@ public class EntityBabyWitherSkeleton extends EntityWitherSkeleton
 		if (Config.useSpecialAbilities)
 		{
 			EntityPlayer player = null;
-			if (source.getSourceOfDamage() instanceof EntityPlayer)
-				player = (EntityPlayer) source.getSourceOfDamage();
-			else if (source.getSourceOfDamage() instanceof EntityArrow && ((EntityArrow) source.getSourceOfDamage()).shootingEntity instanceof EntityPlayer)
-				player = (EntityPlayer) ((EntityArrow) source.getSourceOfDamage()).shootingEntity;
+			if (source.getTrueSource() instanceof EntityPlayer)
+				player = (EntityPlayer) source.getTrueSource();
+			else if (source.getTrueSource() instanceof EntityArrow && ((EntityArrow) source.getTrueSource()).shootingEntity instanceof EntityPlayer)
+				player = (EntityPlayer) ((EntityArrow) source.getTrueSource()).shootingEntity;
 			if (player != null && !(player instanceof FakePlayer) && this.getHealth() > 0 && this.hurtResistantTime < 25)
 			{
-				player.addStat(Achievements.achievementItsMine);
+				//player.addStat(Achievements.achievementItsMine);
 				if (!this.world.isRemote && !player.capabilities.isCreativeMode)
 				{
 					player.addPotionEffect(new PotionEffect(MobEffects.WITHER, 100));
@@ -149,11 +148,11 @@ public class EntityBabyWitherSkeleton extends EntityWitherSkeleton
 				Vec3d vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this, 16, 7, new Vec3d(player.posX, player.posY, player.posZ));
 				if (vec3 != null)
 				{
-					while (player.getDistanceSq(vec3.xCoord, vec3.yCoord, vec3.zCoord) < player.getDistanceSqToEntity(this))
+					while (player.getDistanceSq(vec3.x, vec3.y, vec3.z) < player.getDistanceSqToEntity(this))
 					{
 						vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this, 16, 7, new Vec3d(player.posX, player.posY, player.posZ));
 					}
-					entityPathNavigate.setPath(entityPathNavigate.getPathToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord), 1.2D);
+					entityPathNavigate.setPath(entityPathNavigate.getPathToXYZ(vec3.x, vec3.y, vec3.z), 1.2D);
 				}
 			}
 		}

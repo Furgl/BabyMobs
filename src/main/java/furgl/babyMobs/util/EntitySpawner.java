@@ -57,9 +57,9 @@ public class EntitySpawner
 		this.world = world;
 		this.origin = origin;
 		this.numEntities = numEntities;
-		this.x = origin.xCoord;
-		this.y = origin.yCoord;
-		this.z = origin.zCoord;
+		this.x = origin.x;
+		this.y = origin.y;
+		this.z = origin.z;
 	}
 
 	/**Can have movements: "followShape" or "in/out"*/
@@ -173,16 +173,16 @@ public class EntitySpawner
 						switch(this.shape)
 						{
 						case "circle":
-							x = radius * MathHelper.cos((float) (2*Math.PI*entityIterator/numEntities)) + ((((double) rand.nextInt(20) - 10) / 10) * randVar) + origin.xCoord;
-							y = ((((double) rand.nextInt(20) - 10) / 10) * randVar) + origin.yCoord;
-							z = radius * MathHelper.sin((float) (2*Math.PI*entityIterator/numEntities)) + ((((double) rand.nextInt(20) - 10) / 10) * randVar) + origin.zCoord;	
+							x = radius * MathHelper.cos((float) (2*Math.PI*entityIterator/numEntities)) + ((((double) rand.nextInt(20) - 10) / 10) * randVar) + origin.x;
+							y = ((((double) rand.nextInt(20) - 10) / 10) * randVar) + origin.y;
+							z = radius * MathHelper.sin((float) (2*Math.PI*entityIterator/numEntities)) + ((((double) rand.nextInt(20) - 10) / 10) * randVar) + origin.z;	
 							break;
 						case "sphere":
 							for (int heightIterator=0; heightIterator < numEntities; heightIterator++)
 							{
-								x = MathHelper.cos((float) (2*Math.PI*heightIterator/numEntities)) * radius * MathHelper.cos((float) (2*Math.PI*entityIterator/numEntities)) + ((((double) rand.nextInt(20) - 10) / 10) * randVar) + origin.xCoord;
-								y = radius * MathHelper.sin((float) (2*Math.PI*heightIterator/numEntities)) + ((((double) rand.nextInt(20) - 10) / 10) * randVar) + origin.yCoord;
-								z = MathHelper.cos((float) (2*Math.PI*heightIterator/numEntities)) * radius * MathHelper.sin((float) (2*Math.PI*entityIterator/numEntities)) + ((((double) rand.nextInt(20) - 10) / 10) * randVar) + origin.zCoord;	
+								x = MathHelper.cos((float) (2*Math.PI*heightIterator/numEntities)) * radius * MathHelper.cos((float) (2*Math.PI*entityIterator/numEntities)) + ((((double) rand.nextInt(20) - 10) / 10) * randVar) + origin.x;
+								y = radius * MathHelper.sin((float) (2*Math.PI*heightIterator/numEntities)) + ((((double) rand.nextInt(20) - 10) / 10) * randVar) + origin.y;
+								z = MathHelper.cos((float) (2*Math.PI*heightIterator/numEntities)) * radius * MathHelper.sin((float) (2*Math.PI*entityIterator/numEntities)) + ((((double) rand.nextInt(20) - 10) / 10) * randVar) + origin.z;	
 								this.spawnEntity(heightIterator, entityIterator);
 							}
 							break;
@@ -191,14 +191,14 @@ public class EntitySpawner
 							while (entityIterator1 >= numEntities)
 								entityIterator1 -= numEntities;
 							entityIterator1 = Math.abs(numEntities - entityIterator1);
-							x = origin.xCoord + (((((double) rand.nextInt(20) - 10) / 10) * randVar) * entityIterator1/5) + (length * entityIterator1 / numEntities) * Math.cos(yaw*Math.PI/180 + Math.PI/2);
-							y = origin.yCoord + (((((double) rand.nextInt(20) - 10) / 10) * randVar) * entityIterator1/5) - (length * entityIterator1 / numEntities) * Math.sin(pitch*Math.PI/180);
-							z = origin.zCoord + (((((double) rand.nextInt(20) - 10) / 10) * randVar) * entityIterator1/5) + (length * entityIterator1 / numEntities) * Math.sin(yaw*Math.PI/180 + Math.PI/2);
+							x = origin.x + (((((double) rand.nextInt(20) - 10) / 10) * randVar) * entityIterator1/5) + (length * entityIterator1 / numEntities) * Math.cos(yaw*Math.PI/180 + Math.PI/2);
+							y = origin.y + (((((double) rand.nextInt(20) - 10) / 10) * randVar) * entityIterator1/5) - (length * entityIterator1 / numEntities) * Math.sin(pitch*Math.PI/180);
+							z = origin.z + (((((double) rand.nextInt(20) - 10) / 10) * randVar) * entityIterator1/5) + (length * entityIterator1 / numEntities) * Math.sin(yaw*Math.PI/180 + Math.PI/2);
 							break;
 						default:
-							x = origin.xCoord;
-							y = origin.yCoord;
-							z = origin.zCoord;
+							x = origin.x;
+							y = origin.y;
+							z = origin.z;
 							break;
 						}
 						if (!this.shape.equals("sphere"))

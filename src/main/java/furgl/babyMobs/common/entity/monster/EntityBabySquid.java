@@ -1,6 +1,5 @@
 package furgl.babyMobs.common.entity.monster;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.projectile.EntitySquidInk;
@@ -8,14 +7,12 @@ import furgl.babyMobs.util.EntitySpawner;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.EntitySquid;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class EntityBabySquid extends EntitySquid
@@ -31,8 +28,8 @@ public class EntityBabySquid extends EntitySquid
 	@Override
 	public void onDeath(DamageSource cause) //first achievement
     {
-		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
+//		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
+//			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
 		super.onDeath(cause);
     }
 
@@ -63,7 +60,7 @@ public class EntityBabySquid extends EntitySquid
 	{
 		if (Config.useSpecialAbilities)
 		{
-			if (this.isInWater() && source.getEntity() instanceof EntityLivingBase && this.getHealth() > 0)
+			if (this.isInWater() && source.getTrueSource() instanceof EntityLivingBase && this.getHealth() > 0)
 			{
 				Vec3d vec = new Vec3d(this.posX, this.posY, this.posZ);
 				EntitySpawner entitySpawner = new EntitySpawner(EntitySquidInk.class, this.world, vec, 5);

@@ -1,6 +1,5 @@
 package furgl.babyMobs.common.entity.monster;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
@@ -38,8 +37,8 @@ public class EntityBabyGuardian extends EntityGuardian
 	@Override
 	public void onDeath(DamageSource cause) //first achievement
     {
-		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
+//		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
+//			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
 		super.onDeath(cause);
     }
 	
@@ -71,7 +70,7 @@ public class EntityBabyGuardian extends EntityGuardian
 	 * Returns the sound this mob makes when it is hurt.
 	 */
 	@Override
-	protected SoundEvent getHurtSound()
+    protected SoundEvent getHurtSound(DamageSource p_184601_1_)
 	{
 		if (this.longerSpikes)//TODO spike sound
 			return SoundEvents.ENTITY_BLAZE_HURT;
@@ -117,8 +116,8 @@ public class EntityBabyGuardian extends EntityGuardian
 				{
 					this.faceEntity(this.attackingPlayer, 100, 100);
 					Vec3d vec = this.attackingPlayer.getPositionVector().subtract(this.getPositionVector()).normalize();
-					this.motionX = vec.xCoord/4;
-					this.motionZ = vec.zCoord/4;
+					this.motionX = vec.x/4;
+					this.motionZ = vec.z/4;
 				}
 			}
 		}
@@ -133,7 +132,7 @@ public class EntityBabyGuardian extends EntityGuardian
 		//TODO render spikes longer on attack and play sound
 		if (Config.useSpecialAbilities)
 		{
-			if (source.getSourceOfDamage() instanceof EntityLivingBase)
+			if (source.getTrueSource() instanceof EntityLivingBase)
 			{
 				if (!this.longerSpikes)
 					this.world.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ENTITY_BLAZE_HURT, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 8F, false);

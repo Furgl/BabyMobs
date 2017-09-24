@@ -1,6 +1,5 @@
 package furgl.babyMobs.common.entity.projectile;
 
-import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.util.EntityMover;
 import furgl.babyMobs.util.EntitySpawner;
 import net.minecraft.entity.EntityLivingBase;
@@ -61,7 +60,7 @@ public class EntityBlazeFlamethrower extends EntityThrowable
 		{
 			if (mop.entityHit instanceof EntityPlayer && !((EntityPlayer)mop.entityHit).isImmuneToFire() && ((EntityPlayer)mop.entityHit).attackEntityFrom(DamageSource.ON_FIRE, 1.0F))
 			{
-				((EntityPlayer)mop.entityHit).addStat(Achievements.achievementItsGettingHotInHere);
+				//((EntityPlayer)mop.entityHit).addStat(Achievements.achievementItsGettingHotInHere);
 				((EntityPlayer)mop.entityHit).setFire(3);
 			}
 		}

@@ -104,7 +104,7 @@ public class EntityZombieChicken extends EntityChicken
 	public boolean processInteract(EntityPlayer player, EnumHand hand)
 	{
 		ItemStack stack = player.getHeldItem(hand);
-		if (stack != null && stack.getItem() == ModItems.golden_bread && stack.getMetadata() == 0 && this.isPotionActive(MobEffects.WEAKNESS)) {
+		if (stack != null && stack.getItem() == ModItems.GOLDEN_BREAD && stack.getMetadata() == 0 && this.isPotionActive(MobEffects.WEAKNESS)) {
 			if (!player.capabilities.isCreativeMode)
 				stack.shrink(1);
 			if (!this.world.isRemote)
@@ -140,9 +140,10 @@ public class EntityZombieChicken extends EntityChicken
 	@SideOnly(Side.CLIENT)
     public void handleStatusUpdate(byte id)
     {
-        if (id == 16)
+        if (id == 16) {
             if (!this.isSilent())
                 this.world.playSound(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, this.getSoundCategory(), 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F, false);
+        }
         else
             super.handleStatusUpdate(id);
     }
