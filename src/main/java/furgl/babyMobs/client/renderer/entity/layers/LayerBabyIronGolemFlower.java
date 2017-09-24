@@ -37,7 +37,7 @@ public class LayerBabyIronGolemFlower implements LayerRenderer
             GlStateManager.translate(-0.6F, 0.2F, -0.9F);
             float f7 = 0.5F;
             GlStateManager.scale(f7, -f7, f7);
-            int i = p_177153_1_.getBrightnessForRender();
+            int i = p_177153_1_.getBrightnessForRender(p_177153_4_);
             int j = i % 65536;
             int k = i / 65536;
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j / 1.0F, k / 1.0F);

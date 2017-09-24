@@ -1,5 +1,6 @@
 package furgl.babyMobs.common.entity.monster;
 
+import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ModEntities;
@@ -39,8 +40,8 @@ public class EntityBabyBlaze extends EntityBlaze
 	@Override
 	public void onDeath(DamageSource cause) //first achievement
     {
-//		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-//			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
+		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
+			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
 		super.onDeath(cause);
     }
 

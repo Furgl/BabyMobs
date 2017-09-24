@@ -13,20 +13,23 @@ public class BabyMobsGuiFactory implements IModGuiFactory
     {
  
     }
-
+ 
+    @Override
+	public Class<? extends GuiScreen> mainConfigGuiClass() 
+    {
+        return BabyMobsGuiConfig.class;
+    }
+ 
     @Override
 	public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() 
     {
         return null;
     }
-
+ 
+    @SuppressWarnings("deprecation")
 	@Override
-	public boolean hasConfigGui() {
-		return true;
-	}
-
-	@Override
-	public GuiScreen createConfigGui(GuiScreen parentScreen) {
-		return new BabyMobsGuiConfig(parentScreen);
-	}
+	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) 
+    {
+        return null;
+    }
 }

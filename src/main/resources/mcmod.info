@@ -3,13 +3,8 @@
   "modid": "babymobs",
   "name": "Baby Mobs",
   "description": "Adds baby versions of many vanilla monsters, each with its own special abilities.",
-<<<<<<< HEAD
   "version": "1.5.5",
   "mcversion": "1.11.2",
-=======
-  "version": "1.5.4",
-  "mcversion": "1.12",
->>>>>>> branch '1.11.2' of https://github.com/Furgl/BabyMobs.git
   "url": "https://minecraft.curseforge.com/projects/baby-mobs",
   "updateUrl": "",
   "authorList": ["Furgl"],

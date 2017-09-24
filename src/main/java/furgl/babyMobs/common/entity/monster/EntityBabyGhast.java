@@ -2,6 +2,7 @@ package furgl.babyMobs.common.entity.monster;
 
 import java.util.Random;
 
+import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
@@ -22,6 +23,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 
 public class EntityBabyGhast extends EntityGhast
 {
@@ -46,8 +48,8 @@ public class EntityBabyGhast extends EntityGhast
 	@Override
 	public void onDeath(DamageSource cause) //first achievement
 	{
-//		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-//			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
+		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
+			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
 		super.onDeath(cause);
 	}
 
@@ -132,27 +134,27 @@ public class EntityBabyGhast extends EntityGhast
 				{
 					double d1 = 4.0D;
 					Vec3d vec3d = this.parentEntity.getLook(1.0F);
-					double d2 = entitylivingbase.posX - (this.parentEntity.posX + vec3d.x * d1);
+					double d2 = entitylivingbase.posX - (this.parentEntity.posX + vec3d.xCoord * d1);
 					double d3 = entitylivingbase.getEntityBoundingBox().minY + (double)(entitylivingbase.height / 2.0F) - (0.5D + this.parentEntity.posY + (double)(this.parentEntity.height / 2.0F));
-					double d4 = entitylivingbase.posZ - (this.parentEntity.posZ + vec3d.z * d1);
+					double d4 = entitylivingbase.posZ - (this.parentEntity.posZ + vec3d.zCoord * d1);
 					world.playEvent((EntityPlayer)null, 1016, new BlockPos(this.parentEntity), 0);
 					//TODO EntityGhastFireball (only entity is replaced from orig)
 					if (Config.useSpecialAbilities)
 					{
 						EntityGhastFireball fireball = new EntityGhastFireball(world, this.parentEntity, d2, d3, d4);
 						fireball.explosionPower = this.parentEntity.getFireballStrength();
-						fireball.posX = this.parentEntity.posX + vec3d.x * d1;
+						fireball.posX = this.parentEntity.posX + vec3d.xCoord * d1;
 						fireball.posY = this.parentEntity.posY + this.parentEntity.height / 2.0F + 0.5D;
-						fireball.posZ = this.parentEntity.posZ + vec3d.z * d1;
+						fireball.posZ = this.parentEntity.posZ + vec3d.zCoord * d1;
 						world.spawnEntity(fireball);
 					}
 					else
 					{
 						EntityLargeFireball fireball = new EntityLargeFireball(world, this.parentEntity, d2, d3, d4);
 						fireball.explosionPower = this.parentEntity.getFireballStrength();
-						fireball.posX = this.parentEntity.posX + vec3d.x * d1;
+						fireball.posX = this.parentEntity.posX + vec3d.xCoord * d1;
 						fireball.posY = this.parentEntity.posY + this.parentEntity.height / 2.0F + 0.5D;
-						fireball.posZ = this.parentEntity.posZ + vec3d.z * d1;
+						fireball.posZ = this.parentEntity.posZ + vec3d.zCoord * d1;
 						world.spawnEntity(fireball);
 					}
 					//end   

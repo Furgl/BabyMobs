@@ -9,45 +9,43 @@ import furgl.babyMobs.common.item.projectile.ItemInvisible;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModItems 
 {
-	public static Item INVISIBLE  = new ItemInvisible();
-	public static Item CAVE_SPIDER_VENOM = new ItemCaveSpiderVenom();
-	public static Item CREEPER_EXPLOSION = new ItemCreeperExplosion();
-	public static Item GOLDEN_BREAD = new ItemGoldenBread(10, 1.2F, false);
+	public static Item invisible;
+	public static Item cave_spider_venom;
+	public static Item creeper_explosion;
 
-	public static ArrayList<Item> allItems = new ArrayList<Item>();
+	public static Item golden_bread;
 
-	@Mod.EventBusSubscriber
-	public static class RegistrationHandler {
+	public static ArrayList<Item> allItems;
 
-		@SubscribeEvent
-		public static void registerItems(final RegistryEvent.Register<Item> event) {
-			register(event.getRegistry(), INVISIBLE, "invisible", false);
-			register(event.getRegistry(), CAVE_SPIDER_VENOM, "cave_spider_venom", false);
-			register(event.getRegistry(), CREEPER_EXPLOSION, "creeper_explosion", false);
-			register(event.getRegistry(), GOLDEN_BREAD, "golden_bread", true);
-		}
+	public static void init() {
+		allItems = new ArrayList<Item>();
+		
+		invisible = registerItem(new ItemInvisible(), "invisible", false);
+		cave_spider_venom = registerItem(new ItemCaveSpiderVenom(), "cave_spider_venom", false);
+		creeper_explosion = registerItem(new ItemCreeperExplosion(), "creeper_explosion", false);
 
-		private static void register(IForgeRegistry<Item> registry, Item item, String itemName, boolean addToTab) {
-			allItems.add(item);
-			item.setRegistryName(BabyMobs.MODID, itemName);
-			item.setUnlocalizedName(item.getRegistryName().getResourcePath());
-			if (addToTab)
-				item.setCreativeTab(BabyMobs.tab);
-			registry.register(item);
-		}
-
+		golden_bread = registerItem(new ItemGoldenBread(10, 1.2F, false), "golden_bread", true);
 	}
 
 	public static void registerRenders() {
 		for (Item item : allItems)
-			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register
-			(item, 0, new ModelResourceLocation(BabyMobs.MODID+":" + item.getUnlocalizedName().substring(5), "inventory"));
+			registerRender(item);
+	}
+
+	private static Item registerItem(final Item item, final String unlocalizedName, boolean addToTab) {
+		allItems.add(item);
+		item.setUnlocalizedName(unlocalizedName);
+		if (addToTab)
+			item.setCreativeTab(BabyMobs.tab);
+		GameRegistry.register(item.setRegistryName(unlocalizedName));
+		return item;
+	}
+
+	private static void registerRender(Item item) {
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, new ModelResourceLocation(BabyMobs.MODID+":" + item.getUnlocalizedName().substring(5), "inventory"));
 	}
 }

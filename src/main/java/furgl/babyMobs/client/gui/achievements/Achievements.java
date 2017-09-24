@@ -1,4 +1,4 @@
-/*package furgl.babyMobs.client.gui.achievements;
+package furgl.babyMobs.client.gui.achievements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class Achievements
 		achievementBoomBaby = new Achievement("achievement.boomBaby", "boomBaby", -1, -2, Item.getItemFromBlock(Blocks.TNT), achievementWhyAreTheySoStrong);
 		achievementAFlowerForMe = new Achievement("achievement.aFlowerForMe", "aFlowerForMe", -3, 0, Item.getItemFromBlock(Blocks.RED_FLOWER), achievementWhyAreTheySoStrong);
 		achievementBetterLuckNextTime = new Achievement("achievement.betterLuckNextTime", "betterLuckNextTime", -3, 4, Items.NETHER_STAR, achievementItsMine);
-		
+
 		achievements.add(achievementWhyAreTheySoStrong);
 		achievements.add(achievementItsGettingHotInHere);
 		achievements.add(achievementLaserTag);
@@ -43,4 +43,3 @@ public class Achievements
 		achievements.add(achievementBetterLuckNextTime);
 	}
 }
-*/

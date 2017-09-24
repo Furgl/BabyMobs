@@ -50,6 +50,7 @@ public class EntityAIBabyHurtByTarget extends EntityAITarget {
 	private boolean entityCallsForHelp;
 	/** Store the previous revengeTimer value */
 	private int revengeTimerOld;
+	@SuppressWarnings("rawtypes")
 	private final Class[] field_179447_c;
 	private EntityLivingBase target;
 	public EntityAIBabyHurtByTarget(EntityCreature entityCreature, boolean bool, Class<?> ... className)
@@ -67,7 +68,7 @@ public class EntityAIBabyHurtByTarget extends EntityAITarget {
 	public boolean shouldExecute()
 	{
 		int i = this.taskOwner.getRevengeTimer();
-		return i != this.revengeTimerOld && this.isSuitableTarget(this.taskOwner.getAttackTarget(), false);
+		return i != this.revengeTimerOld && this.isSuitableTarget(this.taskOwner.getAITarget(), false);
 	}
 
 	/**
@@ -78,7 +79,7 @@ public class EntityAIBabyHurtByTarget extends EntityAITarget {
 	{
 		if (!(this.taskOwner instanceof EntityBabyWitherSkeleton))
 		{
-			target = this.taskOwner.getAttackTarget();
+			target = this.taskOwner.getAITarget();
 			this.taskOwner.setAttackTarget(target);
 		}
 		this.revengeTimerOld = this.taskOwner.getRevengeTimer();
@@ -88,14 +89,14 @@ public class EntityAIBabyHurtByTarget extends EntityAITarget {
 			double d0 = this.getTargetDistance();
 			if (this.taskOwner.getClass() == EntityBabyEnderman.class)
 				d0 = 10.0D;
-			List<?> list = this.taskOwner.world.getEntitiesWithinAABB(EntityCreature.class, (new AxisAlignedBB(this.taskOwner.posX, this.taskOwner.posY, this.taskOwner.posZ, this.taskOwner.posX + 1.0D, this.taskOwner.posY + 1.0D, this.taskOwner.posZ + 1.0D)).grow(d0, 10.0D, d0));
+			List<?> list = this.taskOwner.world.getEntitiesWithinAABB(EntityCreature.class, (new AxisAlignedBB(this.taskOwner.posX, this.taskOwner.posY, this.taskOwner.posZ, this.taskOwner.posX + 1.0D, this.taskOwner.posY + 1.0D, this.taskOwner.posZ + 1.0D)).expand(d0, 10.0D, d0));
 			Iterator<?> iterator = list.iterator();
 
 			while (iterator.hasNext())
 			{
 				EntityCreature entitycreature = (EntityCreature)iterator.next();
 
-				if (this.taskOwner != entitycreature && entitycreature.getClass() == this.getParent(this.taskOwner) && !entitycreature.isOnSameTeam(this.taskOwner.getAttackTarget()))
+				if (this.taskOwner != entitycreature && entitycreature.getClass() == this.getParent(this.taskOwner) && !entitycreature.isOnSameTeam(this.taskOwner.getAITarget()))
 				{
 					boolean flag = false;
 					Class[] aclass = this.field_179447_c;
@@ -114,7 +115,7 @@ public class EntityAIBabyHurtByTarget extends EntityAITarget {
 
 					if (!flag)
 					{
-						this.func_179446_a(entitycreature, this.taskOwner.getAttackTarget());
+						this.func_179446_a(entitycreature, this.taskOwner.getAITarget());
 					}
 				}
 			}

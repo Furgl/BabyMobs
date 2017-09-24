@@ -2,6 +2,7 @@ package furgl.babyMobs.common.entity.monster;
 
 import java.util.Iterator;
 
+import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyHurtByTarget;
 import furgl.babyMobs.common.entity.projectile.EntityBabyShulkerBullet;
@@ -10,6 +11,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.monster.EntityShulker;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -19,6 +21,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 
 public class EntityBabyShulker extends EntityShulker
 {	
@@ -36,8 +39,8 @@ public class EntityBabyShulker extends EntityShulker
 	@Override
 	public void onDeath(DamageSource cause) //first achievement
 	{
-//		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-//			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
+		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
+			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
 		super.onDeath(cause);
 	}
 

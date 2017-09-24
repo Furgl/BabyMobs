@@ -1,5 +1,6 @@
 package furgl.babyMobs.common.entity.monster;
 
+import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.ai.EntityAIBabyFollowParent;
@@ -40,8 +41,8 @@ public class EntityBabyEnderman extends EntityEnderman
 	@Override
 	public void onDeath(DamageSource cause) //first achievement
     {
-//		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-//			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
+		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
+			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
 		super.onDeath(cause);
     }
 
@@ -162,8 +163,8 @@ public class EntityBabyEnderman extends EntityEnderman
 				{
 					if (laserDelay > 0 && laserDelay % 5 == 0 && this.getAttackTarget() != null) 
 					{
-						/*if (this.getAttackTarget() instanceof EntityPlayer && !(this.getAttackTarget() instanceof FakePlayer))
-							((EntityPlayer)this.getAttackTarget()).addStat(Achievements.achievementLaserTag);*/
+						if (this.getAttackTarget() instanceof EntityPlayer && !(this.getAttackTarget() instanceof FakePlayer))
+							((EntityPlayer)this.getAttackTarget()).addStat(Achievements.achievementLaserTag);
 						this.getAttackTarget().attackEntityFrom(DamageSource.MAGIC, 1F);
 					}
 					laserDelay--;

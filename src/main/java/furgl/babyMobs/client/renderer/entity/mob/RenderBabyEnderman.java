@@ -4,10 +4,10 @@ import org.lwjgl.opengl.GL11;
 
 import furgl.babyMobs.client.model.ModelBabyEnderman;
 import furgl.babyMobs.common.entity.monster.EntityBabyEnderman;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.RenderEnderman;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -42,7 +42,7 @@ public class RenderBabyEnderman extends RenderEnderman
 		{
 			//entity.setScreaming(true);
 			Tessellator tessellator = Tessellator.getInstance();
-            BufferBuilder worldrenderer = tessellator.getBuffer();
+            VertexBuffer worldrenderer = tessellator.getBuffer();
             this.bindTexture(beam);
             GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, 10497.0F);
             GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, 10497.0F);
@@ -64,8 +64,8 @@ public class RenderBabyEnderman extends RenderEnderman
             //double d3 = vec32.lengthVector();
             double d0 = vec32.lengthVector() + 0.0D;
             vec32 = vec32.normalize();
-            float f7 = (float)Math.acos(vec32.y);
-            float f8 = (float)Math.atan2(vec32.z, vec32.x);
+            float f7 = (float)Math.acos(vec32.yCoord);
+            float f8 = (float)Math.atan2(vec32.zCoord, vec32.xCoord);
             GlStateManager.rotate((((float)Math.PI / 2F) + -f8) * (180F / (float)Math.PI), 0.0F, 1.0F, 0.0F);
             GlStateManager.rotate(f7 * (180F / (float)Math.PI), 1.0F, 0.0F, 0.0F);
             //double d4 = (f4 * 0.05D * (1.0D - (1 & 1) * 2.5D));

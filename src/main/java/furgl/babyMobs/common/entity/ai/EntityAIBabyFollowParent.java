@@ -59,7 +59,7 @@ public class EntityAIBabyFollowParent<T extends Entity> extends EntityAIBase
 	{
 		if (!(this.child.getAttackTarget() == null))
 			return false;
-        List<EntityLiving> list = this.child.world.getEntitiesWithinAABB(EntityLiving.class, this.child.getEntityBoundingBox().grow(8.0D, 4.0D, 8.0D));
+        List<EntityLiving> list = this.child.world.getEntitiesWithinAABB(EntityLiving.class, this.child.getEntityBoundingBox().expand(8.0D, 4.0D, 8.0D));
 		EntityLiving entityliving = null;
 		double d0 = Double.MAX_VALUE;
 		Iterator<?> iterator = list.iterator();
@@ -159,7 +159,7 @@ public class EntityAIBabyFollowParent<T extends Entity> extends EntityAIBase
 	 * Returns whether an in-progress EntityAIBase should continue executing
 	 */
 	@Override
-	public boolean shouldContinueExecuting()
+	public boolean continueExecuting()
 	{
 		if (!this.parent.isEntityAlive())
 		{

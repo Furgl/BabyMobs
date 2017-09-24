@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
+import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.BabyMobs;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ModEntities;
@@ -59,8 +60,8 @@ public class EntityBabySkeleton extends EntitySkeleton
 	@Override
 	public void onDeath(DamageSource cause) //first achievement
 	{
-//		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-//			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
+		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
+			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
 		if (!this.world.isRemote)
 		{
 			EntityTippedArrow arrow = new EntityTippedArrow(world);
@@ -94,8 +95,8 @@ public class EntityBabySkeleton extends EntitySkeleton
 	{
 		if (Config.useSpecialAbilities) 
 		{
-			if (!this.world.isRemote && source.getTrueSource() instanceof EntityPlayer && !(source.getTrueSource() instanceof FakePlayer) && !(source.getTrueSource() instanceof EntityPlayer && ((EntityPlayer)source.getTrueSource()).capabilities.isCreativeMode))
-				((EntityPlayer)source.getTrueSource()).addPotionEffect(this.getPotionEffect());
+			if (!this.world.isRemote && source.getEntity() instanceof EntityPlayer && !(source.getEntity() instanceof FakePlayer) && !(source.getEntity() instanceof EntityPlayer && ((EntityPlayer)source.getEntity()).capabilities.isCreativeMode))
+				((EntityPlayer)source.getEntity()).addPotionEffect(this.getPotionEffect());
 		}
 		return super.attackEntityFrom(source, amount);
 	}

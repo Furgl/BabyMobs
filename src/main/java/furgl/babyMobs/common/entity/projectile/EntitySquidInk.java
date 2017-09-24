@@ -1,5 +1,6 @@
 package furgl.babyMobs.common.entity.projectile;
 
+import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.util.EntitySpawner;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,7 +33,7 @@ public class EntitySquidInk extends EntityWitherSkeletonSmoke
 		{
 			if (!player.capabilities.isCreativeMode)
 			{
-				//player.addStat(Achievements.achievementICantSee);
+				player.addStat(Achievements.achievementICantSee);
 				player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 60, 1));
 			}
 		}

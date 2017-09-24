@@ -140,11 +140,11 @@ public class EntityAIUndeadHorseMate extends EntityAIMate
 
             if (entityplayer != null)
             {
-                entity//player.addStat(StatList.ANIMALS_BRED);
+                entityplayer.addStat(StatList.ANIMALS_BRED);
 
                 if (this.theAnimal instanceof EntityCow)
                 {
-                    entity//player.addStat(AchievementList.breedCow);
+                    entityplayer.addStat(AchievementList.breedCow);
                 }
             }
 

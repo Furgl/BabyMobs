@@ -164,9 +164,9 @@ public class EntityZombiePig extends EntityPig
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
-		if (source.getTrueSource() instanceof EntityPlayer && !(source.getTrueSource() instanceof FakePlayer) && !this.isAngry)
+		if (source.getEntity() instanceof EntityPlayer && !(source.getEntity() instanceof FakePlayer) && !this.isAngry)
 		{
-			EntityPlayer entityplayer = (EntityPlayer) source.getTrueSource();
+			EntityPlayer entityplayer = (EntityPlayer) source.getEntity();
 			this.setRevengeTarget(entityplayer);
 			this.attackingPlayer = entityplayer;
 			this.recentlyHit = this.getRevengeTimer();

@@ -104,7 +104,7 @@ public class EntityZombieChicken extends EntityChicken
 	public boolean processInteract(EntityPlayer player, EnumHand hand)
 	{
 		ItemStack stack = player.getHeldItem(hand);
-		if (stack != null && stack.getItem() == ModItems.GOLDEN_BREAD && stack.getMetadata() == 0 && this.isPotionActive(MobEffects.WEAKNESS)) {
+		if (stack != null && stack.getItem() == ModItems.golden_bread && stack.getMetadata() == 0 && this.isPotionActive(MobEffects.WEAKNESS)) {
 			if (!player.capabilities.isCreativeMode)
 				stack.shrink(1);
 			if (!this.world.isRemote)

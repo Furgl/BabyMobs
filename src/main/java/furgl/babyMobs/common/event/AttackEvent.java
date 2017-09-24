@@ -1,7 +1,6 @@
 package furgl.babyMobs.common.event;
 
 import java.lang.reflect.Method;
-import java.util.UUID;
 
 import furgl.babyMobs.common.block.ModBlocks;
 import furgl.babyMobs.common.config.Config;
@@ -29,22 +28,22 @@ public class AttackEvent
 {
 	@SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
 	public void onEvent(LivingAttackEvent event) {//spawn disappearing web
-		if (!event.getEntity().world.isRemote && event.getSource().getTrueSource() instanceof EntityBabySpider || event.getSource().getTrueSource() instanceof EntityBabyCaveSpider) {
+		if (!event.getEntity().world.isRemote && event.getSource().getEntity() instanceof EntityBabySpider || event.getSource().getEntity() instanceof EntityBabyCaveSpider) {
 			if (Config.useSpecialAbilities && event.getEntityLiving() instanceof EntityPlayer)
 			{
 				BlockPos pos = new BlockPos(event.getEntityLiving().posX, event.getEntityLiving().posY, event.getEntityLiving().posZ);
-				if (event.getEntityLiving().world.rand.nextInt(5) == 0 && event.getEntityLiving().world.isAirBlock(pos) && event.getEntityLiving().getDistanceSqToEntity(event.getSource().getTrueSource()) < 80D)
-					event.getEntityLiving().world.setBlockState(pos, ModBlocks.DISAPPEARING_WEB.getDefaultState());
+				if (event.getEntityLiving().world.rand.nextInt(5) == 0 && event.getEntityLiving().world.isAirBlock(pos) && event.getEntityLiving().getDistanceSqToEntity(event.getSource().getEntity()) < 80D)
+					event.getEntityLiving().world.setBlockState(pos, ModBlocks.disappearingWeb.getDefaultState());
 			}
 		}//convert Zombie
-		else if (!event.getEntity().world.isRemote && event.getSource().getTrueSource() instanceof EntityIronGolem && event.getEntityLiving() instanceof EntityZombie) {
+		else if (!event.getEntity().world.isRemote && event.getSource().getEntity() instanceof EntityIronGolem && event.getEntityLiving() instanceof EntityZombie) {
 			EntityZombie zombie = (EntityZombie) event.getEntityLiving();
 			if (Config.useSpecialAbilities && zombie instanceof EntityZombieVillager && !((EntityZombieVillager) zombie).isConverting()) {
 				zombie.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 100, 0));
 				try {
-					Method method = ReflectionHelper.findMethod(EntityZombieVillager.class, "func_191991_a", null, UUID.class, int.class);//EntityZombie.class.getDeclaredMethod("startConversion", int.class);
+					Method method = ReflectionHelper.findMethod(EntityZombieVillager.class, (EntityZombieVillager) zombie, new String[] {"startConverting", "func_190734_b"}, int.class);//EntityZombie.class.getDeclaredMethod("startConversion", int.class);
 					method.setAccessible(true);
-					method.invoke(zombie, zombie.getPersistentID(), 200);
+					method.invoke(zombie, 200);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -53,7 +52,7 @@ public class AttackEvent
 				event.setCanceled(true);
 			}
 		}//convert ZombiePig
-		else if (!event.getEntity().world.isRemote && event.getSource().getTrueSource() instanceof EntityIronGolem && event.getEntityLiving() instanceof EntityZombiePig) {
+		else if (!event.getEntity().world.isRemote && event.getSource().getEntity() instanceof EntityIronGolem && event.getEntityLiving() instanceof EntityZombiePig) {
 			EntityZombiePig pig = (EntityZombiePig) event.getEntityLiving();
 			if (Config.useSpecialAbilities && !pig.isConverting()) {
 				pig.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 100, 0));
@@ -63,7 +62,7 @@ public class AttackEvent
 				event.setCanceled(true);
 			}
 		}//convert ZombieChicken
-		else if (!event.getEntity().world.isRemote && event.getSource().getTrueSource() instanceof EntityIronGolem && event.getEntityLiving() instanceof EntityZombieChicken) {
+		else if (!event.getEntity().world.isRemote && event.getSource().getEntity() instanceof EntityIronGolem && event.getEntityLiving() instanceof EntityZombieChicken) {
 			EntityZombieChicken chicken = (EntityZombieChicken) event.getEntityLiving();
 			if (Config.useSpecialAbilities && !chicken.isConverting()) {
 				chicken.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 100, 0));
@@ -73,11 +72,11 @@ public class AttackEvent
 				event.setCanceled(true);
 			}
 		}
-		else if (!event.getEntity().world.isRemote && event.getSource().getTrueSource() instanceof EntityZombieVillager && ((EntityZombieVillager)event.getSource().getTrueSource()).isConverting())
+		else if (!event.getEntity().world.isRemote && event.getSource().getEntity() instanceof EntityZombieVillager && ((EntityZombieVillager)event.getSource().getEntity()).isConverting())
 			event.setCanceled(true);
-		else if (!event.getEntity().world.isRemote && event.getSource().getTrueSource() instanceof EntityZombieChicken && ((EntityZombieChicken)event.getSource().getTrueSource()).isConverting())
+		else if (!event.getEntity().world.isRemote && event.getSource().getEntity() instanceof EntityZombieChicken && ((EntityZombieChicken)event.getSource().getEntity()).isConverting())
 			event.setCanceled(true);
-		else if (!event.getEntity().world.isRemote && event.getSource().getTrueSource() instanceof EntityZombiePig && ((EntityZombiePig)event.getSource().getTrueSource()).isConverting())
+		else if (!event.getEntity().world.isRemote && event.getSource().getEntity() instanceof EntityZombiePig && ((EntityZombiePig)event.getSource().getEntity()).isConverting())
 			event.setCanceled(true);
 	}
 }

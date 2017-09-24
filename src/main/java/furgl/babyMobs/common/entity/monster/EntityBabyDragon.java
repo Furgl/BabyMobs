@@ -3,8 +3,8 @@ package furgl.babyMobs.common.entity.monster;
 import furgl.babyMobs.common.BabyMobs;
 import net.minecraft.block.BlockDragonEgg;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.boss.EntityDragonPart;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -99,9 +99,9 @@ public class EntityBabyDragon extends EntityDragon
 				if (this.hasDragonEgg) //server and just spawned by egg
 				{
 					int[] array = new int[3];
-					array[0] = (int) this.dragonEgg.x;
-					array[1] = (int) this.dragonEgg.y;
-					array[2] = (int) this.dragonEgg.z;
+					array[0] = (int) this.dragonEgg.xCoord;
+					array[1] = (int) this.dragonEgg.yCoord;
+					array[2] = (int) this.dragonEgg.zCoord;
 					this.getEntityData().setIntArray("dragonEgg", array);
 					this.dataManager.set(DRAGON_BLOCK_POS, new BlockPos(dragonEgg));
 				}
@@ -129,7 +129,7 @@ public class EntityBabyDragon extends EntityDragon
 		if (this.hasDragonEgg)
 		{
 			if (this.ticksExisted == 3)
-				this.targetY = this.dragonEgg.y + 2D;
+				this.targetY = this.dragonEgg.yCoord + 2D;
 			else if (this.ticksExisted % 40 == 0)
 				this.target = new BlockPos(this.dragonEgg.addVector(rand.nextInt(5)-2, rand.nextDouble()*3, rand.nextInt(5)-2));
 
@@ -139,7 +139,7 @@ public class EntityBabyDragon extends EntityDragon
 				{
 					BabyMobs.proxy.spawnEntityDragonParticlesFX(this);
 				}
-				this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.dragonEgg.x+rand.nextDouble(), this.dragonEgg.y+rand.nextDouble(), this.dragonEgg.z+rand.nextDouble(), 0,0,0, new int[0]);
+				this.world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.dragonEgg.xCoord+rand.nextDouble(), this.dragonEgg.yCoord+rand.nextDouble(), this.dragonEgg.zCoord+rand.nextDouble(), 0,0,0, new int[0]);
 			}
 		}
 		//end
@@ -297,7 +297,7 @@ public class EntityBabyDragon extends EntityDragon
 				this.rotationYaw += this.randomYawVelocity * 0.1F;
 				float f7 = (float)(2.0D / (d9 + 1.0D));
 				float f8 = 0.06F;
-				this.moveRelative(0.0F, -1.0F, f8 * (f5 * f7 + (1.0F - f7)), 0.02F);
+				this.moveRelative(0.0F, -1.0F, f8 * (f5 * f7 + (1.0F - f7)));
 
 				this.move(MoverType.SELF, this.motionX * 0.2D, this.motionY * 0.2D, this.motionZ * 0.2D); //TODO slow
 
@@ -342,7 +342,7 @@ public class EntityBabyDragon extends EntityDragon
 
 			for (int j = 0; j < 3; ++j)
 			{
-				MultiPartEntityPart entitydragonpart = null;
+				EntityDragonPart entitydragonpart = null;
 
 				if (j == 0)
 				{
@@ -416,7 +416,7 @@ public class EntityBabyDragon extends EntityDragon
 	}
 
 	@Override
-    public boolean attackEntityFromPart(MultiPartEntityPart dragonPart, DamageSource source, float damage)
+	public boolean attackEntityFromPart(EntityDragonPart p_70965_1_, DamageSource p_70965_2_, float p_70965_3_) 
 	{
 		return false;
 	}

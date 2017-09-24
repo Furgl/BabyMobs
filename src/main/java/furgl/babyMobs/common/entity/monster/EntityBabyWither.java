@@ -1,5 +1,8 @@
 package furgl.babyMobs.common.entity.monster;
 
+import java.util.Iterator;
+
+import furgl.babyMobs.client.gui.achievements.Achievements;
 import furgl.babyMobs.common.config.Config;
 import furgl.babyMobs.common.entity.ModEntities;
 import furgl.babyMobs.common.entity.projectile.EntityWitherWitherSkull;
@@ -15,11 +18,13 @@ import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.entity.projectile.EntityWitherSkull;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.AchievementList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 
 public class EntityBabyWither extends EntityWither
 {
@@ -36,8 +41,8 @@ public class EntityBabyWither extends EntityWither
 	@Override
 	public void onDeath(DamageSource cause) //first achievement
 	{
-		/*if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
-//			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);*/
+		if (!this.world.isRemote && cause.getEntity() instanceof EntityPlayer && !(cause.getEntity() instanceof FakePlayer))
+			((EntityPlayer)cause.getEntity()).addStat(Achievements.achievementWhyAreTheySoStrong);
 		super.onDeath(cause);
 	}
 
@@ -145,7 +150,7 @@ public class EntityBabyWither extends EntityWither
 		{
 			return false;
 		}
-		else if (source != DamageSource.DROWN && !(source.getTrueSource() instanceof EntityBabyWither))
+		else if (source != DamageSource.DROWN && !(source.getEntity() instanceof EntityBabyWither))
 		{
 			if (this.getInvulTime() > 0 && source != DamageSource.OUT_OF_WORLD)
 			{
@@ -157,7 +162,7 @@ public class EntityBabyWither extends EntityWither
 
 				if (this.isArmored())
 				{
-					entity = source.getTrueSource();
+					entity = source.getSourceOfDamage();
 
 					//TODO reflect arrows when armored
 					if (Config.useSpecialAbilities)
@@ -211,26 +216,26 @@ public class EntityBabyWither extends EntityWither
 		}
 		else 
 		{
-/*			Iterator iterator = this.world.getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().expand(50.0D, 100.0D, 50.0D)).iterator();
+			Iterator iterator = this.world.getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().expand(50.0D, 100.0D, 50.0D)).iterator();
 
 			while (iterator.hasNext())
 			{
 				EntityPlayer entityplayer = (EntityPlayer)iterator.next();
-				entity//player.addStat(Achievements.achievementBetterLuckNextTime);
-			}*/
+				entityplayer.addStat(Achievements.achievementBetterLuckNextTime);
+			}
 			this.entityDropItem(new ItemStack(Items.SKULL, 1, 1), 0.0F);
 		}
 		//end
 
-		/*if (!this.world.isRemote)
+		if (!this.world.isRemote)
 		{
 			Iterator iterator = this.world.getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().expand(50.0D, 100.0D, 50.0D)).iterator();
 
 			while (iterator.hasNext())
 			{
 				EntityPlayer entityplayer = (EntityPlayer)iterator.next();
-				entity//player.addStat(AchievementList.KILL_WITHER);
+				entityplayer.addStat(AchievementList.KILL_WITHER);
 			}
-		}*/
+		}
 	}
 }
