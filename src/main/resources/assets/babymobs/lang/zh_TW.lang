@@ -1,0 +1,70 @@
+entity.babyspider.name=小蜘蛛
+entity.babyskeleton.name=小骷髏
+entity.babycreeper.name=小苦力怕
+entity.babywitherskeleton.name=小凋靈骷髏
+entity.babyenderman.name=小終界使者
+entity.babyblaze.name=小烈焰使者
+entity.babywitch.name=小女巫
+entity.babyguardian.name=小深海守衛
+entity.babysquid.name=小魷魚
+entity.babycavespider.name=小洞穴蜘蛛
+entity.babyzombie.name=小殭屍
+entity.babypigzombie.name=小殭屍豬人
+entity.babyghast.name=小地獄幽靈
+entity.babysnowman.name=小雪人
+entity.babyirongolem.name=小鐵魔像
+entity.babywither.name=小凋零怪
+entity.babydragon.name=小終界龍
+entity.babyshulker.name=小界伏蚌
+entity.zombiepig.name=殭屍豬
+entity.zombiechicken.name=殭屍雞
+
+entity.invisible.name=隱形
+entity.cavespidervenom.name=毒液
+entity.creeperexplosion.name=爆炸
+
+item.babyspider.name=生成 小蜘蛛
+item.babyskeleton.name=生成 小骷髏
+item.babycreeper.name=生成 小苦力怕
+item.babywitherskeleton.name=生成 小凋靈骷髏
+item.babyenderman.name=生成 小終界使者
+item.babyblaze.name=生成 小烈焰使者
+item.babywitch.name=生成 小女巫
+item.babyguardian.name=生成 小深海守衛
+item.babysquid.name=生成 小魷魚
+item.babycavespider.name=生成 小洞穴蜘蛛
+item.babyzombie.name=生成 小殭屍
+item.babypigzombie.name=生成 小殭屍豬人
+item.babyghast.name=生成 小地獄幽靈
+item.babysnowman.name=生成 小雪人
+item.babyirongolem.name=生成 小鐵魔像
+item.babywither.name=生成 小凋零怪
+item.babyshulker.name=生成 小界伏蚌
+
+item.invisible.name=隱形
+item.cave_spider_venom.name=毒液
+item.creeper_explosion.name=爆炸
+item.golden_bread.name=黃金麵包
+
+tile.disappearingWeb.name=消失中的蜘蛛網
+
+itemGroup.tabBabyMobs=小怪物
+
+effect.volatile_levitation=揮發性懸浮
+
+achievement.itsGettingHotInHere=這裡變熱了! 
+achievement.itsGettingHotInHere.desc=被小烈焰使者使出的火球弄至全身著火
+achievement.laserTag=雷射目標
+achievement.laserTag.desc=被小終界使者使出的雷射猛擊
+achievement.itsMine=這是我的! 
+achievement.itsMine.desc=嘗試拿到一個小凋零怪頭顱
+achievement.iCantSee=我甚麼都看不到! 
+achievement.iCantSee.desc=被小魷魚弄瞎
+achievement.boomBaby=小型流動TNT! 
+achievement.boomBaby.desc=有一隻小苦力怕在玩家附近爆炸
+achievement.aFlowerForMe=一朵花? 給我的??? 
+achievement.aFlowerForMe.desc=找到一隻小鐵魔像
+achievement.betterLuckNextTime=下次可能會好運一點? 
+achievement.betterLuckNextTime.desc=未能夠在小凋零怪中獲得地獄之星
+achievement.whyAreTheySoStrong=為甚麼他們如此強大? 
+achievement.whyAreTheySoStrong.desc=殺死一隻小怪物
