@@ -1,0 +1,69 @@
+entity.babyspider.name=小蜘蛛
+entity.babyskeleton.name=小骷髅
+entity.babycreeper.name=小爬行者
+entity.babywitherskeleton.name=小凋灵骷髅
+entity.babyenderman.name=小末影人
+entity.babyblaze.name=小烈焰人
+entity.babywitch.name=小女巫
+entity.babyguardian.name=小守卫者
+entity.babysquid.name=小鱿鱼
+entity.babycavespider.name=小洞穴蜘蛛
+entity.babyzombie.name=小僵尸
+entity.babypigzombie.name=小僵尸猪人
+entity.babyghast.name=小恶魂
+entity.babysnowman.name=小雪傀儡
+entity.babyirongolem.name=小铁傀儡
+entity.babywither.name=小凋灵
+entity.babydragon.name=小末影龙
+entity.babyshulker.name=小潜影贝
+entity.zombiepig.name=僵尸猪
+entity.zombiechicken.name=僵尸鸡
+
+entity.invisible.name=隐形
+entity.cavespidervenom.name=毒液
+entity.creeperexplosion.name=爆炸
+
+item.babyspider.name=生成 小蜘蛛
+item.babyskeleton.name=生成 小骷髅
+item.babycreeper.name=生成 小爬行者
+item.babywitherskeleton.name=生成 小凋灵骷髅
+item.babyenderman.name=生成 小末影人
+item.babyblaze.name=生成 小烈焰人
+item.babywitch.name=生成 小女巫
+item.babyguardian.name=生成 小守卫者
+item.babysquid.name=生成 小鱿鱼
+item.babycavespider.name=生成 小洞穴蜘蛛
+item.babyzombie.name=生成 小僵尸
+item.babyghast.name=生成 小恶魂
+item.babysnowman.name=生成 小雪傀儡
+item.babyirongolem.name=生成 小铁傀儡
+item.babywither.name=生成 小凋灵
+item.babyshulker.name=生成 小潜影贝
+
+item.invisible.name=隐形
+item.cave_spider_venom.name=毒液
+item.creeper_explosion.name=爆炸
+item.golden_bread.name=黄金面包
+
+tile.disappearingWeb.name=蜘蛛网
+
+itemGroup.tabBabyMobs=怪物宝宝
+
+effect.volatile_levitation=挥发性飘浮
+
+achievement.itsGettingHotInHere=浑身滚烫！
+achievement.itsGettingHotInHere.desc=被小烈焰人攻击以至着火
+achievement.laserTag=激光横扫
+achievement.laserTag.desc=被小末影人的激光击中
+achievement.itsMine=都是我的！
+achievement.itsMine.desc=试着获取到小凋灵骷髅的头颅
+achievement.iCantSee=我甚至看不见！
+achievement.iCantSee.desc=被小鱿鱼喷出的墨汁蒙蔽
+achievement.boomBaby=随身TNT！
+achievement.boomBaby.desc=小爬行者在玩家周围爆炸
+achievement.aFlowerForMe=一朵花？送给我？？？
+achievement.aFlowerForMe.desc=找到一只小铁傀儡
+achievement.betterLuckNextTime=或许下一次运气更好？
+achievement.betterLuckNextTime.desc=未能获取小凋灵所携带的下界之星
+achievement.whyAreTheySoStrong=为什么它如此强大？！
+achievement.whyAreTheySoStrong.desc=杀死一只小怪物
